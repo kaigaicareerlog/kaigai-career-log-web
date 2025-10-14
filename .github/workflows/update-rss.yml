@@ -1,0 +1,54 @@
+name: Update RSS Feed
+
+on:
+  # 毎日午前9時（日本時間）に実行（UTC 0:00）
+  schedule:
+    - cron: '0 0 * * *'
+  
+  # 手動実行も可能
+  workflow_dispatch:
+
+jobs:
+  update-rss:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Download latest RSS feed
+        run: |
+          curl -o public/rss/test.xml.new https://anchor.fm/s/105976b60/podcast/rss
+      
+      - name: Check if RSS feed has changed
+        id: check_changes
+        run: |
+          if ! diff -q public/rss/test.xml public/rss/test.xml.new > /dev/null 2>&1; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "RSS feed has new episodes!"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes in RSS feed"
+          fi
+      
+      - name: Update RSS file
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          mv public/rss/test.xml.new public/rss/test.xml
+      
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/rss/test.xml
+          git commit -m "chore: Update RSS feed with new episodes"
+          git push
+      
+      - name: Clean up
+        if: always()
+        run: |
+          rm -f public/rss/test.xml.new
+

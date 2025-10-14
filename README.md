@@ -69,6 +69,29 @@ npm run preview
 - `npm run preview` - Preview production build locally
 - `npm run astro` - Run Astro CLI commands
 
+## 🤖 Automated RSS Feed Updates
+
+このプロジェクトは、GitHub Actionsを使用してRSSフィードを自動的に更新します。
+
+### 更新スケジュール
+
+- **自動実行**: 毎日午前9時（日本時間）/ UTC 0:00
+- **手動実行**: GitHub Actionsタブから「Update RSS Feed」ワークフローを手動で実行可能
+
+### 仕組み
+
+1. GitHub Actionsが https://anchor.fm/s/105976b60/podcast/rss から最新のRSSフィードをダウンロード
+2. 既存の `public/rss/test.xml` と比較
+3. 新しいエピソードがある場合、ファイルを更新してコミット
+4. 変更がプッシュされると、Cloudflare Pagesが自動的に再デプロイ
+
+### 手動更新方法
+
+GitHub リポジトリで:
+1. 「Actions」タブを開く
+2. 「Update RSS Feed」ワークフローを選択
+3. 「Run workflow」をクリック
+
 ## 📄 License
 
 MIT
