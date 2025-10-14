@@ -1,0 +1,350 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+	title="About - 海外キャリアログ"
+	description="海外キャリアログについて - ホスト紹介とポッドキャストの詳細"
+>
+	<main class="about-page">
+		<div class="container">
+			<!-- Podcast Description Section -->
+			<section class="podcast-info">
+				<h1>海外キャリアログ</h1>
+				<p class="description">
+					日本から海外に飛び出し、IT業界で活躍する専門家たちにインタビュー。なぜ海外を目指したのか？英語の壁、就活のリアル、ビザや生活事情まで、リアルな声を記録していきます。これから海外キャリアを目指すあなたへ、道しるべとなるログをお届けします。
+				</p>
+
+				<div class="podcast-links">
+					<h2>Listen On</h2>
+					<div class="platform-grid">
+						<a href="https://open.spotify.com/show/0bj38cgbe71oCr5Q0emwvA?si=c86d054e572146bd" target="_blank" rel="noopener noreferrer" class="platform-link spotify">
+							<img src="https://open.spotify.com/favicon.ico" alt="Spotify" class="platform-icon" />
+							<span>Spotify</span>
+						</a>
+						<a href="https://podcasts.apple.com/ca/podcast/%E6%B5%B7%E5%A4%96%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%AD%E3%82%B0/id1818019572" target="_blank" rel="noopener noreferrer" class="platform-link apple">
+							<img src="https://www.apple.com/favicon.ico" alt="Apple Podcasts" class="platform-icon" />
+							<span>Apple Podcasts</span>
+						</a>
+						<a href="https://www.youtube.com/@kaigaicareerlog" target="_blank" rel="noopener noreferrer" class="platform-link youtube">
+							<img src="https://www.youtube.com/favicon.ico" alt="YouTube" class="platform-icon" />
+							<span>YouTube</span>
+						</a>
+						<a href="https://x.com/kaigaicareerlog" target="_blank" rel="noopener noreferrer" class="platform-link twitter">
+							<img src="https://x.com/favicon.ico" alt="X (Twitter)" class="platform-icon" />
+							<span>X (Twitter)</span>
+						</a>
+					</div>
+				</div>
+			</section>
+
+			<!-- Hosts Section -->
+			<section class="hosts-section">
+				<h2>ホスト紹介</h2>
+				
+				<div class="hosts-grid">
+					<!-- Ryo -->
+					<div class="host-card">
+						<div class="host-header">
+							<h3>Ryo</h3>
+							<div class="host-links">
+								<a href="https://x.com/togashi_ryo" target="_blank" rel="noopener noreferrer" class="social-link" title="X (Twitter)">
+									<img src="https://x.com/favicon.ico" alt="X" class="social-icon" />
+								</a>
+								<a href="https://www.linkedin.com/in/ryotogashi/" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn">
+									<img src="https://www.linkedin.com/favicon.ico" alt="LinkedIn" class="social-icon" />
+								</a>
+							</div>
+						</div>
+						<p class="coming-soon">Coming soon...</p>
+					</div>
+
+					<!-- Senna -->
+					<div class="host-card">
+						<div class="host-header">
+							<h3>Senna</h3>
+							<div class="host-links">
+								<a href="https://x.com/onepercentdsgn" target="_blank" rel="noopener noreferrer" class="social-link" title="X (Twitter)">
+									<img src="https://x.com/favicon.ico" alt="X" class="social-icon" />
+								</a>
+								<a href="https://x.com/frogagent" target="_blank" rel="noopener noreferrer" class="social-link" title="Frog Agent">
+									<img src="https://x.com/favicon.ico" alt="Frog Agent" class="social-icon" />
+								</a>
+								<a href="https://frogagent.com/" target="_blank" rel="noopener noreferrer" class="social-link" title="Frog Website">
+									🐸
+								</a>
+							</div>
+						</div>
+						<p class="coming-soon">Coming soon...</p>
+					</div>
+
+					<!-- Ayaka -->
+					<div class="host-card">
+						<div class="host-header">
+							<h3>Ayaka</h3>
+							<div class="host-links">
+								<a href="https://x.com/ayacappuccino" target="_blank" rel="noopener noreferrer" class="social-link" title="X (Twitter)">
+									<img src="https://x.com/favicon.ico" alt="X" class="social-icon" />
+								</a>
+								<a href="https://www.linkedin.com/in/ayaka-yasuda-7ab597197/" target="_blank" rel="noopener noreferrer" class="social-link" title="LinkedIn">
+									<img src="https://www.linkedin.com/favicon.ico" alt="LinkedIn" class="social-icon" />
+								</a>
+							</div>
+						</div>
+						<p class="coming-soon">Coming soon...</p>
+					</div>
+				</div>
+			</section>
+		</div>
+	</main>
+</BaseLayout>
+
+<style>
+	.about-page {
+		flex: 1;
+		width: 100%;
+		padding: 3rem 0;
+	}
+
+	.container {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 1rem;
+	}
+
+	/* Podcast Info Section */
+	.podcast-info {
+		margin-bottom: 4rem;
+		text-align: center;
+	}
+
+	.podcast-info h1 {
+		font-size: clamp(2rem, 5vw, 3rem);
+		font-weight: 700;
+		background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+		margin-bottom: 1.5rem;
+	}
+
+	.description {
+		font-size: 1.1rem;
+		line-height: 1.8;
+		color: var(--color-text);
+		max-width: 800px;
+		margin: 0 auto 3rem;
+	}
+
+	/* Platform Links */
+	.podcast-links h2 {
+		font-size: 1.5rem;
+		font-weight: 600;
+		margin-bottom: 1.5rem;
+		color: var(--color-text);
+	}
+
+	.platform-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+		gap: 1rem;
+		max-width: 900px;
+		margin: 0 auto;
+	}
+
+	.platform-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+		padding: 1rem 1.5rem;
+		background: var(--color-background);
+		border: 2px solid rgba(59, 130, 246, 0.2);
+		border-radius: 0.75rem;
+		text-decoration: none;
+		color: var(--color-text);
+		font-weight: 500;
+		transition: all 0.3s ease;
+	}
+
+	.platform-link:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 6px 20px rgba(59, 130, 246, 0.2);
+	}
+
+	.platform-link.spotify {
+		border-color: rgba(29, 185, 84, 0.3);
+	}
+
+	.platform-link.spotify:hover {
+		border-color: #1db954;
+		background: rgba(29, 185, 84, 0.05);
+	}
+
+	.platform-link.apple {
+		border-color: rgba(142, 67, 240, 0.3);
+	}
+
+	.platform-link.apple:hover {
+		border-color: #8e43f0;
+		background: rgba(142, 67, 240, 0.05);
+	}
+
+	.platform-link.youtube {
+		border-color: rgba(255, 0, 0, 0.3);
+	}
+
+	.platform-link.youtube:hover {
+		border-color: #ff0000;
+		background: rgba(255, 0, 0, 0.05);
+	}
+
+	.platform-link.twitter {
+		border-color: rgba(29, 155, 240, 0.3);
+	}
+
+	.platform-link.twitter:hover {
+		border-color: #1d9bf0;
+		background: rgba(29, 155, 240, 0.05);
+	}
+
+	.platform-icon {
+		width: 24px;
+		height: 24px;
+		object-fit: contain;
+	}
+
+	/* Hosts Section */
+	.hosts-section {
+		margin-top: 4rem;
+	}
+
+	.hosts-section h2 {
+		font-size: 2rem;
+		font-weight: 700;
+		text-align: center;
+		margin-bottom: 2rem;
+		background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.hosts-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 2rem;
+		margin-top: 2rem;
+	}
+
+	.host-card {
+		background: var(--color-background);
+		border-radius: 1rem;
+		padding: 2rem;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+		border: 1px solid rgba(59, 130, 246, 0.1);
+		transition: all 0.3s ease;
+	}
+
+	.host-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 8px 30px rgba(59, 130, 246, 0.15);
+	}
+
+	.host-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 1rem;
+		padding-bottom: 1rem;
+		border-bottom: 2px solid rgba(59, 130, 246, 0.1);
+	}
+
+	.host-card h3 {
+		font-size: 1.5rem;
+		font-weight: 600;
+		color: var(--color-text);
+	}
+
+	.host-links {
+		display: flex;
+		gap: 0.75rem;
+	}
+
+	.social-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		border-radius: 0.5rem;
+		background: rgba(59, 130, 246, 0.08);
+		border: 1px solid rgba(59, 130, 246, 0.2);
+		text-decoration: none;
+		font-size: 1.2rem;
+		transition: all 0.3s ease;
+	}
+
+	.social-link:hover {
+		background: rgba(59, 130, 246, 0.15);
+		border-color: var(--color-primary);
+		transform: scale(1.1);
+	}
+
+	.social-icon {
+		width: 18px;
+		height: 18px;
+		object-fit: contain;
+	}
+
+	.coming-soon {
+		color: var(--color-muted);
+		font-style: italic;
+		font-size: 1rem;
+		text-align: center;
+		padding: 2rem 0;
+	}
+
+	/* Mobile responsive */
+	@media (max-width: 768px) {
+		.about-page {
+			padding: 2rem 0;
+		}
+
+		.podcast-info {
+			margin-bottom: 3rem;
+		}
+
+		.description {
+			font-size: 1rem;
+			line-height: 1.6;
+		}
+
+		.platform-grid {
+			grid-template-columns: 1fr;
+			gap: 0.75rem;
+		}
+
+		.hosts-grid {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
+		.host-card {
+			padding: 1.5rem;
+		}
+	}
+
+	/* Dark mode support */
+	@media (prefers-color-scheme: dark) {
+		.host-card {
+			background: rgba(15, 23, 42, 0.8);
+			border-color: rgba(59, 130, 246, 0.2);
+		}
+
+		.platform-link {
+			background: rgba(15, 23, 42, 0.8);
+		}
+	}
+</style>
+
