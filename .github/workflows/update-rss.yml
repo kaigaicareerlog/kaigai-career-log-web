@@ -3,8 +3,8 @@ name: Update RSS Feed
 on:
   # 毎日午前9時（日本時間）に実行（UTC 0:00）
   schedule:
-    - cron: '0 0 * * *'
-  
+    - cron: "0 0 * * *"
+
   # 手動実行も可能
   workflow_dispatch:
 
@@ -13,42 +13,38 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - name: Download latest RSS feed
-        run: |
-          curl -o public/rss/test.xml.new https://anchor.fm/s/105976b60/podcast/rss
-      
-      - name: Check if RSS feed has changed
-        id: check_changes
-        run: |
-          if ! diff -q public/rss/test.xml public/rss/test.xml.new > /dev/null 2>&1; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-            echo "RSS feed has new episodes!"
-          else
-            echo "changed=false" >> $GITHUB_OUTPUT
-            echo "No changes in RSS feed"
-          fi
-      
-      - name: Update RSS file
-        if: steps.check_changes.outputs.changed == 'true'
-        run: |
-          mv public/rss/test.xml.new public/rss/test.xml
-      
-      - name: Commit and push changes
-        if: steps.check_changes.outputs.changed == 'true'
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add public/rss/test.xml
-          git commit -m "chore: Update RSS feed with new episodes"
-          git push
-      
-      - name: Clean up
-        if: always()
-        run: |
-          rm -f public/rss/test.xml.new
 
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set timestamp
+      id: timestamp
+      run: |
+        echo "datetime=$(TZ=Asia/Tokyo date +'%Y%m%d-%H%M')" >> $GITHUB_OUTPUT
+
+    - name: Download latest RSS feed
+      run: |
+        FILENAME="public/rss/${{ steps.timestamp.outputs.datetime }}-rss-file.xml"
+        curl -o "$FILENAME" https://anchor.fm/s/105976b60/podcast/rss
+        echo "New RSS file created: $FILENAME"
+
+    - name: Create latest symlink
+      run: |
+        cd public/rss
+        ln -sf "${{ steps.timestamp.outputs.datetime }}-rss-file.xml" latest.xml
+        echo "Symlink created: latest.xml -> ${{ steps.timestamp.outputs.datetime }}-rss-file.xml"
+
+    - name: Delete old RSS files (older than 3 days)
+      run: |
+        cd public/rss
+        find . -name "*-rss-file.xml" -type f -mtime +3 -delete
+        echo "Deleted RSS files older than 3 days"
+
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add public/rss/
+        git commit -m "chore: Update RSS feed - ${{ steps.timestamp.outputs.datetime }}"
+        git push
