@@ -1,0 +1,91 @@
+---
+interface Props {
+  platform: 'spotify' | 'apple' | 'youtube';
+  href: string;
+  label: string;
+  iconSrc: string;
+}
+
+const { platform, href, label, iconSrc } = Astro.props;
+---
+
+<a 
+  href={href} 
+  target="_blank" 
+  rel="noopener noreferrer" 
+  class={`platform-btn ${platform}`}
+>
+  <img src={iconSrc} alt={label} class="platform-icon" />
+  {label}
+</a>
+
+<style>
+  .platform-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.8rem;
+    text-decoration: none;
+    border-radius: 0.4rem;
+    font-weight: 500;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+
+  .platform-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+  }
+
+  .platform-btn.spotify {
+    background: rgba(29, 185, 84, 0.08);
+    color: #1db954;
+    border: 1.5px solid rgba(29, 185, 84, 0.3);
+  }
+
+  .platform-btn.spotify:hover {
+    background: rgba(29, 185, 84, 0.15);
+    border-color: rgba(29, 185, 84, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(29, 185, 84, 0.15);
+  }
+
+  .platform-btn.apple {
+    background: rgba(142, 67, 240, 0.08);
+    color: #8e43f0;
+    border: 1.5px solid rgba(142, 67, 240, 0.3);
+  }
+
+  .platform-btn.apple:hover {
+    background: rgba(142, 67, 240, 0.15);
+    border-color: rgba(142, 67, 240, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(142, 67, 240, 0.15);
+  }
+
+  .platform-btn.youtube {
+    background: rgba(255, 0, 0, 0.08);
+    color: #ff0000;
+    border: 1.5px solid rgba(255, 0, 0, 0.3);
+  }
+
+  .platform-btn.youtube:hover {
+    background: rgba(255, 0, 0, 0.15);
+    border-color: rgba(255, 0, 0, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 0, 0, 0.15);
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .platform-btn {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      justify-content: center;
+    }
+  }
+</style>
+

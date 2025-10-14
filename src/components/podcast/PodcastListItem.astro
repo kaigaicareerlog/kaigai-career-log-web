@@ -1,0 +1,178 @@
+---
+import { formatDate, formatDuration } from '../../utils/formatters';
+import type { PodcastEpisode } from '../../utils/types';
+import PlatformButton from './PlatformButton.astro';
+
+interface Props {
+  podcast: PodcastEpisode;
+}
+
+const { podcast } = Astro.props;
+---
+
+<article class="podcast-card">
+  <div class="podcast-header">
+    <h3 class="podcast-title">{podcast.title}</h3>
+  </div>
+  
+  <div class="podcast-content">
+    <p class="podcast-description">{podcast.description}</p>
+  </div>
+  
+  <div class="podcast-footer">
+    <div class="podcast-meta">
+      <span class="duration">📻 {formatDuration(podcast.duration)}</span>
+      <span class="date">📅 {formatDate(podcast.date)}</span>
+    </div>
+    
+    <div class="podcast-actions">
+      <div class="platform-links">
+        <PlatformButton 
+          platform="spotify"
+          href={podcast.link}
+          label="Spotify"
+          iconSrc="https://open.spotify.com/favicon.ico"
+        />
+        <PlatformButton 
+          platform="apple"
+          href="https://podcasts.apple.com/ca/podcast/%E6%B5%B7%E5%A4%96%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%AD%E3%82%B0/id1818019572"
+          label="Apple Podcasts"
+          iconSrc="https://www.apple.com/favicon.ico"
+        />
+        <PlatformButton 
+          platform="youtube"
+          href="https://www.youtube.com/@kaigaicareerlog"
+          label="YouTube"
+          iconSrc="https://www.youtube.com/favicon.ico"
+        />
+      </div>
+    </div>
+  </div>
+</article>
+
+<style>
+  .podcast-card {
+    background: var(--color-background);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  .podcast-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  }
+
+  .podcast-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 40px rgba(59, 130, 246, 0.15);
+  }
+
+  .podcast-header {
+    margin-bottom: 1rem;
+  }
+
+  .podcast-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 0.75rem;
+    color: var(--color-text);
+  }
+
+  .podcast-content {
+    margin-bottom: 1rem;
+  }
+
+  .podcast-description {
+    font-size: 0.95rem;
+    line-height: 1.2;
+    color: var(--color-text);
+    margin-bottom: 0.75rem;
+  }
+
+  .podcast-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  .podcast-meta {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+
+  .podcast-actions {
+    display: flex;
+  }
+
+  .platform-links {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .podcast-card {
+      padding: 1rem;
+    }
+
+    .podcast-title {
+      font-size: 1rem;
+    }
+
+    .podcast-description {
+      display: none;
+    }
+
+    .podcast-content {
+      margin-bottom: 0.5rem;
+    }
+
+    .podcast-footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .podcast-meta {
+      flex-direction: column;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+    }
+
+    .podcast-actions {
+      width: 100%;
+    }
+
+    .platform-links {
+      flex-direction: column;
+      gap: 0.4rem;
+      width: 100%;
+    }
+  }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .podcast-card {
+      background: rgba(15, 23, 42, 0.8);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+  }
+</style>
+
