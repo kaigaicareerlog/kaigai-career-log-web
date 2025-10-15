@@ -1,0 +1,378 @@
+---
+// This component handles the Tab+L modal for showing episode GUID
+---
+
+<div id="episode-guid-modal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="guid-modal-title">Episode GUID</h2>
+      <button class="close-btn" id="close-guid-modal">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="guid-section">
+        <div class="guid-label">
+          <h3>GUID</h3>
+          <p class="guid-description">Use this GUID to update URLs or transcribe this episode</p>
+        </div>
+        <div class="guid-input-container">
+          <input type="text" id="guid-input" readonly class="guid-input" />
+          <button id="copy-guid-btn" class="copy-guid-btn" title="Copy GUID">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="keyboard-hint">
+        Press <kbd>Tab</kbd> + <kbd>L</kbd> to toggle • <kbd>Esc</kbd> to close
+      </div>
+      <span id="copy-guid-feedback" class="copy-feedback">Copied!</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Get modal elements
+  const modal = document.getElementById('episode-guid-modal');
+  const closeBtn = document.getElementById('close-guid-modal');
+  const guidInput = document.getElementById('guid-input') as HTMLInputElement;
+  const copyBtn = document.getElementById('copy-guid-btn');
+  const copyFeedback = document.getElementById('copy-guid-feedback');
+  
+  let tabPressed = false;
+
+  // Listen for Tab + L keypress
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    // Track Tab key state
+    if (e.key === 'Tab') {
+      tabPressed = true;
+    }
+
+    // Check if L is pressed while Tab is held
+    if ((e.key === 'l' || e.key === 'L') && tabPressed) {
+      e.preventDefault();
+      toggleModal();
+    }
+
+    // Close modal on Escape
+    if (e.key === 'Escape') {
+      hideModal();
+    }
+  });
+
+  // Reset Tab state when released
+  document.addEventListener('keyup', (e: KeyboardEvent) => {
+    if (e.key === 'Tab') {
+      tabPressed = false;
+    }
+  });
+
+  // Close button click
+  closeBtn?.addEventListener('click', hideModal);
+
+  // Copy button click
+  copyBtn?.addEventListener('click', copyGuidToClipboard);
+
+  // Close when clicking outside modal
+  modal?.addEventListener('click', (e: MouseEvent) => {
+    if (e.target === modal) {
+      hideModal();
+    }
+  });
+
+  function toggleModal() {
+    if (modal?.classList.contains('active')) {
+      hideModal();
+    } else {
+      showModal();
+    }
+  }
+
+  function showModal() {
+    if (!modal) return;
+
+    // Try to get current episode data
+    const episodeData = (window as any).__EPISODE_DATA__;
+    
+    if (episodeData && episodeData.guid) {
+      // Update modal content
+      const titleEl = document.getElementById('guid-modal-title');
+      if (titleEl && episodeData.title) {
+        titleEl.textContent = `${episodeData.title}`;
+      }
+      
+      if (guidInput) {
+        guidInput.value = episodeData.guid;
+      }
+
+      modal.classList.add('active');
+      
+      // Auto-select the GUID for easy copying
+      setTimeout(() => {
+        guidInput?.select();
+      }, 100);
+    }
+  }
+
+  function hideModal() {
+    modal?.classList.remove('active');
+    copyFeedback?.classList.remove('show');
+  }
+
+  async function copyGuidToClipboard() {
+    if (!guidInput || !guidInput.value) return;
+
+    try {
+      await navigator.clipboard.writeText(guidInput.value);
+      
+      // Show feedback
+      copyFeedback?.classList.add('show');
+      
+      // Hide feedback after 2 seconds
+      setTimeout(() => {
+        copyFeedback?.classList.remove('show');
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy GUID:', err);
+    }
+  }
+</script>
+
+<style>
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    padding: 1rem;
+    overflow-y: auto;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .modal-content {
+    background: var(--color-background);
+    border-radius: 1rem;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+  }
+
+  .modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 1rem;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--color-muted);
+    cursor: pointer;
+    padding: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .close-btn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .guid-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .guid-label h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .guid-description {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+  }
+
+  .guid-input-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .guid-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid rgba(59, 130, 246, 0.2);
+    border-radius: 0.5rem;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.9rem;
+    background-color: rgba(59, 130, 246, 0.05);
+    color: var(--color-text);
+    transition: all 0.2s ease;
+  }
+
+  .guid-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+
+  .copy-guid-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    background-color: rgba(59, 130, 246, 0.1);
+    border: 2px solid rgba(59, 130, 246, 0.2);
+    border-radius: 0.5rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .copy-guid-btn:hover {
+    background-color: rgba(59, 130, 246, 0.2);
+    border-color: var(--color-primary);
+  }
+
+  .copy-guid-btn:active {
+    transform: scale(0.95);
+  }
+
+  .copy-guid-btn svg {
+    display: block;
+  }
+
+  .modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(59, 130, 246, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .keyboard-hint {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  kbd {
+    padding: 0.2rem 0.4rem;
+    background-color: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 0.25rem;
+    font-family: 'Monaco', 'Courier New', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .copy-feedback {
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    color: #10b981;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .copy-feedback.show {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .modal-content {
+      margin: auto;
+      max-height: calc(100vh - 2rem);
+    }
+
+    .modal-header h2 {
+      font-size: 1.1rem;
+    }
+
+    .modal-body {
+      padding: 1rem;
+    }
+
+    .guid-input {
+      font-size: 0.8rem;
+    }
+
+    .keyboard-hint {
+      font-size: 0.75rem;
+    }
+  }
+</style>
+

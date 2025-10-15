@@ -61,6 +61,7 @@ npm run preview
 - 🌙 Dark mode support (automatic based on system preference)
 - 📝 TypeScript with strict type checking
 - 🔧 Minimal and maintainable codebase
+- ⌨️ Keyboard shortcuts (Tab+E for URLs, Tab+L for GUID)
 
 ## 📝 Available Scripts
 
@@ -176,6 +177,16 @@ npm run transcribe <episode-guid>
 ```
 
 詳細は [文字起こしガイド](docs/TRANSCRIPTION_GUIDE.md) を参照してください。
+
+## ⌨️ Keyboard Shortcuts
+
+エピソードページで便利なキーボードショートカットが利用できます。
+
+- **Tab + E**: エピソード URL モーダルを開く（Spotify、Apple Podcasts、YouTube など）
+- **Tab + L**: エピソード GUID モーダルを開く（URL 更新や文字起こしで使用）
+- **Esc**: モーダルを閉じる
+
+詳細は [キーボードショートカットガイド](docs/KEYBOARD_SHORTCUTS.md) を参照してください。
 
 ## 📄 License
 

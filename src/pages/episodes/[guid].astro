@@ -5,6 +5,7 @@ import { formatDate, formatDuration } from '../../utils/formatters';
 import { getSpotifyEmbedUrl } from '../../utils/spotify';
 import PlatformButton from '../../components/podcast/PlatformButton.astro';
 import EpisodeUrlModal from '../../components/EpisodeUrlModal.astro';
+import EpisodeGuidModal from '../../components/EpisodeGuidModal.astro';
 import {
   SPOTIFY_CHANNEL_URL,
   YOUTUBE_CHANNEL_URL,
@@ -119,11 +120,13 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
   </main>
 
   <EpisodeUrlModal />
+  <EpisodeGuidModal />
 
   <script define:vars={{ episode }}>
-    // Make episode data available globally for the modal
+    // Make episode data available globally for the modals
     window.__EPISODE_DATA__ = {
       title: episode.title,
+      guid: episode.guid,
       applePodcastUrl: episode.applePodcastUrl || '',
       spotifyUrl: episode.spotifyUrl || '',
       youtubeUrl: episode.youtubeUrl || '',
