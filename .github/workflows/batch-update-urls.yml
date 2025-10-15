@@ -6,6 +6,9 @@ on:
       - "episode-urls-update.json"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   batch-update:
     runs-on: ubuntu-latest
