@@ -11,7 +11,8 @@
     "batch-update-urls": "tsx scripts/batch-update-urls.ts",
     "transcribe": "tsx scripts/transcribe-episode.ts",
     "find-spotify-url": "tsx scripts/find-spotify-url.ts",
-    "update-spotify-urls": "tsx scripts/update-spotify-urls.ts"
+    "update-spotify-urls": "tsx scripts/update-spotify-urls.ts",
+    "update-youtube-urls": "tsx scripts/update-youtube-urls.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",

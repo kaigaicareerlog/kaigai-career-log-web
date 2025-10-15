@@ -2,9 +2,9 @@
 
 このドキュメントでは、エピソードの URL（Spotify、YouTube、Apple Podcast、Amazon Music）を更新する方法を説明します。
 
-## 方法 1: GitHub Actions で個別更新
+## 方法 1: GitHub Actions で自動更新（推奨）
 
-GitHub Actions の UI から、個別のエピソードの URL を更新できます。
+GitHub Actions の UI から、複数のプラットフォームの URL を自動的に取得して更新できます。
 
 ### 手順
 
@@ -12,19 +12,60 @@ GitHub Actions の UI から、個別のエピソードの URL を更新でき�
 2. 左サイドバーから「Update Episode URLs」ワークフローを選択
 3. 「Run workflow」ボタンをクリック
 4. 以下の情報を入力：
-   - **Episode GUID** (必須): 更新したいエピソードの GUID
-   - **Spotify URL** (任意): Spotify のエピソード URL
-   - **YouTube URL** (任意): YouTube のエピソード URL
-   - **Apple Podcast URL** (任意): Apple Podcast のエピソード URL
-   - **Amazon Music URL** (任意): Amazon Music のエピソード URL
+   - **Episode GUID** (任意): 特定のエピソードのみ更新する場合は GUID を入力（空欄の場合は全エピソードを更新）
+   - **Update Spotify URLs** (チェックボックス): Spotify URL を自動取得して更新
+   - **Update YouTube URLs** (チェックボックス): YouTube URL を自動取得して更新
+   - **Update Apple Podcast URLs** (チェックボックス): Apple Podcast URL を自動取得して更新（未実装）
+   - **Update Amazon Music URLs** (チェックボックス): Amazon Music URL を自動取得して更新（未実装）
 5. 「Run workflow」をクリック
+
+### 特徴
+
+- **複数プラットフォーム対応**: 複数のチェックボックスを選択して、一度に複数のプラットフォームの URL を更新できます
+- **自動マッチング**: エピソードのタイトルを使って、各プラットフォームの URL を自動的に検索します
+- **デフォルト選択**: Spotify と YouTube がデフォルトでチェックされています
+
+### 必要な設定
+
+#### Spotify URL の自動取得
+
+- `SPOTIFY_CLIENT_ID`: Spotify アプリの Client ID
+- `SPOTIFY_CLIENT_SECRET`: Spotify アプリの Client Secret
+
+詳細は `SPOTIFY_SETUP_QUICKSTART.md` を参照してください。
+
+#### YouTube URL の自動取得
+
+- `YOUTUBE_API_KEY`: YouTube Data API v3 の API キー
+
+YouTube API キーの取得方法：
+
+1. [Google Cloud Console](https://console.cloud.google.com/) にアクセス
+2. 新しいプロジェクトを作成（または既存のものを選択）
+3. YouTube Data API v3 を有効化
+4. 認証情報（API キー）を作成
+5. GitHub リポジトリの Settings > Secrets に `YOUTUBE_API_KEY` として追加
 
 ### 例
 
+**全エピソードの Spotify と YouTube URL を更新:**
+
+```
+Episode GUID: (空欄)
+✅ Update Spotify URLs
+✅ Update YouTube URLs
+❌ Update Apple Podcast URLs
+❌ Update Amazon Music URLs
+```
+
+**特定のエピソードの YouTube URL のみを更新:**
+
 ```
 Episode GUID: 39cf6d7a-a8fc-4f4f-a0f7-3ad0e8e1bc7d
-Spotify URL: https://open.spotify.com/episode/1pCYF2Hh9auRtTCELuPK8e
-YouTube URL: https://youtu.be/z0jJm4cqHbA
+❌ Update Spotify URLs
+✅ Update YouTube URLs
+❌ Update Apple Podcast URLs
+❌ Update Amazon Music URLs
 ```
 
 ## 方法 2: バッチ更新（複数エピソード一括更新）
@@ -72,7 +113,44 @@ git push
 
 開発環境で直接スクリプトを実行することもできます。
 
-### 個別更新
+### 自動 URL 取得
+
+#### Spotify URL の自動取得
+
+```bash
+# 全エピソードの Spotify URL を更新
+npm run update-spotify-urls
+
+# 特定のエピソードの Spotify URL を更新
+npm run update-spotify-urls <guid>
+```
+
+環境変数:
+
+```bash
+export SPOTIFY_CLIENT_ID="your_client_id"
+export SPOTIFY_CLIENT_SECRET="your_client_secret"
+```
+
+#### YouTube URL の自動取得
+
+```bash
+# 全エピソードの YouTube URL を更新
+npm run update-youtube-urls
+
+# 特定のエピソードの YouTube URL を更新
+npm run update-youtube-urls <guid>
+```
+
+環境変数:
+
+```bash
+export YOUTUBE_API_KEY="your_api_key"
+```
+
+### 手動 URL 更新
+
+特定の URL を手動で設定する場合:
 
 ```bash
 npm run update-episode-urls <guid> [spotify_url] [youtube_url] [apple_podcast_url] [amazon_music_url]
