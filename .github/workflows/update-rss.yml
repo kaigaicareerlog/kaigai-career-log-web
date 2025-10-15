@@ -44,11 +44,19 @@ jobs:
           npx tsx scripts/xml-to-json.ts "$XMLFILE" "$JSONFILE"
           echo "Converted XML to JSON: $JSONFILE"
 
+      - name: Generate episodes.json
+        run: |
+          JSONFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-podcast-data.json"
+          EPISODESFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-episodes.json"
+          npx tsx scripts/generate-episodes.ts "$JSONFILE" "$EPISODESFILE"
+          echo "Generated episodes.json: $EPISODESFILE"
+
       - name: Delete old files (older than 3 days)
         run: |
           cd public/rss
           find . -name "*-rss-file.xml" -type f -mtime +3 -delete
           find . -name "*-podcast-data.json" -type f -mtime +3 -delete
+          find . -name "*-episodes.json" -type f -mtime +3 -delete
           echo "Deleted files older than 3 days"
 
       - name: Commit and push changes

@@ -83,14 +83,16 @@ npm run preview
 1. GitHub Actions が https://anchor.fm/s/105976b60/podcast/rss から最新の RSS フィードをダウンロード
 2. タイムスタンプ付きの XML ファイル (`YYYYMMDD-HHMM-rss-file.xml`) を保存
 3. XML を JSON に変換し、タイムスタンプ付きの JSON ファイル (`YYYYMMDD-HHMM-podcast-data.json`) を保存
-4. 3 日より古いファイルは自動削除
-5. Web サイトは最新の JSON ファイルを自動的に読み込む
-6. 変更がプッシュされると、Cloudflare Pages が自動的に再デプロイ
+4. `episodes.json` を生成（既存データとマージし、各エピソードに ID と URL 情報を付与）
+5. 3 日より古いファイルは自動削除
+6. Web サイトは最新の JSON ファイルを自動的に読み込む
+7. 変更がプッシュされると、Cloudflare Pages が自動的に再デプロイ
 
 ### データフォーマット
 
-- **JSON ファイル**: `public/rss/YYYYMMDD-HHMM-podcast-data.json` (3 日間保持、Web サイトが最新を自動選択)
 - **XML ファイル**: `public/rss/YYYYMMDD-HHMM-rss-file.xml` (3 日間保持、バックアップ用)
+- **JSON ファイル**: `public/rss/YYYYMMDD-HHMM-podcast-data.json` (3 日間保持、中間データ)
+- **エピソードデータ**: `public/rss/YYYYMMDD-HHMM-episodes.json` (3 日間保持、Web サイトが最新を自動選択)
 
 ### 手動更新方法
 
@@ -105,6 +107,26 @@ GitHub リポジトリで:
 ```bash
 npx tsx scripts/xml-to-json.ts public/rss/latest.xml public/rss/podcast-data.json
 ```
+
+### エピソードメタデータの管理
+
+`episodes.json` には各エピソードに以下の追加情報が含まれます：
+
+- `guid`: エピソードの一意識別子（RSS フィードから自動取得）
+- `spotifyUrl`: Spotify エピソード URL（手動で追加）
+- `youtubeUrl`: YouTube 動画 URL（手動で追加）
+- `applePodcastUrl`: Apple Podcasts エピソード URL（手動で追加）
+- `amazonMusicUrl`: Amazon Music エピソード URL（手動で追加）
+
+新しいエピソードが追加されると、URL フィールドは空文字列として初期化されます。既存のエピソードのメタデータ（URL 情報）は `guid` をキーとして保持されます。
+
+**手動で URL を追加する場合:**
+
+1. 最新の `public/rss/YYYYMMDD-HHMM-episodes.json` を直接編集
+2. 該当するエピソードの URL フィールドに値を設定
+3. コミット＆プッシュ
+
+次回の自動更新時に、編集した URL 情報は新しいタイムスタンプのファイルに引き継がれます。
 
 ## 📄 License
 

@@ -23,23 +23,23 @@ interface PodcastData {
 }
 
 /**
- * 最新のJSONファイルを取得する
+ * 最新のepisodes.jsonファイルを取得する
  */
-function getLatestJSONFile(): string {
+function getLatestEpisodesFile(): string {
   const rssDir = path.join(process.cwd(), "public", "rss");
 
   // 最新の日付付きファイルを探す
   const files = fs.readdirSync(rssDir);
-  const jsonFiles = files
-    .filter((file) => file.match(/^\d{8}-\d{4}-podcast-data\.json$/))
+  const episodesFiles = files
+    .filter((file) => file.match(/^\d{8}-\d{4}-episodes\.json$/))
     .sort()
     .reverse();
 
-  if (jsonFiles.length > 0) {
-    return path.join(rssDir, jsonFiles[0]);
+  if (episodesFiles.length > 0) {
+    return path.join(rssDir, episodesFiles[0]);
   }
 
-  throw new Error("No JSON podcast data files found");
+  throw new Error("No episodes files found");
 }
 
 /**
@@ -47,8 +47,8 @@ function getLatestJSONFile(): string {
  */
 export async function parseJSONFeed(): Promise<RSSChannel> {
   try {
-    // 最新のJSONファイルを読み込む
-    const jsonPath = getLatestJSONFile();
+    // 最新のepisodes.jsonを読み込む
+    const jsonPath = getLatestEpisodesFile();
     const jsonText = fs.readFileSync(jsonPath, "utf-8");
     const data: PodcastData = JSON.parse(jsonText);
 
