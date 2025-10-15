@@ -1,0 +1,143 @@
+---
+interface Platform {
+  name: string;
+  href: string;
+  icon: string;
+  class: string;
+}
+
+const platforms: Platform[] = [
+  {
+    name: 'Spotify',
+    href: 'https://open.spotify.com/show/0bj38cgbe71oCr5Q0emwvA?si=c86d054e572146bd',
+    icon: 'https://open.spotify.com/favicon.ico',
+    class: 'spotify'
+  },
+  {
+    name: 'Apple Podcasts',
+    href: 'https://podcasts.apple.com/ca/podcast/%E6%B5%B7%E5%A4%96%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%AD%E3%82%B0/id1818019572',
+    icon: 'https://www.apple.com/favicon.ico',
+    class: 'apple'
+  },
+  {
+    name: 'YouTube',
+    href: 'https://www.youtube.com/@kaigaicareerlog',
+    icon: 'https://www.youtube.com/favicon.ico',
+    class: 'youtube'
+  },
+  {
+    name: 'X (Twitter)',
+    href: 'https://x.com/kaigaicareerlog',
+    icon: 'https://x.com/favicon.ico',
+    class: 'twitter'
+  }
+];
+---
+
+<section class="podcast-links">
+  <h2>Listen On</h2>
+  <div class="platform-grid">
+    {platforms.map((platform) => (
+      <a 
+        href={platform.href} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class={`platform-link ${platform.class}`}
+      >
+        <img src={platform.icon} alt={platform.name} class="platform-icon" />
+        <span>{platform.name}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .podcast-links {
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .podcast-links h2 {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    color: var(--color-muted);
+  }
+
+  .platform-grid {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .platform-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: rgba(59, 130, 246, 0.05);
+    border: 1.5px solid rgba(59, 130, 246, 0.15);
+    border-radius: 0.6rem;
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+  }
+
+  .platform-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  }
+
+  .platform-link.spotify:hover {
+    background: rgba(29, 185, 84, 0.1);
+    border-color: rgba(29, 185, 84, 0.4);
+  }
+
+  .platform-link.apple:hover {
+    background: rgba(142, 67, 240, 0.1);
+    border-color: rgba(142, 67, 240, 0.4);
+  }
+
+  .platform-link.youtube:hover {
+    background: rgba(255, 0, 0, 0.1);
+    border-color: rgba(255, 0, 0, 0.4);
+  }
+
+  .platform-link.twitter:hover {
+    background: rgba(29, 155, 240, 0.1);
+    border-color: rgba(29, 155, 240, 0.4);
+  }
+
+  .platform-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .platform-grid {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .platform-link {
+      width: 100%;
+      padding: 0.75rem 1rem;
+    }
+  }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .platform-link {
+      background: rgba(59, 130, 246, 0.08);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+  }
+</style>
+

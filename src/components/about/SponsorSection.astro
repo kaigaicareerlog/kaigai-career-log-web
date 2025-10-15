@@ -1,0 +1,279 @@
+---
+// No props needed - all data is self-contained
+---
+
+<section class="sponsor-section">
+	<h2>スポンサー</h2>
+	<div class="sponsor-card">
+		<div class="sponsor-content">
+			<div class="sponsor-header">
+				<img src="/frog-logo.png" alt="Frog" class="logo-img" />
+				<h3>Frog</h3>
+			</div>
+			<p class="sponsor-description">
+				エンジニア、デザイナー、IT専門職の世界進出をサポートしています。バンクーバーやカナダの情報も。留学や海外就職のご相談お待ちしています。
+			</p>
+			<div class="sponsor-tags">
+				<span class="tag">海外就職</span>
+				<span class="tag">留学</span>
+				<span class="tag">就労</span>
+				<span class="tag">永住権</span>
+				<span class="tag">エンジニア</span>
+				<span class="tag">デベロッパー</span>
+				<span class="tag">プログラマ</span>
+				<span class="tag">デザイナー</span>
+			</div>
+			<div class="sponsor-links">
+				<a href="https://frogagent.com/" target="_blank" rel="noopener noreferrer" class="sponsor-btn website">
+					<span class="btn-icon">🌐</span>
+					<span>Website</span>
+				</a>
+				<a href="https://x.com/frogagent" target="_blank" rel="noopener noreferrer" class="sponsor-btn twitter">
+					<img src="https://abs.twimg.com/favicons/twitter.3.ico" alt="X" class="btn-icon-img" />
+					<span>X (Twitter)</span>
+				</a>
+				<a href="https://lin.ee/qki0Tgt" target="_blank" rel="noopener noreferrer" class="sponsor-btn line">
+					<span class="btn-icon">💬</span>
+					<span>LINE相談</span>
+				</a>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.sponsor-section {
+		margin: 4rem 0;
+		padding: 2rem 0;
+	}
+
+	.sponsor-section h2 {
+		font-size: 1.8rem;
+		font-weight: 600;
+		text-align: center;
+		margin-bottom: 2rem;
+		color: var(--color-text);
+	}
+
+	.sponsor-card {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 2.5rem;
+		background: var(--color-background);
+		border-radius: 1.2rem;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+		transition: all 0.3s ease;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.sponsor-card::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: 1.2rem;
+		padding: 2px;
+		background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+		-webkit-mask: 
+			linear-gradient(#fff 0 0) content-box, 
+			linear-gradient(#fff 0 0);
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+		pointer-events: none;
+	}
+
+	.sponsor-card:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2);
+	}
+
+	.sponsor-header {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		justify-content: center;
+		margin-bottom: 1rem;
+	}
+
+	.logo-img {
+		width: 60px;
+		height: 60px;
+		object-fit: contain;
+		border-radius: 0.75rem;
+		background: rgba(59, 130, 246, 0.05);
+		padding: 0.5rem;
+		border: 2px solid rgba(59, 130, 246, 0.1);
+	}
+
+	.sponsor-content h3 {
+		font-size: 2rem;
+		font-weight: 700;
+		margin: 0;
+		background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
+
+	.sponsor-description {
+		font-size: 1rem;
+		line-height: 1.7;
+		color: var(--color-text);
+		text-align: center;
+		margin-bottom: 1.5rem;
+		max-width: 600px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.sponsor-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		justify-content: center;
+		margin-bottom: 2rem;
+	}
+
+	.tag {
+		display: inline-block;
+		padding: 0.4rem 0.8rem;
+		background: rgba(14, 165, 233, 0.1);
+		color: var(--color-primary);
+		border-radius: 0.5rem;
+		font-size: 0.85rem;
+		font-weight: 500;
+		border: 1px solid rgba(14, 165, 233, 0.2);
+	}
+
+	.sponsor-links {
+		display: flex;
+		gap: 1rem;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
+	.sponsor-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.75rem 1.5rem;
+		border-radius: 0.75rem;
+		text-decoration: none;
+		font-weight: 600;
+		font-size: 0.95rem;
+		transition: all 0.3s ease;
+		border: 2px solid transparent;
+	}
+
+	.btn-icon {
+		font-size: 1.2rem;
+	}
+
+	.btn-icon-img {
+		width: 20px;
+		height: 20px;
+		object-fit: contain;
+	}
+
+	.sponsor-btn.website {
+		background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+		color: white;
+		border: 2px solid transparent;
+	}
+
+	.sponsor-btn.website:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+	}
+
+	.sponsor-btn.twitter {
+		background: rgba(29, 155, 240, 0.1);
+		color: #1d9bf0;
+		border: 2px solid rgba(29, 155, 240, 0.3);
+	}
+
+	.sponsor-btn.twitter:hover {
+		background: rgba(29, 155, 240, 0.2);
+		border-color: #1d9bf0;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 16px rgba(29, 155, 240, 0.3);
+	}
+
+	.sponsor-btn.line {
+		background: rgba(0, 195, 0, 0.1);
+		color: #00c300;
+		border: 2px solid rgba(0, 195, 0, 0.3);
+	}
+
+	.sponsor-btn.line:hover {
+		background: rgba(0, 195, 0, 0.2);
+		border-color: #00c300;
+		transform: translateY(-2px);
+		box-shadow: 0 4px 16px rgba(0, 195, 0, 0.3);
+	}
+
+	/* Mobile responsive */
+	@media (max-width: 768px) {
+		.sponsor-section {
+			margin: 3rem 0;
+			padding: 1.5rem 0;
+		}
+
+		.sponsor-card {
+			padding: 2rem 1.5rem;
+		}
+
+		.sponsor-header {
+			gap: 0.75rem;
+		}
+
+		.logo-img {
+			width: 50px;
+			height: 50px;
+		}
+
+		.sponsor-content h3 {
+			font-size: 1.5rem;
+		}
+
+		.sponsor-description {
+			font-size: 0.95rem;
+		}
+
+		.sponsor-links {
+			flex-direction: column;
+		}
+
+		.sponsor-btn {
+			width: 100%;
+			justify-content: center;
+		}
+
+		.sponsor-tags {
+			gap: 0.4rem;
+		}
+
+		.tag {
+			font-size: 0.8rem;
+			padding: 0.35rem 0.7rem;
+		}
+	}
+
+	/* Dark mode support */
+	@media (prefers-color-scheme: dark) {
+		.sponsor-card {
+			background: rgba(15, 23, 42, 0.8);
+		}
+
+		.logo-img {
+			background: rgba(59, 130, 246, 0.1);
+			border-color: rgba(59, 130, 246, 0.2);
+		}
+
+		.tag {
+			background: rgba(14, 165, 233, 0.15);
+			border-color: rgba(14, 165, 233, 0.3);
+		}
+	}
+</style>
+
