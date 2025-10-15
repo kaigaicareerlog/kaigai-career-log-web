@@ -45,18 +45,33 @@
   
   let currentEpisode: any = null;
 
-  // Listen for Cmd/Ctrl + E keypress
-  document.addEventListener('keydown', (e: KeyboardEvent) => {
-    if ((e.key === 'e' || e.key === 'E') && (e.metaKey || e.ctrlKey)) {
-      e.preventDefault();
-      showModal();
-    }
+    let tabPressed = false;
 
-    // Close modal on Escape
-    if (e.key === 'Escape') {
-      hideModal();
-    }
-  });
+    // Listen for Tab + E keypress
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      // Track Tab key state
+      if (e.key === 'Tab') {
+        tabPressed = true;
+      }
+
+      // Check if E is pressed while Tab is held
+      if ((e.key === 'e' || e.key === 'E') && tabPressed) {
+        e.preventDefault();
+        showModal();
+      }
+
+      // Close modal on Escape
+      if (e.key === 'Escape') {
+        hideModal();
+      }
+    });
+
+    // Reset Tab state when released
+    document.addEventListener('keyup', (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        tabPressed = false;
+      }
+    });
 
   // Close button click
   closeBtn?.addEventListener('click', hideModal);
