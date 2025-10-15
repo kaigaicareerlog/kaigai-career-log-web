@@ -9,11 +9,13 @@
     "astro": "astro",
     "update-episode-urls": "tsx scripts/update-episode-urls.ts",
     "batch-update-urls": "tsx scripts/batch-update-urls.ts",
-    "transcribe": "tsx scripts/transcribe-episode.ts"
+    "transcribe": "tsx scripts/transcribe-episode.ts",
+    "find-spotify-url": "tsx scripts/find-spotify-url.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",
-    "astro": "^5.14.4"
+    "astro": "^5.14.4",
+    "dotenv": "^17.2.3"
   },
   "devDependencies": {
     "tsx": "^4.20.6"
