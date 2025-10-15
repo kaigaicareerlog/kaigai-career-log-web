@@ -70,6 +70,7 @@ npm run preview
 - `npm run astro` - Run Astro CLI commands
 - `npm run update-episode-urls` - Update episode URLs by GUID
 - `npm run batch-update-urls` - Batch update multiple episode URLs
+- `npm run transcribe <guid>` - Transcribe an episode using AssemblyAI
 
 ## 🤖 Automated Podcast Feed Updates
 
@@ -148,6 +149,33 @@ npm run batch-update-urls episode-urls-update.json
 ```
 
 次回の自動更新時に、編集した URL 情報は新しいタイムスタンプのファイルに引き継がれます。
+
+## 📝 エピソード文字起こし
+
+AssemblyAI を使用してエピソードの自動文字起こしを生成できます。
+
+### セットアップ
+
+1. [AssemblyAI](https://www.assemblyai.com/) で API キーを取得
+2. GitHub リポジトリの Secrets に `ASSEMBLYAI_API_KEY` を追加
+3. GitHub Actions から「Transcribe Episode」ワークフローを実行
+
+### 使い方
+
+**GitHub Actions（推奨）:**
+
+1. Actions タブ → Transcribe Episode を選択
+2. Episode GUID を入力して実行
+3. 自動的にプルリクエストが作成されます
+
+**ローカル実行:**
+
+```bash
+export ASSEMBLYAI_API_KEY="your-api-key"
+npm run transcribe <episode-guid>
+```
+
+詳細は [文字起こしガイド](docs/TRANSCRIPTION_GUIDE.md) を参照してください。
 
 ## 📄 License
 

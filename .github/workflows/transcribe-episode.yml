@@ -1,0 +1,62 @@
+name: Transcribe Episode
+
+on:
+  workflow_dispatch:
+    inputs:
+      episode_guid:
+        description: "Episode GUID to transcribe"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  transcribe:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run transcription
+        env:
+          ASSEMBLYAI_API_KEY: ${{ secrets.ASSEMBLYAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: npm run transcribe ${{ inputs.episode_guid }}
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Add transcription for episode ${{ inputs.episode_guid }}"
+          committer: GitHub <noreply@github.com>
+          author: GitHub <noreply@github.com>
+          signoff: false
+          branch: transcribe-episode-${{ inputs.episode_guid }}
+          delete-branch: true
+          title: "Add transcription for episode ${{ inputs.episode_guid }}"
+          body: |
+            This PR adds transcription for episode ${{ inputs.episode_guid }}.
+
+            The transcription includes:
+            - Speaker identification
+            - Timestamps
+            - Full text of the episode
+            - Japanese language support
+          labels: transcription
+          draft: false

@@ -8,7 +8,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "update-episode-urls": "tsx scripts/update-episode-urls.ts",
-    "batch-update-urls": "tsx scripts/batch-update-urls.ts"
+    "batch-update-urls": "tsx scripts/batch-update-urls.ts",
+    "transcribe": "tsx scripts/transcribe-episode.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",
