@@ -1,0 +1,15 @@
+[
+  {
+    "guid": "39cf6d7a-a8fc-4f4f-a0f7-3ad0e8e1bc7d",
+    "spotifyUrl": "https://open.spotify.com/episode/...",
+    "youtubeUrl": "https://youtu.be/...",
+    "applePodcastUrl": "https://podcasts.apple.com/...",
+    "amazonMusicUrl": "https://music.amazon.ca/..."
+  },
+  {
+    "guid": "791bc8bd-01ce-408c-9583-2f1447ac9c6b",
+    "spotifyUrl": "https://open.spotify.com/episode/...",
+    "youtubeUrl": "https://youtu.be/..."
+  }
+]
+

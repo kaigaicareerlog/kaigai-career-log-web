@@ -1,0 +1,65 @@
+name: Update Episode URLs
+
+on:
+  workflow_dispatch:
+    inputs:
+      guid:
+        description: 'Episode GUID'
+        required: true
+        type: string
+      spotify_url:
+        description: 'Spotify URL (optional)'
+        required: false
+        type: string
+      youtube_url:
+        description: 'YouTube URL (optional)'
+        required: false
+        type: string
+      apple_podcast_url:
+        description: 'Apple Podcast URL (optional)'
+        required: false
+        type: string
+      amazon_music_url:
+        description: 'Amazon Music URL (optional)'
+        required: false
+        type: string
+
+jobs:
+  update-urls:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Update episode URLs
+        run: |
+          node scripts/update-episode-urls.js \
+            "${{ inputs.guid }}" \
+            "${{ inputs.spotify_url }}" \
+            "${{ inputs.youtube_url }}" \
+            "${{ inputs.apple_podcast_url }}" \
+            "${{ inputs.amazon_music_url }}"
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/rss/*.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update URLs for episode ${{ inputs.guid }}"
+            git push
+          fi
+
