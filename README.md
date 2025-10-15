@@ -78,6 +78,8 @@ npm run preview
 - `npm run update-episode-urls` - Update episode URLs by GUID
 - `npm run batch-update-urls` - Batch update multiple episode URLs
 - `npm run transcribe <guid>` - Transcribe an episode using AssemblyAI
+- `npm run find-spotify-url <guid>` - Find Spotify URL for a specific episode
+- `npm run update-spotify-urls [guid]` - Update Spotify URLs in episodes.json (all or specific episode)
 
 ## 🤖 Automated Podcast Feed Updates
 
@@ -183,6 +185,52 @@ npm run transcribe <episode-guid>
 ```
 
 詳細は [文字起こしガイド](docs/TRANSCRIPTION_GUIDE.md) を参照してください。
+
+## 🎵 エピソード URL の自動取得
+
+プラットフォーム（Spotify、YouTube など）の URL を自動的に取得・更新できます。
+
+### セットアップ
+
+1. [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) でアプリを作成
+2. Client ID と Client Secret を取得
+3. GitHub リポジトリの Secrets に以下を追加:
+   - `SPOTIFY_CLIENT_ID`
+   - `SPOTIFY_CLIENT_SECRET`
+
+### 使い方
+
+**GitHub Actions（手動実行）:**
+
+- Actions タブ → Update Episode URLs
+- プラットフォームを選択（現在は Spotify のみ対応）
+- GUID を入力（空欄で全エピソード更新）
+
+**ローカル実行:**
+
+```bash
+# 特定のエピソードを検索
+npm run find-spotify-url <episode-guid>
+
+# すべての未設定エピソードを更新
+npm run update-spotify-urls
+
+# 特定のエピソードのみ更新
+npm run update-spotify-urls <episode-guid>
+```
+
+詳細は以下のドキュメントを参照:
+
+- [Spotify URL Finder クイックスタート](SPOTIFY_SETUP_QUICKSTART.md)
+- [Spotify URL Finder 詳細ガイド](docs/SPOTIFY_URL_FINDER.md)
+- [GitHub Action 設定ガイド](docs/GITHUB_ACTION_SPOTIFY.md)
+
+### 対応プラットフォーム
+
+- ✅ **Spotify** - 完全対応
+- 🔜 **YouTube** - 開発予定
+- 🔜 **Apple Podcasts** - 開発予定
+- 🔜 **Amazon Music** - 開発予定
 
 ## ⌨️ Keyboard Shortcuts
 
