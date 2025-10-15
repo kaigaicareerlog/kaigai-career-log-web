@@ -1,14 +1,14 @@
 ---
-import { parseRSSFeed } from '../../utils/rssParser';
+import { parseJSONFeed } from '../../utils/jsonParser';
 import type { PodcastEpisode } from '../../utils/types';
 import PodcastListItem from './PodcastListItem.astro';
 
-// RSSフィードからポッドキャストデータを取得
+// JSONフィードからポッドキャストデータを取得
 let rssData;
 try {
-  rssData = await parseRSSFeed();
+  rssData = await parseJSONFeed();
 } catch (error) {
-  console.error('Failed to parse RSS feed:', error);
+  console.error('Failed to parse JSON feed:', error);
   rssData = {
     title: '海外キャリアログ',
     description: 'ポッドキャスト情報を読み込み中...',

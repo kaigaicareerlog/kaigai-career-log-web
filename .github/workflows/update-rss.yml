@@ -14,37 +14,47 @@ jobs:
     permissions:
       contents: write
 
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set timestamp
-      id: timestamp
-      run: |
-        echo "datetime=$(TZ=Asia/Tokyo date +'%Y%m%d-%H%M')" >> $GITHUB_OUTPUT
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
-    - name: Download latest RSS feed
-      run: |
-        FILENAME="public/rss/${{ steps.timestamp.outputs.datetime }}-rss-file.xml"
-        curl -o "$FILENAME" https://anchor.fm/s/105976b60/podcast/rss
-        echo "New RSS file created: $FILENAME"
+      - name: Install dependencies
+        run: npm install
 
-    - name: Create latest symlink
-      run: |
-        cd public/rss
-        ln -sf "${{ steps.timestamp.outputs.datetime }}-rss-file.xml" latest.xml
-        echo "Symlink created: latest.xml -> ${{ steps.timestamp.outputs.datetime }}-rss-file.xml"
+      - name: Set timestamp
+        id: timestamp
+        run: |
+          echo "datetime=$(TZ=Asia/Tokyo date +'%Y%m%d-%H%M')" >> $GITHUB_OUTPUT
 
-    - name: Delete old RSS files (older than 3 days)
-      run: |
-        cd public/rss
-        find . -name "*-rss-file.xml" -type f -mtime +3 -delete
-        echo "Deleted RSS files older than 3 days"
+      - name: Download latest RSS feed
+        run: |
+          FILENAME="public/rss/${{ steps.timestamp.outputs.datetime }}-rss-file.xml"
+          curl -o "$FILENAME" https://anchor.fm/s/105976b60/podcast/rss
+          echo "New RSS file created: $FILENAME"
 
-    - name: Commit and push changes
-      run: |
-        git config --local user.email "github-actions[bot]@users.noreply.github.com"
-        git config --local user.name "github-actions[bot]"
-        git add public/rss/
-        git commit -m "chore: Update RSS feed - ${{ steps.timestamp.outputs.datetime }}"
-        git push
+      - name: Convert XML to JSON
+        run: |
+          XMLFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-rss-file.xml"
+          JSONFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-podcast-data.json"
+          npx tsx scripts/xml-to-json.ts "$XMLFILE" "$JSONFILE"
+          echo "Converted XML to JSON: $JSONFILE"
+
+      - name: Delete old files (older than 3 days)
+        run: |
+          cd public/rss
+          find . -name "*-rss-file.xml" -type f -mtime +3 -delete
+          find . -name "*-podcast-data.json" -type f -mtime +3 -delete
+          echo "Deleted files older than 3 days"
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/rss/
+          git commit -m "chore: Update RSS feed - ${{ steps.timestamp.outputs.datetime }}"
+          git push
