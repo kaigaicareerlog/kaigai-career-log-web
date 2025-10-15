@@ -51,6 +51,16 @@ jobs:
           npx tsx scripts/generate-episodes.ts "$JSONFILE" "$EPISODESFILE"
           echo "Generated episodes.json: $EPISODESFILE"
 
+      - name: Update Spotify and YouTube URLs for new episodes
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          EPISODESFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-episodes.json"
+          echo "Finding Spotify and YouTube URLs for new episodes..."
+          npx tsx scripts/update-new-episode-urls.ts "$EPISODESFILE"
+
       - name: Delete old files (older than 3 days)
         run: |
           cd public/rss
