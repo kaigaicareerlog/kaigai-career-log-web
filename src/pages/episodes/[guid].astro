@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { parseJSONFeed } from '../../utils/jsonParser';
 import { formatDate, formatDuration } from '../../utils/formatters';
 import PlatformButton from '../../components/podcast/PlatformButton.astro';
+import EpisodeUrlModal from '../../components/EpisodeUrlModal.astro';
 import {
   SPOTIFY_CHANNEL_URL,
   YOUTUBE_CHANNEL_URL,
@@ -98,6 +99,19 @@ const amazonMusicUrl = episode.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL;
       )}
     </div>
   </main>
+
+  <EpisodeUrlModal />
+
+  <script define:vars={{ episode }}>
+    // Make episode data available globally for the modal
+    window.__EPISODE_DATA__ = {
+      title: episode.title,
+      applePodcastUrl: episode.applePodcastUrl || '',
+      spotifyUrl: episode.spotifyUrl || '',
+      youtubeUrl: episode.youtubeUrl || '',
+      amazonMusicUrl: episode.amazonMusicUrl || '',
+    };
+  </script>
 </BaseLayout>
 
 <style>
