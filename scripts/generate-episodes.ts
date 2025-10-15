@@ -188,7 +188,7 @@ try {
   if (newEpisodes.length > 0) {
     console.log(`   New episodes added: ${newEpisodes.length}`);
     newEpisodes.forEach((ep) => {
-      console.log(`   - [${ep.id}] ${ep.title}`);
+      console.log(`   - [${ep.guid}] ${ep.title}`);
     });
   } else {
     console.log(`   No new episodes`);

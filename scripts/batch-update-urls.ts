@@ -1,6 +1,6 @@
 /**
  * Script to batch update episode URLs from a JSON file
- * Usage: node scripts/batch-update-urls.js <updates-json-file>
+ * Usage: tsx scripts/batch-update-urls.ts <updates-json-file>
  */
 
 import fs from "fs";
@@ -10,10 +10,44 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+interface Episode {
+  title: string;
+  description: string;
+  link: string;
+  guid: string;
+  date: string;
+  duration: string;
+  audioUrl: string;
+  spotifyUrl: string;
+  youtubeUrl: string;
+  applePodcastUrl: string;
+  amazonMusicUrl: string;
+}
+
+interface EpisodesData {
+  channel: {
+    title: string;
+    description: string;
+    link: string;
+    language: string;
+    image: string;
+  };
+  episodes: Episode[];
+  lastUpdated: string;
+}
+
+interface EpisodeUpdate {
+  guid: string;
+  spotifyUrl?: string;
+  youtubeUrl?: string;
+  applePodcastUrl?: string;
+  amazonMusicUrl?: string;
+}
+
 /**
  * Find the latest episodes file
  */
-function findLatestEpisodesFile(rssDir) {
+function findLatestEpisodesFile(rssDir: string): string {
   if (!fs.existsSync(rssDir)) {
     throw new Error(`RSS directory not found: ${rssDir}`);
   }
@@ -34,15 +68,17 @@ function findLatestEpisodesFile(rssDir) {
 /**
  * Batch update episode URLs
  */
-function batchUpdateUrls(updatesFile) {
+function batchUpdateUrls(updatesFile: string): void {
   const rssDir = path.join(__dirname, "..", "public", "rss");
   const latestFile = findLatestEpisodesFile(rssDir);
 
   console.log(`Reading episodes from: ${latestFile}`);
-  const data = JSON.parse(fs.readFileSync(latestFile, "utf-8"));
+  const data: EpisodesData = JSON.parse(fs.readFileSync(latestFile, "utf-8"));
 
   console.log(`Reading updates from: ${updatesFile}`);
-  const updates = JSON.parse(fs.readFileSync(updatesFile, "utf-8"));
+  const updates: EpisodeUpdate[] = JSON.parse(
+    fs.readFileSync(updatesFile, "utf-8")
+  );
 
   if (!Array.isArray(updates)) {
     throw new Error("Updates file must contain an array of episode updates");
@@ -114,7 +150,7 @@ function batchUpdateUrls(updatesFile) {
 const args = process.argv.slice(2);
 
 if (args.length < 1) {
-  console.error("Usage: node scripts/batch-update-urls.js <updates-json-file>");
+  console.error("Usage: tsx scripts/batch-update-urls.ts <updates-json-file>");
   process.exit(1);
 }
 
@@ -123,7 +159,6 @@ const updatesFile = args[0];
 try {
   batchUpdateUrls(updatesFile);
 } catch (error) {
-  console.error("❌ Error:", error.message);
+  console.error("❌ Error:", (error as Error).message);
   process.exit(1);
 }
-

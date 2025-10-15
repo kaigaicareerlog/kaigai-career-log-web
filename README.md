@@ -68,6 +68,8 @@ npm run preview
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build locally
 - `npm run astro` - Run Astro CLI commands
+- `npm run update-episode-urls` - Update episode URLs by GUID
+- `npm run batch-update-urls` - Batch update multiple episode URLs
 
 ## 🤖 Automated Podcast Feed Updates
 
@@ -120,11 +122,30 @@ npx tsx scripts/xml-to-json.ts public/rss/latest.xml public/rss/podcast-data.jso
 
 新しいエピソードが追加されると、URL フィールドは空文字列として初期化されます。既存のエピソードのメタデータ（URL 情報）は `guid` をキーとして保持されます。
 
-**手動で URL を追加する場合:**
+**URL を追加・更新する方法:**
 
-1. 最新の `public/rss/YYYYMMDD-HHMM-episodes.json` を直接編集
-2. 該当するエピソードの URL フィールドに値を設定
-3. コミット＆プッシュ
+複数の方法でエピソードの URL を更新できます。詳しくは [エピソード URL 更新ガイド](docs/EPISODE_URLS_UPDATE.md) を参照してください。
+
+**方法 1: GitHub Actions で個別更新（推奨）**
+
+1. GitHub リポジトリの「Actions」タブに移動
+2. 「Update Episode URLs」ワークフローを選択
+3. 「Run workflow」で GUID と各 URL を入力
+
+**方法 2: バッチ更新（複数エピソード一括）**
+
+1. `episode-urls-update.json` ファイルを作成（例: `episode-urls-update.example.json` 参照）
+2. コミット＆プッシュすると自動的に更新
+
+**方法 3: ローカルでスクリプト実行**
+
+```bash
+# 個別更新
+npm run update-episode-urls <guid> [spotify_url] [youtube_url] [apple_podcast_url] [amazon_music_url]
+
+# バッチ更新
+npm run batch-update-urls episode-urls-update.json
+```
 
 次回の自動更新時に、編集した URL 情報は新しいタイムスタンプのファイルに引き継がれます。
 

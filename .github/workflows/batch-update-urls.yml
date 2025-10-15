@@ -3,13 +3,13 @@ name: Batch Update Episode URLs
 on:
   push:
     paths:
-      - 'episode-urls-update.json'
+      - "episode-urls-update.json"
   workflow_dispatch:
 
 jobs:
   batch-update:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -19,7 +19,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install dependencies
         run: npm ci
@@ -36,7 +36,7 @@ jobs:
 
       - name: Batch update episode URLs
         if: steps.check_file.outputs.exists == 'true'
-        run: node scripts/batch-update-urls.js episode-urls-update.json
+        run: npx tsx scripts/batch-update-urls.ts episode-urls-update.json
 
       - name: Remove update file
         if: steps.check_file.outputs.exists == 'true'
@@ -55,4 +55,3 @@ jobs:
             git commit -m "Batch update episode URLs"
             git push
           fi
-

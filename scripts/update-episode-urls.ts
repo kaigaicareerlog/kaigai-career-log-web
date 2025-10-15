@@ -1,6 +1,6 @@
 /**
  * Script to update episode URLs by GUID
- * Usage: node scripts/update-episode-urls.js <guid> [spotify_url] [youtube_url] [apple_podcast_url] [amazon_music_url]
+ * Usage: tsx scripts/update-episode-urls.ts <guid> [spotify_url] [youtube_url] [apple_podcast_url] [amazon_music_url]
  */
 
 import fs from "fs";
@@ -10,10 +10,36 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+interface Episode {
+  title: string;
+  description: string;
+  link: string;
+  guid: string;
+  date: string;
+  duration: string;
+  audioUrl: string;
+  spotifyUrl: string;
+  youtubeUrl: string;
+  applePodcastUrl: string;
+  amazonMusicUrl: string;
+}
+
+interface EpisodesData {
+  channel: {
+    title: string;
+    description: string;
+    link: string;
+    language: string;
+    image: string;
+  };
+  episodes: Episode[];
+  lastUpdated: string;
+}
+
 /**
  * Find the latest episodes file
  */
-function findLatestEpisodesFile(rssDir) {
+function findLatestEpisodesFile(rssDir: string): string {
   if (!fs.existsSync(rssDir)) {
     throw new Error(`RSS directory not found: ${rssDir}`);
   }
@@ -34,12 +60,18 @@ function findLatestEpisodesFile(rssDir) {
 /**
  * Update episode URLs
  */
-function updateEpisodeUrls(guid, spotifyUrl, youtubeUrl, applePodcastUrl, amazonMusicUrl) {
+function updateEpisodeUrls(
+  guid: string,
+  spotifyUrl: string,
+  youtubeUrl: string,
+  applePodcastUrl: string,
+  amazonMusicUrl: string
+): void {
   const rssDir = path.join(__dirname, "..", "public", "rss");
   const latestFile = findLatestEpisodesFile(rssDir);
 
   console.log(`Reading episodes from: ${latestFile}`);
-  const data = JSON.parse(fs.readFileSync(latestFile, "utf-8"));
+  const data: EpisodesData = JSON.parse(fs.readFileSync(latestFile, "utf-8"));
 
   // Find episode by GUID
   const episode = data.episodes.find((ep) => ep.guid === guid);
@@ -83,7 +115,9 @@ function updateEpisodeUrls(guid, spotifyUrl, youtubeUrl, applePodcastUrl, amazon
 
   // Write back to file
   fs.writeFileSync(latestFile, JSON.stringify(data, null, 2), "utf-8");
-  console.log(`✅ Successfully updated episode URLs in ${path.basename(latestFile)}`);
+  console.log(
+    `✅ Successfully updated episode URLs in ${path.basename(latestFile)}`
+  );
 }
 
 // Main execution
@@ -91,7 +125,7 @@ const args = process.argv.slice(2);
 
 if (args.length < 1) {
   console.error(
-    "Usage: node scripts/update-episode-urls.js <guid> [spotify_url] [youtube_url] [apple_podcast_url] [amazon_music_url]"
+    "Usage: tsx scripts/update-episode-urls.ts <guid> [spotify_url] [youtube_url] [apple_podcast_url] [amazon_music_url]"
   );
   process.exit(1);
 }
@@ -107,7 +141,6 @@ try {
     amazonMusicUrl || ""
   );
 } catch (error) {
-  console.error("❌ Error:", error.message);
+  console.error("❌ Error:", (error as Error).message);
   process.exit(1);
 }
-
