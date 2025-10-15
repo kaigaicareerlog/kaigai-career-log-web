@@ -31,6 +31,28 @@
 - **Name**: `OPENAI_API_KEY`
 - **Value**: [OpenAI API キー]
 
+### 3. GitHub Actions の権限設定
+
+GitHub Actions がプルリクエストを作成できるように設定します：
+
+**方法 1: リポジトリ設定を変更（推奨）**
+
+1. GitHub リポジトリの **Settings** → **Actions** → **General** に移動
+2. **Workflow permissions** セクションで：
+   - ✅ "Read and write permissions" を選択
+   - ✅ "Allow GitHub Actions to create and approve pull requests" にチェック
+3. **Save** をクリック
+
+**方法 2: Personal Access Token を使用**
+
+リポジトリ設定を変更したくない場合：
+
+1. GitHub プロフィール → Settings → Developer settings → Personal access tokens → Tokens (classic)
+2. "Generate new token" で `repo` と `workflow` スコープを持つトークンを作成
+3. リポジトリの Secrets に追加：
+   - **Name**: `PAT_TOKEN`
+   - **Value**: [生成したトークン]
+
 ## 🚀 使用方法
 
 ### 方法 1: GitHub Actions（推奨）
