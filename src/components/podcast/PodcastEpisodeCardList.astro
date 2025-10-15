@@ -1,7 +1,7 @@
 ---
 import { parseJSONFeed } from '../../utils/jsonParser';
 import type { PodcastEpisode } from '../../utils/types';
-import PodcastListItem from './PodcastListItem.astro';
+import PodcastEpisodeCard from './PodcastEpisodeCard.astro';
 
 // JSONフィードからポッドキャストデータを取得
 let rssData;
@@ -28,7 +28,7 @@ const podcasts: PodcastEpisode[] = rssData.episodes || [];
     {podcasts.length > 0 ? (
       <div class="podcast-list">
         {podcasts.map((podcast) => (
-          <PodcastListItem podcast={podcast} />
+          <PodcastEpisodeCard podcast={podcast} />
         ))}
       </div>
     ) : (
