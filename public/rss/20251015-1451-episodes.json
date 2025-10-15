@@ -93,10 +93,10 @@
       "date": "Sun, 14 Sep 2025 21:30:00 GMT",
       "duration": "00:29:04",
       "audioUrl": "https://anchor.fm/s/105976b60/podcast/play/108256471/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2025-8-13%2F36d7650b-052a-ccbf-d103-78de9fdebe22.mp3",
-      "spotifyUrl": "",
-      "youtubeUrl": "",
-      "applePodcastUrl": "",
-      "amazonMusicUrl": ""
+      "spotifyUrl": "https://open.spotify.com/episode/7JkL9QTQNVTfCz6L2sdF3K",
+      "youtubeUrl": "https://youtu.be/HVfMVZbXDxw?si=hyDX9pyMtMpfDrcH",
+      "applePodcastUrl": "https://podcasts.apple.com/ca/podcast/%E6%97%A5%E6%9C%AC%E3%81%AE%E3%83%A1%E3%82%AC%E3%83%99%E3%83%B3%E7%B5%8C%E9%A8%93%E3%81%AF%E9%80%9A%E7%94%A8%E3%81%99%E3%82%8B-%E3%82%B8%E3%83%A5%E3%83%8B%E3%82%A2%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%E3%81%AE%E3%82%AB%E3%83%8A%E3%83%80%E5%B0%B1%E8%81%B7%E3%81%A8%E7%B5%A6%E4%B8%8E-%E5%AF%BE%E8%AB%87/id1818019572?i=1000726805671",
+      "amazonMusicUrl": "https://music.amazon.ca/podcasts/118b5e6b-1f97-4c62-97a5-754714381b40/episodes/f9353954-5e25-4d50-a1ed-c17a4d46f848/%E6%B5%B7%E5%A4%96%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%AD%E3%82%B0-%E6%97%A5%E6%9C%AC%E3%81%AE%E3%83%A1%E3%82%AC%E3%83%99%E3%83%B3%E7%B5%8C%E9%A8%93%E3%81%AF%E9%80%9A%E7%94%A8%E3%81%99%E3%82%8B%EF%BC%9F%E3%82%B8%E3%83%A5%E3%83%8B%E3%82%A2%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%E3%81%AE%E3%82%AB%E3%83%8A%E3%83%80%E5%B0%B1%E8%81%B7%E3%81%A8%E7%B5%A6%E4%B8%8E%E3%80%90%E5%AF%BE%E8%AB%87%E3%80%91"
     },
     {
       "title": "モバイルから未経験バックエンドへ！レイオフを乗り越えたエンジニアの転職戦略（後半）#14",
@@ -307,5 +307,5 @@
       "amazonMusicUrl": ""
     }
   ],
-  "lastUpdated": "2025-10-15T20:13:27.476Z"
+  "lastUpdated": "2025-10-15T20:18:50.742Z"
 }
