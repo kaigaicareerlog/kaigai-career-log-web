@@ -18,6 +18,10 @@ interface PodcastData {
     date: string;
     duration: string;
     audioUrl: string;
+    spotifyUrl?: string;
+    youtubeUrl?: string;
+    applePodcastUrl?: string;
+    amazonMusicUrl?: string;
   }>;
   lastUpdated: string;
 }
@@ -67,6 +71,10 @@ export async function parseJSONFeed(): Promise<RSSChannel> {
         date: ep.date,
         duration: ep.duration,
         audioUrl: ep.audioUrl,
+        spotifyUrl: ep.spotifyUrl,
+        youtubeUrl: ep.youtubeUrl,
+        applePodcastUrl: ep.applePodcastUrl,
+        amazonMusicUrl: ep.amazonMusicUrl,
       })),
     };
   } catch (error) {

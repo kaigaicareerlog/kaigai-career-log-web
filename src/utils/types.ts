@@ -9,6 +9,10 @@ export interface PodcastEpisode {
   link: string;
   audioUrl: string;
   guid: string;
+  spotifyUrl?: string;
+  youtubeUrl?: string;
+  applePodcastUrl?: string;
+  amazonMusicUrl?: string;
 }
 
 /**

@@ -3,21 +3,29 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { parseJSONFeed } from '../../utils/jsonParser';
 import { formatDate, formatDuration } from '../../utils/formatters';
 import PlatformButton from '../../components/podcast/PlatformButton.astro';
+import {
+  SPOTIFY_CHANNEL_URL,
+  YOUTUBE_CHANNEL_URL,
+  APPLE_PODCAST_CHANNEL_URL,
+  AMAZON_MUSIC_CHANNEL_URL,
+} from '../../constants/podcastUrls';
 
 export async function getStaticPaths() {
   const data = await parseJSONFeed();
   
   return data.episodes.map((episode) => ({
     params: { guid: episode.guid },
-    props: { episode, channel: data }
+    props: { episode }
   }));
 }
 
 const { episode } = Astro.props;
-const { channel } = Astro.props;
 
-// Convert Spotify creator link to listener link
-const spotifyLink = episode.link.replace('podcasters.spotify.com', 'open.spotify.com');
+// Use episode-specific URLs if available, otherwise use channel URLs
+const spotifyUrl = episode.spotifyUrl || SPOTIFY_CHANNEL_URL;
+const youtubeUrl = episode.youtubeUrl || YOUTUBE_CHANNEL_URL;
+const applePodcastUrl = episode.applePodcastUrl || APPLE_PODCAST_CHANNEL_URL;
+const amazonMusicUrl = episode.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL;
 ---
 
 <BaseLayout
@@ -51,22 +59,30 @@ const spotifyLink = episode.link.replace('podcasters.spotify.com', 'open.spotify
         <div class="platform-links">
           <PlatformButton
             platform="spotify"
-            href={spotifyLink}
+            href={spotifyUrl}
             label="Spotify"
             iconSrc="https://open.spotify.com/favicon.ico"
           />
           <PlatformButton
             platform="apple"
-            href="https://podcasts.apple.com/ca/podcast/%E6%B5%B7%E5%A4%96%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%AD%E3%82%B0/id1818019572"
+            href={applePodcastUrl}
             label="Apple Podcasts"
             iconSrc="https://www.apple.com/favicon.ico"
           />
           <PlatformButton
             platform="youtube"
-            href="https://www.youtube.com/@kaigaicareerlog"
+            href={youtubeUrl}
             label="YouTube"
             iconSrc="https://www.youtube.com/favicon.ico"
           />
+          {amazonMusicUrl && (
+            <PlatformButton
+              platform="amazon"
+              href={amazonMusicUrl}
+              label="Amazon Music"
+              iconSrc="https://www.amazon.com/favicon.ico"
+            />
+          )}
         </div>
       </section>
 

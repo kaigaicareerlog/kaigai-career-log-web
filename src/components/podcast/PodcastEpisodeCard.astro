@@ -2,12 +2,24 @@
 import { formatDate, formatDuration } from '../../utils/formatters';
 import type { PodcastEpisode } from '../../utils/types';
 import PlatformButton from './PlatformButton.astro';
+import {
+  SPOTIFY_CHANNEL_URL,
+  YOUTUBE_CHANNEL_URL,
+  APPLE_PODCAST_CHANNEL_URL,
+  AMAZON_MUSIC_CHANNEL_URL,
+} from '../../constants/podcastUrls';
 
 interface Props {
   podcast: PodcastEpisode;
 }
 
 const { podcast } = Astro.props;
+
+// Use episode-specific URLs if available, otherwise use channel URLs
+const spotifyUrl = podcast.spotifyUrl || SPOTIFY_CHANNEL_URL;
+const youtubeUrl = podcast.youtubeUrl || YOUTUBE_CHANNEL_URL;
+const applePodcastUrl = podcast.applePodcastUrl || APPLE_PODCAST_CHANNEL_URL;
+const amazonMusicUrl = podcast.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL;
 ---
 
 <article class="podcast-card">
@@ -32,22 +44,30 @@ const { podcast } = Astro.props;
     <div class="platform-links">
       <PlatformButton 
         platform="spotify"
-        href={podcast.link}
+        href={spotifyUrl}
         label="Spotify"
         iconSrc="https://open.spotify.com/favicon.ico"
       />
       <PlatformButton 
         platform="apple"
-        href="https://podcasts.apple.com/ca/podcast/%E6%B5%B7%E5%A4%96%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%AD%E3%82%B0/id1818019572"
+        href={applePodcastUrl}
         label="Apple Podcasts"
         iconSrc="https://www.apple.com/favicon.ico"
       />
       <PlatformButton 
         platform="youtube"
-        href="https://www.youtube.com/@kaigaicareerlog"
+        href={youtubeUrl}
         label="YouTube"
         iconSrc="https://www.youtube.com/favicon.ico"
       />
+      {amazonMusicUrl && (
+        <PlatformButton 
+          platform="amazon"
+          href={amazonMusicUrl}
+          label="Amazon Music"
+          iconSrc="https://www.amazon.com/favicon.ico"
+        />
+      )}
     </div>
   </div>
 </article>

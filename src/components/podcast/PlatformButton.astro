@@ -1,6 +1,6 @@
 ---
 interface Props {
-  platform: 'spotify' | 'apple' | 'youtube';
+  platform: 'spotify' | 'apple' | 'youtube' | 'amazon';
   href: string;
   label: string;
   iconSrc: string;
@@ -76,6 +76,19 @@ const { platform, href, label, iconSrc } = Astro.props;
     border-color: rgba(255, 0, 0, 0.5);
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(255, 0, 0, 0.15);
+  }
+
+  .platform-btn.amazon {
+    background: rgba(255, 153, 0, 0.08);
+    color: #ff9900;
+    border: 1.5px solid rgba(255, 153, 0, 0.3);
+  }
+
+  .platform-btn.amazon:hover {
+    background: rgba(255, 153, 0, 0.15);
+    border-color: rgba(255, 153, 0, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 153, 0, 0.15);
   }
 
   /* Mobile responsive */
