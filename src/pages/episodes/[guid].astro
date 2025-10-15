@@ -1,0 +1,230 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { parseJSONFeed } from '../../utils/jsonParser';
+import { formatDate, formatDuration } from '../../utils/formatters';
+import PlatformButton from '../../components/podcast/PlatformButton.astro';
+
+export async function getStaticPaths() {
+  const data = await parseJSONFeed();
+  
+  return data.episodes.map((episode) => ({
+    params: { guid: episode.guid },
+    props: { episode, channel: data }
+  }));
+}
+
+const { episode } = Astro.props;
+const { channel } = Astro.props;
+
+// Convert Spotify creator link to listener link
+const spotifyLink = episode.link.replace('podcasters.spotify.com', 'open.spotify.com');
+---
+
+<BaseLayout
+  title={`${episode.title} - 海外キャリアログ`}
+  description={episode.description}
+>
+  <main class="episode-page">
+    <div class="container">
+      <!-- Back Button -->
+      <a href="/" class="back-link">← エピソード一覧に戻る</a>
+
+      <!-- Episode Header -->
+      <article class="episode-header">
+        <h1 class="episode-title">{episode.title}</h1>
+        
+        <div class="episode-meta">
+          <span class="meta-item">📅 {formatDate(episode.date)}</span>
+          <span class="meta-item">📻 {formatDuration(episode.duration)}</span>
+        </div>
+      </article>
+
+      <!-- Episode Description -->
+      <section class="episode-description">
+        <h2>エピソード詳細</h2>
+        <p>{episode.description}</p>
+      </section>
+
+      <!-- Platform Links -->
+      <section class="platform-section">
+        <h2>このエピソードを聴く</h2>
+        <div class="platform-links">
+          <PlatformButton
+            platform="spotify"
+            href={spotifyLink}
+            label="Spotify"
+            iconSrc="https://open.spotify.com/favicon.ico"
+          />
+          <PlatformButton
+            platform="apple"
+            href="https://podcasts.apple.com/ca/podcast/%E6%B5%B7%E5%A4%96%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%AD%E3%82%B0/id1818019572"
+            label="Apple Podcasts"
+            iconSrc="https://www.apple.com/favicon.ico"
+          />
+          <PlatformButton
+            platform="youtube"
+            href="https://www.youtube.com/@kaigaicareerlog"
+            label="YouTube"
+            iconSrc="https://www.youtube.com/favicon.ico"
+          />
+        </div>
+      </section>
+
+      <!-- Audio Player -->
+      {episode.audioUrl && (
+        <section class="audio-section">
+          <h2>再生</h2>
+          <audio controls class="audio-player">
+            <source src={episode.audioUrl} type="audio/mpeg" />
+            お使いのブラウザは音声再生に対応していません。
+          </audio>
+        </section>
+      )}
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .episode-page {
+    flex: 1;
+    width: 100%;
+    padding: 2rem 0;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+  }
+
+  .back-link:hover {
+    transform: translateX(-4px);
+    color: var(--color-secondary);
+  }
+
+  .episode-header {
+    margin-bottom: 2rem;
+  }
+
+  .episode-title {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .episode-meta {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-size: 0.95rem;
+    color: var(--color-muted);
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .episode-description {
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: var(--color-background);
+    border-radius: 1rem;
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .episode-description h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .episode-description p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--color-text);
+    white-space: pre-wrap;
+  }
+
+  .platform-section {
+    margin-bottom: 2rem;
+  }
+
+  .platform-section h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .platform-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .audio-section {
+    margin-bottom: 2rem;
+  }
+
+  .audio-section h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .audio-player {
+    width: 100%;
+    border-radius: 0.75rem;
+    outline: none;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .episode-page {
+      padding: 1.5rem 0;
+    }
+
+    .episode-meta {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .episode-description {
+      padding: 1.5rem;
+    }
+
+    .platform-links {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .episode-description {
+      background: rgba(15, 23, 42, 0.8);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+  }
+</style>
+
