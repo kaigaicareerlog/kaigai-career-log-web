@@ -44,10 +44,15 @@ npm run preview
 /
 ├── public/          # Static assets (favicon, images, etc.)
 ├── src/
+│   ├── components/  # Reusable components
+│   │   ├── common/  # Common components (Modal, etc.)
+│   │   └── podcast/ # Podcast-specific components
 │   ├── layouts/     # Reusable layout components
-│   │   └── BaseLayout.astro
-│   └── pages/       # File-based routing
-│       └── index.astro
+│   ├── pages/       # File-based routing
+│   ├── utils/       # Utility functions (modal, formatters, etc.)
+│   └── constants/   # Constants and configuration
+├── scripts/         # Build and maintenance scripts
+├── docs/            # Documentation
 ├── astro.config.mjs # Astro configuration
 ├── tsconfig.json    # TypeScript configuration (strict mode)
 └── package.json     # Dependencies and scripts
@@ -62,6 +67,7 @@ npm run preview
 - 📝 TypeScript with strict type checking
 - 🔧 Minimal and maintainable codebase
 - ⌨️ Keyboard shortcuts (Tab+E for URLs, Tab+L for GUID)
+- 🎭 Abstracted modal system for easy reuse
 
 ## 📝 Available Scripts
 
@@ -187,6 +193,8 @@ npm run transcribe <episode-guid>
 - **Esc**: モーダルを閉じる
 
 詳細は [キーボードショートカットガイド](docs/KEYBOARD_SHORTCUTS.md) を参照してください。
+
+モーダルシステムの実装については [モーダルシステムドキュメント](docs/MODAL_SYSTEM.md) を参照してください。
 
 ## 📄 License
 

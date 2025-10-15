@@ -1,312 +1,200 @@
 ---
 // This component handles the Tab+E modal for showing episode URLs
+import Modal from './common/Modal.astro';
 ---
 
-<div id="episode-url-modal" class="modal-overlay">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 id="modal-title">Episode URLs</h2>
-      <button class="close-btn" id="close-modal">×</button>
-    </div>
-    <div class="modal-body">
-      <div class="url-section">
-        <h3>Apple Podcasts</h3>
-        <input type="text" id="apple-url" readonly class="url-input" />
-      </div>
-      <div class="url-section">
-        <h3>Spotify</h3>
-        <input type="text" id="spotify-url" readonly class="url-input" />
-      </div>
-      <div class="url-section">
-        <h3>YouTube</h3>
-        <input type="text" id="youtube-url" readonly class="url-input" />
-      </div>
-      <div class="url-section">
-        <h3>Amazon Music</h3>
-        <input type="text" id="amazon-url" readonly class="url-input" />
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button id="copy-all-btn" class="copy-all-btn">
-        <span class="btn-icon">📋</span>
-        <span class="btn-text">Copy All</span>
-      </button>
-      <span id="copy-feedback" class="copy-feedback">Copied!</span>
-    </div>
+<Modal id="episode-url-modal" title="Episode URLs">
+  <div class="url-section">
+    <h3>Apple Podcasts</h3>
+    <input type="text" id="apple-url" readonly class="url-input" />
   </div>
-</div>
+  <div class="url-section">
+    <h3>Spotify</h3>
+    <input type="text" id="spotify-url" readonly class="url-input" />
+  </div>
+  <div class="url-section">
+    <h3>YouTube</h3>
+    <input type="text" id="youtube-url" readonly class="url-input" />
+  </div>
+  <div class="url-section">
+    <h3>Amazon Music</h3>
+    <input type="text" id="amazon-url" readonly class="url-input" />
+  </div>
+
+  <div slot="footer" class="footer-content">
+    <button id="copy-all-btn" class="copy-all-btn">
+      <span class="btn-icon">📋</span>
+      <span class="btn-text">Copy All</span>
+    </button>
+    <span id="copy-feedback" class="copy-feedback">Copied!</span>
+  </div>
+</Modal>
 
 <script>
+  import {
+    getModalElements,
+    showModal,
+    hideModal,
+    setupModalOutsideClick,
+    copyToClipboard,
+  } from '../utils/modal';
+
   // Get modal elements
-  const modal = document.getElementById('episode-url-modal');
-  const closeBtn = document.getElementById('close-modal');
+  const { modal, closeBtn } = getModalElements('episode-url-modal');
   const copyAllBtn = document.getElementById('copy-all-btn');
   const copyFeedback = document.getElementById('copy-feedback');
-  
+
   let currentEpisode: any = null;
+  let tabPressed = false;
 
-    let tabPressed = false;
+  // Listen for Tab + E keypress
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'Tab') {
+      tabPressed = true;
+    }
 
-    // Listen for Tab + E keypress
-    document.addEventListener('keydown', (e: KeyboardEvent) => {
-      // Track Tab key state
-      if (e.key === 'Tab') {
-        tabPressed = true;
-      }
+    if ((e.key === 'e' || e.key === 'E') && tabPressed) {
+      e.preventDefault();
+      openModal();
+    }
 
-      // Check if E is pressed while Tab is held
-      if ((e.key === 'e' || e.key === 'E') && tabPressed) {
-        e.preventDefault();
-        showModal();
-      }
-
-      // Close modal on Escape
-      if (e.key === 'Escape') {
-        hideModal();
-      }
-    });
-
-    // Reset Tab state when released
-    document.addEventListener('keyup', (e: KeyboardEvent) => {
-      if (e.key === 'Tab') {
-        tabPressed = false;
-      }
-    });
-
-  // Close button click
-  closeBtn?.addEventListener('click', hideModal);
-
-  // Copy all button click
-  copyAllBtn?.addEventListener('click', copyAllToClipboard);
-
-  // Close when clicking outside modal
-  modal?.addEventListener('click', (e: MouseEvent) => {
-    if (e.target === modal) {
-      hideModal();
+    if (e.key === 'Escape') {
+      hideModal(modal);
     }
   });
 
-  function showModal() {
+  document.addEventListener('keyup', (e: KeyboardEvent) => {
+    if (e.key === 'Tab') {
+      tabPressed = false;
+    }
+  });
+
+  // Setup event listeners
+  closeBtn?.addEventListener('click', () => hideModal(modal));
+  copyAllBtn?.addEventListener('click', copyAllToClipboard);
+  setupModalOutsideClick(modal, () => hideModal(modal));
+
+  function openModal() {
     if (!modal) return;
 
     // Try to get current episode data
     const episodeData = (window as any).__EPISODE_DATA__;
-    
+
     if (episodeData) {
       currentEpisode = episodeData;
-      
+
       // Update modal content
-      const titleEl = document.getElementById('modal-title');
+      const titleEl = document.getElementById('episode-url-modal-title');
       const appleInput = document.getElementById('apple-url') as HTMLInputElement;
       const spotifyInput = document.getElementById('spotify-url') as HTMLInputElement;
       const youtubeInput = document.getElementById('youtube-url') as HTMLInputElement;
       const amazonInput = document.getElementById('amazon-url') as HTMLInputElement;
 
-      if (titleEl) titleEl.textContent = episodeData.title;
+      if (titleEl && episodeData.title) {
+        titleEl.textContent = episodeData.title;
+      }
+
       if (appleInput) appleInput.value = episodeData.applePodcastUrl || '';
       if (spotifyInput) spotifyInput.value = episodeData.spotifyUrl || '';
       if (youtubeInput) youtubeInput.value = episodeData.youtubeUrl || '';
       if (amazonInput) amazonInput.value = episodeData.amazonMusicUrl || '';
-    }
 
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function hideModal() {
-    if (!modal) return;
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-    
-    // Hide feedback after closing
-    if (copyFeedback) {
-      copyFeedback.classList.remove('show');
+      showModal(modal);
     }
   }
 
   async function copyAllToClipboard() {
     if (!currentEpisode) return;
 
-    const text = `${currentEpisode.title}
+    const urls: string[] = [];
 
-Apple
-${currentEpisode.applePodcastUrl}
-
-Spotify
-${currentEpisode.spotifyUrl}
-
-Youtube
-${currentEpisode.youtubeUrl}
-
-Amazon Music
-${currentEpisode.amazonMusicUrl}`;
-
-    try {
-      await navigator.clipboard.writeText(text);
-      
-      // Show feedback
-      if (copyFeedback) {
-        copyFeedback.classList.add('show');
-        setTimeout(() => {
-          copyFeedback.classList.remove('show');
-        }, 2000);
-      }
-    } catch (err) {
-      console.error('Failed to copy:', err);
+    if (currentEpisode.applePodcastUrl) {
+      urls.push(`Apple Podcasts: ${currentEpisode.applePodcastUrl}`);
     }
+    if (currentEpisode.spotifyUrl) {
+      urls.push(`Spotify: ${currentEpisode.spotifyUrl}`);
+    }
+    if (currentEpisode.youtubeUrl) {
+      urls.push(`YouTube: ${currentEpisode.youtubeUrl}`);
+    }
+    if (currentEpisode.amazonMusicUrl) {
+      urls.push(`Amazon Music: ${currentEpisode.amazonMusicUrl}`);
+    }
+
+    if (urls.length === 0) return;
+
+    const textToCopy = urls.join('\n');
+    await copyToClipboard(textToCopy, copyFeedback);
   }
 </script>
 
 <style>
-  .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-
-  .modal-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .modal-content {
-    background: var(--color-background);
-    border-radius: 1rem;
-    padding: 2rem;
-    max-width: 600px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    border: 2px solid rgba(59, 130, 246, 0.2);
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(59, 130, 246, 0.1);
-  }
-
-  .modal-header h2 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin: 0;
-    line-height: 1.4;
-    flex: 1;
-  }
-
-  .close-btn {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    color: var(--color-muted);
-    cursor: pointer;
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    min-height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.5rem;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-  }
-
-  .close-btn:hover {
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--color-text);
-  }
-
-  .modal-body {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
   .url-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .url-section:last-of-type {
+    margin-bottom: 0;
   }
 
   .url-section h3 {
+    margin: 0 0 0.5rem 0;
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--color-muted);
-    margin: 0;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .url-input {
     width: 100%;
-    padding: 0.75rem 1rem;
-    border: 1.5px solid rgba(59, 130, 246, 0.2);
+    padding: 0.75rem;
+    border: 2px solid rgba(59, 130, 246, 0.2);
     border-radius: 0.5rem;
-    background: rgba(59, 130, 246, 0.05);
-    color: var(--color-text);
     font-size: 0.9rem;
-    font-family: 'Monaco', 'Courier New', monospace;
-    transition: all 0.3s ease;
+    background-color: rgba(59, 130, 246, 0.05);
+    color: var(--color-text);
+    transition: all 0.2s ease;
+    font-family: system-ui, -apple-system, sans-serif;
   }
 
   .url-input:focus {
     outline: none;
     border-color: var(--color-primary);
-    background: rgba(59, 130, 246, 0.08);
+    background-color: rgba(59, 130, 246, 0.1);
   }
 
-  .url-input:empty,
-  .url-input[value=""] {
+  .url-input:empty::before {
+    content: 'No URL available';
+    color: var(--color-muted);
     font-style: italic;
-    opacity: 0.6;
   }
 
-  .modal-footer {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 2px solid rgba(59, 130, 246, 0.1);
+  .footer-content {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 1rem;
+    width: 100%;
   }
 
   .copy-all-btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.5rem 1rem;
-    background: transparent;
-    color: var(--color-primary);
-    border: 1.5px solid var(--color-primary);
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    border: none;
     border-radius: 0.5rem;
-    font-weight: 500;
-    font-size: 0.85rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
   }
 
   .copy-all-btn:hover {
-    background: rgba(14, 165, 233, 0.1);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
   }
 
   .copy-all-btn:active {
@@ -318,12 +206,12 @@ ${currentEpisode.amazonMusicUrl}`;
   }
 
   .copy-feedback {
-    color: var(--color-primary);
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    color: #10b981;
     font-weight: 600;
     font-size: 0.9rem;
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: all 0.3s ease;
   }
 
   .copy-feedback.show {
@@ -331,54 +219,14 @@ ${currentEpisode.amazonMusicUrl}`;
     transform: translateX(0);
   }
 
-  /* Dark mode support */
-  @media (prefers-color-scheme: dark) {
-    .modal-content {
-      background: rgba(15, 23, 42, 0.95);
-      border-color: rgba(59, 130, 246, 0.3);
-    }
-
-    .modal-header {
-      border-bottom-color: rgba(59, 130, 246, 0.2);
-    }
-
-    .modal-footer {
-      border-top-color: rgba(59, 130, 246, 0.2);
-    }
-
-    .url-input {
-      background: rgba(59, 130, 246, 0.1);
-      border-color: rgba(59, 130, 246, 0.3);
-    }
-  }
-
   /* Mobile responsive */
   @media (max-width: 768px) {
-    .modal-content {
-      width: 95%;
-      padding: 1.5rem;
-    }
-
-    .modal-header {
-      gap: 0.75rem;
-    }
-
-    .modal-header h2 {
-      font-size: 1rem;
-    }
-
-    .close-btn {
-      width: 28px;
-      height: 28px;
-      min-width: 28px;
-      min-height: 28px;
-      font-size: 1.75rem;
+    .url-section {
+      margin-bottom: 1.25rem;
     }
 
     .url-input {
       font-size: 0.85rem;
-      padding: 0.65rem 0.85rem;
     }
   }
 </style>
-
