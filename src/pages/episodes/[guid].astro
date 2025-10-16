@@ -68,14 +68,82 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
         </div>
       </article>
 
-      <!-- Episode Description -->
-      <section class="episode-description">
-        <h2>エピソード詳細</h2>
-        <p>{episode.description}</p>
-      </section>
+      <!-- Grid Container -->
+      <div class="content-grid">
+        <!-- Main Content -->
+        <div class="main-content">
+          <!-- Episode Description -->
+          <section class="episode-description">
+            <h2>エピソード詳細</h2>
+            <p>{episode.description}</p>
+          </section>
 
-      <!-- Platform Links -->
-      <section class="platform-section">
+          <!-- Spotify Player -->
+          {spotifyEmbedUrl ? (
+            <section class="audio-section">
+              <h2>再生</h2>
+              <iframe
+                class="spotify-player"
+                src={spotifyEmbedUrl}
+                width="100%"
+                height="352"
+                frameborder="0"
+                allowfullscreen
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy"
+              ></iframe>
+            </section>
+          ) : episode.audioUrl && (
+            <section class="audio-section">
+              <h2>再生</h2>
+              <audio controls class="audio-player">
+                <source src={episode.audioUrl} type="audio/mpeg" />
+                お使いのブラウザは音声再生に対応していません。
+              </audio>
+            </section>
+          )}
+
+          <!-- Transcript Section -->
+          {transcript && (
+            <section class="transcript-section">
+              <button class="transcript-toggle" id="transcript-toggle">
+                <h2>文字起こし</h2>
+                <svg class="toggle-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <div class="transcript-container" id="transcript-container">
+                {transcript.utterances.map((utterance: any) => {
+                  const hostInfo = getHostInfo(utterance.speaker);
+                  return (
+                    <div class="transcript-utterance">
+                      <div class="speaker-info">
+                        <img 
+                          src={hostInfo.image} 
+                          alt={hostInfo.name}
+                          class="speaker-avatar"
+                          style={`border-color: ${hostInfo.color}`}
+                        />
+                        <div class="speaker-details">
+                          <span class="speaker-name" style={`color: ${hostInfo.color}`}>
+                            {hostInfo.name}
+                          </span>
+                          <span class="timestamp">{utterance.timestamp}</span>
+                        </div>
+                      </div>
+                      <p class="transcript-text">{utterance.text}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <!-- Platform Links -->
+          <section class="platform-section">
         <h2>このエピソードを聴く</h2>
         <div class="platform-links">
           <PlatformButton
@@ -106,67 +174,8 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
           )}
         </div>
       </section>
-
-      <!-- Spotify Player -->
-      {spotifyEmbedUrl ? (
-        <section class="audio-section">
-          <h2>再生</h2>
-          <iframe
-            class="spotify-player"
-            src={spotifyEmbedUrl}
-            width="100%"
-            height="352"
-            frameborder="0"
-            allowfullscreen
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"
-          ></iframe>
-        </section>
-      ) : episode.audioUrl && (
-        <section class="audio-section">
-          <h2>再生</h2>
-          <audio controls class="audio-player">
-            <source src={episode.audioUrl} type="audio/mpeg" />
-            お使いのブラウザは音声再生に対応していません。
-          </audio>
-        </section>
-      )}
-
-      <!-- Transcript Section -->
-      {transcript && (
-        <section class="transcript-section">
-          <button class="transcript-toggle" id="transcript-toggle">
-            <h2>文字起こし</h2>
-            <svg class="toggle-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </button>
-          <div class="transcript-container" id="transcript-container">
-            {transcript.utterances.map((utterance: any) => {
-              const hostInfo = getHostInfo(utterance.speaker);
-              return (
-                <div class="transcript-utterance">
-                  <div class="speaker-info">
-                    <img 
-                      src={hostInfo.image} 
-                      alt={hostInfo.name}
-                      class="speaker-avatar"
-                      style={`border-color: ${hostInfo.color}`}
-                    />
-                    <div class="speaker-details">
-                      <span class="speaker-name" style={`color: ${hostInfo.color}`}>
-                        {hostInfo.name}
-                      </span>
-                      <span class="timestamp">{utterance.timestamp}</span>
-                    </div>
-                  </div>
-                  <p class="transcript-text">{utterance.text}</p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-      )}
+        </aside>
+      </div>
     </div>
   </main>
 
@@ -219,9 +228,26 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
   }
 
   .container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
+  }
+
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .main-content {
+    min-width: 0; /* Prevents grid blowout */
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
   }
 
   .back-link {
@@ -293,20 +319,24 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
   }
 
   .platform-section {
-    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--color-background);
+    border-radius: 1rem;
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   }
 
   .platform-section h2 {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 1rem;
     color: var(--color-text);
   }
 
   .platform-links {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
   }
 
   .audio-section {
@@ -453,6 +483,25 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
       padding: 1.5rem 0;
     }
 
+    .content-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .sidebar {
+      position: static;
+      order: -1; /* Move sidebar above main content on mobile */
+    }
+
+    .platform-section {
+      padding: 1.5rem;
+    }
+
+    .platform-links {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
     .episode-meta {
       flex-direction: column;
       gap: 0.5rem;
@@ -460,10 +509,6 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
 
     .episode-description {
       padding: 1.5rem;
-    }
-
-    .platform-links {
-      grid-template-columns: 1fr;
     }
 
     .transcript-container {
