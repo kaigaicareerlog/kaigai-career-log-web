@@ -165,26 +165,47 @@ AssemblyAI を使用してエピソードの自動文字起こしを生成でき
 
 ### セットアップ
 
-1. [AssemblyAI](https://www.assemblyai.com/) で API キーを取得
-2. GitHub リポジトリの Secrets に `ASSEMBLYAI_API_KEY` を追加
+1. API キーを取得（無料）：
+   - [AssemblyAI](https://www.assemblyai.com/) で API キーを取得
+   - [Groq](https://console.groq.com/) または [Gemini](https://makersuite.google.com/app/apikey) で API キーを取得
+   - 📖 詳細な手順: [API キー取得ガイド](docs/GET_API_KEYS.md)
+2. GitHub リポジトリの Secrets に以下を追加：
+   - `ASSEMBLYAI_API_KEY`
+   - `GROQ_API_KEY`（推奨）または `GEMINI_API_KEY`
 3. GitHub Actions から「Transcribe Episode」ワークフローを実行
 
 ### 使い方
 
-**GitHub Actions（推奨）:**
+**GitHub Actions（推奨・自動クリーンアップ付き）:**
 
 1. Actions タブ → Transcribe Episode を選択
-2. Episode GUID を入力して実行
-3. 自動的にプルリクエストが作成されます
+2. Episode GUID を入力
+3. クリーンアップ方法を選択（groq または gemini）
+4. 実行 - 文字起こし + AI 整形が自動で完了！
+5. 自動的にプルリクエストが作成されます
 
 **ローカル実行:**
 
 ```bash
+# ステップ1: 文字起こし（音声→テキスト）
 export ASSEMBLYAI_API_KEY="your-api-key"
 npm run transcribe <episode-guid>
+
+# ステップ2: AI でテキスト整形（無料）
+tsx scripts/cleanup-transcript.ts <episode-guid> groq    # Groq AI（推奨）
+tsx scripts/cleanup-transcript.ts <episode-guid> gemini  # Google Gemini
 ```
 
-詳細は [文字起こしガイド](docs/TRANSCRIPTION_GUIDE.md) を参照してください。
+### AI テキスト整形（スペース削除・句読点追加）
+
+2 つの**無料 AI**オプションから選択：
+
+- **groq**: Groq AI（無料枠、高品質、Llama 3.1 70B、[API キー取得](https://console.groq.com/)）
+- **gemini**: Google Gemini（無料枠、高品質、[API キー取得](https://makersuite.google.com/app/apikey)）
+
+**コスト保護機能**: 無料枠内で自動停止、予期しない課金なし。
+
+詳細は [文字起こしガイド](docs/TRANSCRIPTION_GUIDE.md) と [整形オプション](docs/CLEANUP_OPTIONS.md) を参照してください。
 
 ## 🎵 エピソード URL の自動取得
 

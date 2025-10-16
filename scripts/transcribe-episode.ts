@@ -8,7 +8,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import {
   transcribeAudio,
-  generateMarkdownTranscript,
   generateJSONTranscript,
 } from "../src/utils/transcription.js";
 
@@ -68,20 +67,15 @@ function getEpisodeByGuid(guid: string): Episode {
 }
 
 /**
- * Save transcript files
+ * Save transcript JSON file
  */
-function saveTranscripts(guid: string, markdown: string, json: object): void {
+function saveTranscript(guid: string, json: object): void {
   const transcriptsDir = path.join(__dirname, "..", "public", "transcripts");
 
   // Create transcripts directory if it doesn't exist
   if (!fs.existsSync(transcriptsDir)) {
     fs.mkdirSync(transcriptsDir, { recursive: true });
   }
-
-  // Save markdown
-  const markdownPath = path.join(transcriptsDir, `${guid}.md`);
-  fs.writeFileSync(markdownPath, markdown, "utf-8");
-  console.log(`✅ Saved markdown transcript: ${markdownPath}`);
 
   // Save JSON
   const jsonPath = path.join(transcriptsDir, `${guid}.json`);
@@ -108,10 +102,9 @@ async function transcribeEpisode(guid: string): Promise<void> {
 
   // Check if transcript already exists
   const transcriptsDir = path.join(__dirname, "..", "public", "transcripts");
-  const markdownPath = path.join(transcriptsDir, `${guid}.md`);
   const jsonPath = path.join(transcriptsDir, `${guid}.json`);
 
-  if (fs.existsSync(markdownPath) || fs.existsSync(jsonPath)) {
+  if (fs.existsSync(jsonPath)) {
     console.log("⚠️  Transcript already exists for this episode");
     console.log("   Overwriting existing transcript...\n");
   }
@@ -128,14 +121,14 @@ async function transcribeEpisode(guid: string): Promise<void> {
   console.log(`   Utterances: ${result.utterances.length}`);
   console.log(`   Words: ${result.words.length}\n`);
 
-  // Generate outputs
-  const markdown = generateMarkdownTranscript(result);
+  // Generate JSON output
   const json = generateJSONTranscript(result, guid, episode.title);
 
-  // Save transcripts
-  saveTranscripts(guid, markdown, json);
+  // Save transcript
+  saveTranscript(guid, json);
 
-  console.log("\n✨ Transcription complete!\n");
+  console.log("\n✨ Transcription complete!");
+  console.log("   Run cleanup script next to improve text quality.\n");
 }
 
 // Main execution
