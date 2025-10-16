@@ -35,6 +35,10 @@ import {
   getApplePodcastEpisodes,
   findApplePodcastEpisodeByTitle,
 } from "../src/utils/apple.ts";
+import {
+  getAmazonMusicEpisodes,
+  findAmazonMusicEpisodeByTitle,
+} from "../src/utils/amazon.ts";
 
 interface Episode {
   guid: string;
@@ -42,6 +46,7 @@ interface Episode {
   spotifyUrl?: string;
   youtubeUrl?: string;
   applePodcastUrl?: string;
+  amazonMusicUrl?: string;
   [key: string]: any;
 }
 
@@ -55,6 +60,8 @@ interface EpisodesData {
 const DEFAULT_SPOTIFY_SHOW_ID = "0bj38cgbe71oCr5Q0emwvA";
 const DEFAULT_YOUTUBE_CHANNEL_ID = "@kaigaicareerlog";
 const DEFAULT_APPLE_PODCAST_ID = "1818019572"; // From https://podcasts.apple.com/ca/podcast/id1818019572
+const DEFAULT_AMAZON_MUSIC_SHOW_ID = "118b5e6b-1f97-4c62-97a5-754714381b40";
+const DEFAULT_AMAZON_MUSIC_REGION = "co.jp";
 
 /**
  * Main function to update URLs for new episodes
@@ -69,6 +76,10 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
     process.env.YOUTUBE_CHANNEL_ID || DEFAULT_YOUTUBE_CHANNEL_ID;
   const applePodcastId =
     process.env.APPLE_PODCAST_ID || DEFAULT_APPLE_PODCAST_ID;
+  const amazonMusicShowId =
+    process.env.AMAZON_MUSIC_SHOW_ID || DEFAULT_AMAZON_MUSIC_SHOW_ID;
+  const amazonMusicRegion =
+    process.env.AMAZON_MUSIC_REGION || DEFAULT_AMAZON_MUSIC_REGION;
 
   // Warn about missing credentials (but continue - Apple Podcasts doesn't need auth!)
   const warnings: string[] = [];
@@ -100,17 +111,22 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
   const episodesNeedingApple = episodesData.episodes.filter(
     (ep) => !ep.applePodcastUrl || ep.applePodcastUrl === ""
   );
+  const episodesNeedingAmazon = episodesData.episodes.filter(
+    (ep) => !ep.amazonMusicUrl || ep.amazonMusicUrl === ""
+  );
 
   console.log(`\n📊 Episodes Status:`);
   console.log(`   Total episodes: ${episodesData.episodes.length}`);
   console.log(`   Missing Spotify URLs: ${episodesNeedingSpotify.length}`);
   console.log(`   Missing YouTube URLs: ${episodesNeedingYoutube.length}`);
   console.log(`   Missing Apple Podcasts URLs: ${episodesNeedingApple.length}`);
+  console.log(`   Missing Amazon Music URLs: ${episodesNeedingAmazon.length}`);
 
   if (
     episodesNeedingSpotify.length === 0 &&
     episodesNeedingYoutube.length === 0 &&
-    episodesNeedingApple.length === 0
+    episodesNeedingApple.length === 0 &&
+    episodesNeedingAmazon.length === 0
   ) {
     console.log("\n✅ All episodes already have URLs!");
     return;
@@ -231,7 +247,52 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
     totalUpdated += appleUpdated;
   }
 
-  // 7. Save updated episodes.json if any changes were made
+  // 7. Update Amazon Music URLs if needed (requires Puppeteer)
+  if (episodesNeedingAmazon.length > 0) {
+    console.log(`\n📦 Updating Amazon Music URLs...`);
+    console.log(`   Using browser automation (this may take a minute)...`);
+
+    try {
+      const amazonEpisodes = await getAmazonMusicEpisodes(
+        amazonMusicShowId,
+        amazonMusicRegion
+      );
+      console.log(`✅ Found ${amazonEpisodes.length} episodes on Amazon Music`);
+
+      let amazonUpdated = 0;
+      for (const episode of episodesNeedingAmazon) {
+        console.log(`\n   🔎 Processing: "${episode.title}"`);
+        const amazonUrl = findAmazonMusicEpisodeByTitle(
+          amazonEpisodes,
+          episode.title
+        );
+
+        if (amazonUrl) {
+          episode.amazonMusicUrl = amazonUrl;
+          amazonUpdated++;
+          console.log(`      ✅ Found Amazon Music URL: ${amazonUrl}`);
+        } else {
+          console.log(`      ❌ Amazon Music URL not found`);
+        }
+      }
+
+      console.log(
+        `\n   📊 Amazon Music: Updated ${amazonUpdated}/${episodesNeedingAmazon.length} episodes`
+      );
+      totalUpdated += amazonUpdated;
+    } catch (error) {
+      console.log(`\n⚠️  Error fetching Amazon Music episodes:`);
+      if (error instanceof Error) {
+        console.log(`   ${error.message}`);
+        if (error.message.includes("Puppeteer")) {
+          console.log(`   Install with: npm install -D puppeteer`);
+        }
+      }
+      console.log(`   Continuing without Amazon Music URLs...`);
+    }
+  }
+
+  // 8. Save updated episodes.json if any changes were made
   if (totalUpdated > 0) {
     episodesData.lastUpdated = new Date().toISOString();
     await writeFile(
@@ -244,9 +305,7 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
   } else {
     console.log(`\n⚠️  No URLs were found for any episodes`);
     console.log(`   This might mean:`);
-    console.log(
-      `   - Episodes are not yet published on Spotify/YouTube/Apple Podcasts`
-    );
+    console.log(`   - Episodes are not yet published on the platforms`);
     console.log(`   - Episode titles don't match exactly`);
     console.log(`   - There's an API issue`);
   }
@@ -280,7 +339,14 @@ if (!episodesPath) {
   );
   console.log("  APPLE_PODCAST_ID=your_podcast_id (defaults to 1818019572)");
   console.log(
+    "  AMAZON_MUSIC_SHOW_ID=your_show_id (defaults to 118b5e6b-1f97-4c62-97a5-754714381b40)"
+  );
+  console.log("  AMAZON_MUSIC_REGION=region (defaults to 'co.jp')");
+  console.log(
     "\nNote: Apple Podcasts uses iTunes API (free, no auth required!)"
+  );
+  console.log(
+    "      Amazon Music uses browser automation (requires Puppeteer)."
   );
   console.log(
     "      At least Apple Podcasts URLs will be found even without any credentials."

@@ -14,3 +14,5 @@ export const APPLE_PODCAST_CHANNEL_URL =
 // Amazon Music
 export const AMAZON_MUSIC_CHANNEL_URL =
   "https://music.amazon.ca/podcasts/118b5e6b-1f97-4c62-97a5-754714381b40/%E6%B5%B7%E5%A4%96%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%AD%E3%82%B0";
+export const AMAZON_MUSIC_SHOW_ID = "118b5e6b-1f97-4c62-97a5-754714381b40";
+export const AMAZON_MUSIC_REGION = "co.jp"; // or "ca", "com", etc.

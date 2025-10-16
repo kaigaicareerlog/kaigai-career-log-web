@@ -14,6 +14,7 @@
     "update-spotify-urls": "tsx scripts/update-spotify-urls.ts",
     "update-youtube-urls": "tsx scripts/update-youtube-urls.ts",
     "update-apple-urls": "tsx scripts/update-apple-urls.ts",
+    "update-amazon-urls": "tsx scripts/update-amazon-urls.ts",
     "update-new-episode-urls": "tsx scripts/update-new-episode-urls.ts",
     "update-episode-by-guid": "tsx scripts/update-episode-by-guid.ts",
     "find-latest-episodes": "tsx scripts/find-latest-episodes.ts"
@@ -24,6 +25,7 @@
     "dotenv": "^17.2.3"
   },
   "devDependencies": {
+    "puppeteer": "^24.25.0",
     "tsx": "^4.20.6"
   }
 }
