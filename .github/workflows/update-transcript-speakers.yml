@@ -1,0 +1,91 @@
+name: Update Transcript Speakers
+
+on:
+  workflow_dispatch:
+    inputs:
+      episode_guid:
+        description: "Episode GUID"
+        required: true
+        type: string
+      old_speaker:
+        description: "Old speaker label (e.g., A, B, C)"
+        required: true
+        type: string
+      speaker_type:
+        description: "Speaker type"
+        required: true
+        type: choice
+        options:
+          - Host
+          - Guest
+      new_speaker_host:
+        description: "Host name (if Host selected)"
+        required: false
+        type: choice
+        options:
+          - Ryo
+          - Senna
+          - Ayaka
+      new_speaker_guest:
+        description: "Guest name (if Guest selected)"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-speakers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          persist-credentials: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Determine new speaker name
+        id: speaker
+        run: |
+          if [ "${{ inputs.speaker_type }}" = "Host" ]; then
+            echo "name=${{ inputs.new_speaker_host }}" >> $GITHUB_OUTPUT
+          else
+            echo "name=${{ inputs.new_speaker_guest }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update speaker labels
+        run: npx tsx scripts/update-transcript-speakers.ts ${{ inputs.episode_guid }} "${{ inputs.old_speaker }}" "${{ steps.speaker.outputs.name }}"
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          commit-message: "Update transcript speakers for ${{ inputs.episode_guid }}: ${{ inputs.old_speaker }} → ${{ steps.speaker.outputs.name }}"
+          committer: GitHub <noreply@github.com>
+          author: GitHub <noreply@github.com>
+          signoff: false
+          branch: update-speakers-${{ inputs.episode_guid }}-${{ github.run_number }}
+          delete-branch: true
+          title: "Update speakers for episode ${{ inputs.episode_guid }}"
+          body: |
+            This PR updates speaker labels for episode ${{ inputs.episode_guid }}.
+
+            **Changes:**
+            - Old speaker: `${{ inputs.old_speaker }}`
+            - New speaker: `${{ steps.speaker.outputs.name }}` (${{ inputs.speaker_type }})
+
+            The transcript will now show the correct speaker names.
+          labels: transcript,speakers
+          draft: false

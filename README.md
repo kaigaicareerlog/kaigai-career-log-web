@@ -207,6 +207,35 @@ tsx scripts/cleanup-transcript.ts <episode-guid> gemini  # Google Gemini
 
 詳細は [文字起こしガイド](docs/TRANSCRIPTION_GUIDE.md) と [整形オプション](docs/CLEANUP_OPTIONS.md) を参照してください。
 
+### スピーカー名の更新 🎙️
+
+文字起こし後、スピーカーラベル（A, B, C など）を実名に更新すると、エピソードページにアバターと名前が表示されます：
+
+**GitHub Actions（推奨）:**
+
+1. Actions タブ → Update Transcript Speakers を選択
+2. 入力：
+   - Episode GUID
+   - 変更前のラベル（例: A, B, C）
+   - スピーカータイプ（Host または Guest）
+   - **Host の場合:** Ryo, Senna, Ayaka から選択（カスタムアバター付き）
+   - **Guest の場合:** ゲスト名を入力（例: "John Smith"）
+3. 実行 → PR を確認してマージ
+
+**ローカル実行:**
+
+```bash
+# ホストの場合
+tsx scripts/update-transcript-speakers.ts <guid> A Ryo
+tsx scripts/update-transcript-speakers.ts <guid> B Senna
+
+# ゲストの場合（複数単語の名前は引用符で囲む）
+tsx scripts/update-transcript-speakers.ts <guid> C "John Smith"
+tsx scripts/update-transcript-speakers.ts <guid> D Ayaka
+```
+
+詳細は [スピーカー更新ガイド](docs/UPDATE_SPEAKERS.md) を参照してください。
+
 ## 🎵 エピソード URL の自動取得
 
 プラットフォーム（Spotify、YouTube など）の URL を自動的に取得・更新できます。
