@@ -13,7 +13,9 @@
     "find-spotify-url": "tsx scripts/find-spotify-url.ts",
     "update-spotify-urls": "tsx scripts/update-spotify-urls.ts",
     "update-youtube-urls": "tsx scripts/update-youtube-urls.ts",
-    "update-new-episode-urls": "tsx scripts/update-new-episode-urls.ts"
+    "update-new-episode-urls": "tsx scripts/update-new-episode-urls.ts",
+    "update-episode-by-guid": "tsx scripts/update-episode-by-guid.ts",
+    "find-latest-episodes": "tsx scripts/find-latest-episodes.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",

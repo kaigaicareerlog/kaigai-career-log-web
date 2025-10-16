@@ -1,0 +1,116 @@
+name: Update Episode URLs Manually
+
+on:
+  workflow_dispatch:
+    inputs:
+      guid:
+        description: "Episode GUID (found in episodes.json)"
+        required: true
+        type: string
+      spotify_url:
+        description: "Spotify URL (leave empty to skip)"
+        required: false
+        type: string
+        default: ""
+      youtube_url:
+        description: "YouTube URL (leave empty to skip)"
+        required: false
+        type: string
+        default: ""
+      apple_podcast_url:
+        description: "Apple Podcast URL (leave empty to skip)"
+        required: false
+        type: string
+        default: ""
+      amazon_music_url:
+        description: "Amazon Music URL (leave empty to skip)"
+        required: false
+        type: string
+        default: ""
+
+jobs:
+  update-urls:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Find latest episodes file
+        id: find-file
+        run: |
+          EPISODES_FILE=$(npm run find-latest-episodes --silent)
+          echo "episodes_file=$EPISODES_FILE" >> $GITHUB_OUTPUT
+          echo "📁 Found episodes file: $EPISODES_FILE"
+
+      - name: Display update information
+        run: |
+          echo "🔄 Updating episode URLs"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "📝 GUID: ${{ github.event.inputs.guid }}"
+          echo ""
+          if [ -n "${{ github.event.inputs.spotify_url }}" ]; then
+            echo "🎵 Spotify: ${{ github.event.inputs.spotify_url }}"
+          fi
+          if [ -n "${{ github.event.inputs.youtube_url }}" ]; then
+            echo "🎥 YouTube: ${{ github.event.inputs.youtube_url }}"
+          fi
+          if [ -n "${{ github.event.inputs.apple_podcast_url }}" ]; then
+            echo "🍎 Apple Podcast: ${{ github.event.inputs.apple_podcast_url }}"
+          fi
+          if [ -n "${{ github.event.inputs.amazon_music_url }}" ]; then
+            echo "📦 Amazon Music: ${{ github.event.inputs.amazon_music_url }}"
+          fi
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+      - name: Update episode URLs
+        run: |
+          EPISODES_FILE="${{ steps.find-file.outputs.episodes_file }}"
+          GUID="${{ github.event.inputs.guid }}"
+
+          # Build the command with provided URLs
+          CMD="npx tsx scripts/update-episode-by-guid.ts \"$EPISODES_FILE\" \"$GUID\""
+
+          if [ -n "${{ github.event.inputs.spotify_url }}" ]; then
+            CMD="$CMD --spotify \"${{ github.event.inputs.spotify_url }}\""
+          fi
+
+          if [ -n "${{ github.event.inputs.youtube_url }}" ]; then
+            CMD="$CMD --youtube \"${{ github.event.inputs.youtube_url }}\""
+          fi
+
+          if [ -n "${{ github.event.inputs.apple_podcast_url }}" ]; then
+            CMD="$CMD --apple \"${{ github.event.inputs.apple_podcast_url }}\""
+          fi
+
+          if [ -n "${{ github.event.inputs.amazon_music_url }}" ]; then
+            CMD="$CMD --amazon \"${{ github.event.inputs.amazon_music_url }}\""
+          fi
+
+          # Execute the command
+          eval $CMD
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/rss/
+
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "⚠️  No changes to commit"
+          else
+            git commit -m "chore: Manual URL update for episode ${{ github.event.inputs.guid }}"
+            git push
+            echo "✅ Changes committed and pushed successfully"
+          fi
