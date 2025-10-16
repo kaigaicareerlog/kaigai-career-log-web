@@ -61,10 +61,11 @@ The project has three methods for managing episode URLs:
 
 **Available scripts**:
 
-- `update-episode-by-guid` - Update specific episode
+- `update-episode-by-guid` - Update specific episode with any URLs
 - `update-spotify-urls` - Update all missing Spotify URLs
 - `update-youtube-urls` - Update all missing YouTube URLs
-- `update-new-episode-urls` - Update both Spotify & YouTube for new episodes
+- `update-apple-urls` - Update all missing Apple Podcasts URLs (no API key needed!)
+- `update-new-episode-urls` - Update Spotify, YouTube & Apple Podcasts for new episodes
 - `find-spotify-url` - Find Spotify URL for an episode (read-only)
 
 **Documentation**: [SPOTIFY_URL_FINDER.md](./SPOTIFY_URL_FINDER.md)
@@ -220,10 +221,11 @@ This won't update the file, just shows you the URL.
 ### 🎯 Tips for Success
 
 - **Consistent titles**: Use the same title across all platforms
-- **Publish everywhere**: Ensure episodes are on Spotify & YouTube
+- **Publish everywhere**: Ensure episodes are on Spotify, YouTube & Apple Podcasts
 - **Check logs**: Review GitHub Actions logs to see what happened
 - **Test locally first**: Use scripts to test before pushing changes
 - **Keep secrets secure**: Never commit API keys to Git
+- **Apple Podcasts bonus**: Works automatically with no setup required!
 
 ### ⚠️ Common Pitfalls
 

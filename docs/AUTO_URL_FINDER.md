@@ -8,7 +8,8 @@ When the `update-rss` GitHub Action runs and detects new episodes, it automatica
 
 1. Searches for the episode on Spotify and finds its URL
 2. Searches for the episode on YouTube and finds its URL
-3. Updates the `episodes.json` file with the discovered URLs
+3. Searches for the episode on Apple Podcasts and finds its URL (no API key needed!)
+4. Updates the `episodes.json` file with the discovered URLs
 
 This automation eliminates the manual work of finding and adding URLs for new episodes.
 
@@ -19,7 +20,7 @@ This automation eliminates the manual work of finding and adding URLs for new ep
 1. **Download RSS Feed** - Fetches the latest RSS feed from Anchor.fm
 2. **Convert XML to JSON** - Converts the RSS XML to JSON format
 3. **Generate episodes.json** - Creates/updates the episodes file, preserving existing URLs
-4. **Find URLs for New Episodes** - ⭐ NEW: Automatically finds Spotify and YouTube URLs
+4. **Find URLs for New Episodes** - ⭐ Automatically finds Spotify, YouTube & Apple Podcasts URLs
 5. **Commit Changes** - Saves all changes to the repository
 
 ### URL Matching Logic
@@ -32,9 +33,11 @@ The script uses intelligent title matching to find episodes:
 
 ## Required GitHub Secrets
 
-For this feature to work, you need to configure the following secrets in your GitHub repository:
+For Spotify and YouTube URL finding, you need to configure the following secrets in your GitHub repository.
 
-### Spotify API Credentials
+**Note: Apple Podcasts uses the free iTunes Search API and doesn't require any API keys!** 🎉
+
+### Spotify API Credentials (Optional for Spotify URLs)
 
 1. **SPOTIFY_CLIENT_ID**
 
@@ -47,7 +50,7 @@ For this feature to work, you need to configure the following secrets in your Gi
    - Click "Show Client Secret"
    - Copy the Client Secret
 
-### YouTube API Key
+### YouTube API Key (Optional for YouTube URLs)
 
 3. **YOUTUBE_API_KEY**
    - Go to: https://console.cloud.google.com/
@@ -81,6 +84,7 @@ npm run update-new-episode-urls public/rss/20251015-1451-episodes.json
 Create a `.env` file in your project root:
 
 ```env
+# Optional: Only needed for specific platforms
 SPOTIFY_CLIENT_ID=your_spotify_client_id
 SPOTIFY_CLIENT_SECRET=your_spotify_client_secret
 YOUTUBE_API_KEY=your_youtube_api_key
@@ -88,6 +92,9 @@ YOUTUBE_API_KEY=your_youtube_api_key
 # Optional (have default values)
 SPOTIFY_SHOW_ID=0bj38cgbe71oCr5Q0emwvA
 YOUTUBE_CHANNEL_ID=@kaigaicareerlog
+APPLE_PODCAST_ID=1818019572
+
+# Note: Even with no credentials, Apple Podcasts URLs will still be found!
 ```
 
 ## Output Examples
@@ -101,6 +108,7 @@ YOUTUBE_CHANNEL_ID=@kaigaicareerlog
    Total episodes: 23
    Missing Spotify URLs: 2
    Missing YouTube URLs: 2
+   Missing Apple Podcasts URLs: 2
 
 🎵 Updating Spotify URLs...
 🔐 Authenticating with Spotify...
@@ -122,8 +130,17 @@ YOUTUBE_CHANNEL_ID=@kaigaicareerlog
 
    📊 YouTube: Updated 2/2 episodes
 
+🍎 Updating Apple Podcasts URLs...
+🍎 Fetching all episodes from Apple Podcasts...
+✅ Found 23 episodes in Apple Podcasts
+
+   🔎 Processing: "Episode Title 1"
+      ✅ Found Apple Podcasts URL: https://podcasts.apple.com/ca/podcast/...
+
+   📊 Apple Podcasts: Updated 2/2 episodes
+
 ✅ Successfully updated episodes file: public/rss/20251015-1451-episodes.json
-   Total URLs added: 4
+   Total URLs added: 6
 
 ✨ Done!
 ```
