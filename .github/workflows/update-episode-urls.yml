@@ -20,12 +20,12 @@ on:
       update_apple:
         description: "Update Apple Podcast URLs"
         required: false
-        default: false
+        default: true
         type: boolean
       update_amazon:
         description: "Update Amazon Music URLs"
         required: false
-        default: false
+        default: true
         type: boolean
 
 jobs:
