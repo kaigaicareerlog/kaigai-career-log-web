@@ -167,3 +167,21 @@ export function generateJSONTranscript(
     })),
   };
 }
+
+/**
+ * Load transcript for an episode if it exists
+ * @param episodeGuid - Episode GUID
+ * @returns Transcript JSON or null if not found
+ */
+export async function loadTranscript(episodeGuid: string) {
+  try {
+    const response = await fetch(`/transcripts/${episodeGuid}.json`);
+    if (!response.ok) {
+      return null;
+    }
+    return await response.json();
+  } catch (error) {
+    console.error(`Failed to load transcript for ${episodeGuid}:`, error);
+    return null;
+  }
+}

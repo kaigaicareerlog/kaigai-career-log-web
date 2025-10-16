@@ -12,6 +12,8 @@ import {
   APPLE_PODCAST_CHANNEL_URL,
   AMAZON_MUSIC_CHANNEL_URL,
 } from '../../constants/podcastUrls';
+import fs from 'fs';
+import path from 'path';
 
 export async function getStaticPaths() {
   const data = await parseJSONFeed();
@@ -23,6 +25,18 @@ export async function getStaticPaths() {
 }
 
 const { episode } = Astro.props;
+
+// Load transcript if available
+let transcript = null;
+try {
+  const transcriptPath = path.join(process.cwd(), 'public', 'transcripts', `${episode.guid}.json`);
+  if (fs.existsSync(transcriptPath)) {
+    const transcriptContent = fs.readFileSync(transcriptPath, 'utf-8');
+    transcript = JSON.parse(transcriptContent);
+  }
+} catch (error) {
+  console.error(`Failed to load transcript for ${episode.guid}:`, error);
+}
 
 // Use episode-specific URLs if available, otherwise use channel URLs
 const spotifyUrl = episode.spotifyUrl || SPOTIFY_CHANNEL_URL;
@@ -114,6 +128,24 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
             <source src={episode.audioUrl} type="audio/mpeg" />
             お使いのブラウザは音声再生に対応していません。
           </audio>
+        </section>
+      )}
+
+      <!-- Transcript Section -->
+      {transcript && (
+        <section class="transcript-section">
+          <h2>文字起こし</h2>
+          <div class="transcript-container">
+            {transcript.utterances.map((utterance: any) => (
+              <div class="transcript-utterance">
+                <div class="transcript-header">
+                  <span class="speaker-label">{utterance.speaker}</span>
+                  <span class="timestamp">{utterance.timestamp}</span>
+                </div>
+                <p class="transcript-text">{utterance.text}</p>
+              </div>
+            ))}
+          </div>
         </section>
       )}
     </div>
@@ -257,6 +289,69 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   }
 
+  /* Transcript Section */
+  .transcript-section {
+    margin-bottom: 2rem;
+  }
+
+  .transcript-section h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+  }
+
+  .transcript-container {
+    background: var(--color-background);
+    border-radius: 1rem;
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    padding: 2rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    max-height: 600px;
+    overflow-y: auto;
+  }
+
+  .transcript-utterance {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .transcript-utterance:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .transcript-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .speaker-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-primary);
+    background: rgba(59, 130, 246, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+  }
+
+  .timestamp {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    font-family: monospace;
+  }
+
+  .transcript-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--color-text);
+    margin: 0;
+  }
+
   /* Mobile responsive */
   @media (max-width: 768px) {
     .episode-page {
@@ -275,6 +370,17 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     .platform-links {
       grid-template-columns: 1fr;
     }
+
+    .transcript-container {
+      padding: 1.5rem;
+      max-height: 500px;
+    }
+
+    .transcript-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
   }
 
   /* Dark mode support */
@@ -282,6 +388,19 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     .episode-description {
       background: rgba(15, 23, 42, 0.8);
       border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .transcript-container {
+      background: rgba(15, 23, 42, 0.8);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .transcript-utterance {
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .speaker-label {
+      background: rgba(59, 130, 246, 0.2);
     }
   }
 </style>
