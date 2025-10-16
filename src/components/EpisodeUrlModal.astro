@@ -22,11 +22,17 @@ import Modal from './common/Modal.astro';
   </div>
 
   <div slot="footer" class="footer-content">
-    <button id="copy-all-btn" class="copy-all-btn">
-      <span class="btn-icon">📋</span>
-      <span class="btn-text">Copy All</span>
-    </button>
     <span id="copy-feedback" class="copy-feedback">Copied!</span>
+    <div class="button-group">
+      <button id="copy-title-btn" class="copy-btn">
+        <span class="btn-icon">📝</span>
+        <span class="btn-text">Copy Title</span>
+      </button>
+      <button id="copy-all-btn" class="copy-btn">
+        <span class="btn-icon">📋</span>
+        <span class="btn-text">Copy Urls</span>
+      </button>
+    </div>
   </div>
 </Modal>
 
@@ -41,6 +47,7 @@ import Modal from './common/Modal.astro';
 
   // Get modal elements
   const { modal, closeBtn } = getModalElements('episode-url-modal');
+  const copyTitleBtn = document.getElementById('copy-title-btn');
   const copyAllBtn = document.getElementById('copy-all-btn');
   const copyFeedback = document.getElementById('copy-feedback');
 
@@ -71,6 +78,7 @@ import Modal from './common/Modal.astro';
 
   // Setup event listeners
   closeBtn?.addEventListener('click', () => hideModal(modal));
+  copyTitleBtn?.addEventListener('click', copyTitleToClipboard);
   copyAllBtn?.addEventListener('click', copyAllToClipboard);
   setupModalOutsideClick(modal, () => hideModal(modal));
 
@@ -103,27 +111,32 @@ import Modal from './common/Modal.astro';
     }
   }
 
+  async function copyTitleToClipboard() {
+    if (!currentEpisode || !currentEpisode.title) return;
+    await copyToClipboard(currentEpisode.title, copyFeedback);
+  }
+
   async function copyAllToClipboard() {
     if (!currentEpisode) return;
 
     const urls: string[] = [];
 
     if (currentEpisode.applePodcastUrl) {
-      urls.push(`Apple Podcasts: ${currentEpisode.applePodcastUrl}`);
+      urls.push(`Apple podcast\n${currentEpisode.applePodcastUrl}`);
     }
     if (currentEpisode.spotifyUrl) {
-      urls.push(`Spotify: ${currentEpisode.spotifyUrl}`);
+      urls.push(`Spotify\n${currentEpisode.spotifyUrl}`);
     }
     if (currentEpisode.youtubeUrl) {
-      urls.push(`YouTube: ${currentEpisode.youtubeUrl}`);
+      urls.push(`Youtube\n${currentEpisode.youtubeUrl}`);
     }
     if (currentEpisode.amazonMusicUrl) {
-      urls.push(`Amazon Music: ${currentEpisode.amazonMusicUrl}`);
+      urls.push(`Amazon music\n${currentEpisode.amazonMusicUrl}`);
     }
 
     if (urls.length === 0) return;
 
-    const textToCopy = urls.join('\n');
+    const textToCopy = urls.join('\n\n');
     await copyToClipboard(textToCopy, copyFeedback);
   }
 </script>
@@ -173,12 +186,18 @@ import Modal from './common/Modal.astro';
 
   .footer-content {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     width: 100%;
+    gap: 1rem;
   }
 
-  .copy-all-btn {
+  .button-group {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .copy-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -192,12 +211,12 @@ import Modal from './common/Modal.astro';
     transition: all 0.2s ease;
   }
 
-  .copy-all-btn:hover {
+  .copy-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
   }
 
-  .copy-all-btn:active {
+  .copy-btn:active {
     transform: translateY(0);
   }
 

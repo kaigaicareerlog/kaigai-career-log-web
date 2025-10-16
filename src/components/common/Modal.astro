@@ -89,7 +89,6 @@ const { id, title, showFooter = true } = Astro.props;
 
   .modal-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
     padding: 1.5rem;
     border-bottom: 1px solid rgba(59, 130, 246, 0.1);
@@ -101,10 +100,9 @@ const { id, title, showFooter = true } = Astro.props;
     font-weight: 600;
     color: var(--color-text);
     flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     padding-right: 1rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .close-btn {
