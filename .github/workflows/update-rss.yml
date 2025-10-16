@@ -1,9 +1,10 @@
 name: Update RSS Feed
 
 on:
-  # 毎日午前9時（日本時間）に実行（UTC 0:00）
+  # 毎日午後4時（バンクーバー時間）に実行（UTC 23:00）
+  # Runs daily at 4pm Vancouver time (23:00 UTC = 4pm PDT / 3pm PST)
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 23 * * *"
 
   # 手動実行も可能
   workflow_dispatch:
