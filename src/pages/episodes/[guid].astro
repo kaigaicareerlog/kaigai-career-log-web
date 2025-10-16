@@ -135,8 +135,13 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
       <!-- Transcript Section -->
       {transcript && (
         <section class="transcript-section">
-          <h2>文字起こし</h2>
-          <div class="transcript-container">
+          <button class="transcript-toggle" id="transcript-toggle">
+            <h2>文字起こし</h2>
+            <svg class="toggle-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <div class="transcript-container" id="transcript-container">
             {transcript.utterances.map((utterance: any) => {
               const hostInfo = getHostInfo(utterance.speaker);
               return (
@@ -178,6 +183,31 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
       youtubeUrl: episode.youtubeUrl || '',
       amazonMusicUrl: episode.amazonMusicUrl || '',
     };
+  </script>
+
+  <script>
+    // Transcript toggle functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleButton = document.getElementById('transcript-toggle');
+      const transcriptContainer = document.getElementById('transcript-container');
+      
+      if (toggleButton && transcriptContainer) {
+        // Set initial state to collapsed
+        transcriptContainer.classList.add('collapsed');
+        
+        toggleButton.addEventListener('click', () => {
+          const isCollapsed = transcriptContainer.classList.contains('collapsed');
+          
+          if (isCollapsed) {
+            transcriptContainer.classList.remove('collapsed');
+            toggleButton.classList.add('open');
+          } else {
+            transcriptContainer.classList.add('collapsed');
+            toggleButton.classList.remove('open');
+          }
+        });
+      }
+    });
   </script>
 </BaseLayout>
 
@@ -308,11 +338,39 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     margin-bottom: 2rem;
   }
 
-  .transcript-section h2 {
+  .transcript-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .transcript-toggle:hover {
+    opacity: 0.8;
+  }
+
+  .transcript-toggle h2 {
     font-size: 1.3rem;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin: 0;
     color: var(--color-text);
+    text-align: left;
+  }
+
+  .toggle-icon {
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    color: var(--color-primary);
+  }
+
+  .transcript-toggle.open .toggle-icon {
+    transform: rotate(180deg);
   }
 
   .transcript-container {
@@ -323,6 +381,15 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
     max-height: 600px;
     overflow-y: auto;
+    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+  }
+
+  .transcript-container.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    overflow: hidden;
+    border: none;
   }
 
   .transcript-utterance {
