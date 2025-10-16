@@ -37,7 +37,7 @@ export function getHostInfo(speaker: string): HostInfo {
   return (
     HOSTS[speaker] || {
       name: speaker,
-      image: "/favicon.svg",
+      image: "/guest-avatar.svg",
       color: "#6b7280", // gray
     }
   );

@@ -11,11 +11,19 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * Simple regex cleanup - removes multiple spaces
+ * Simple regex cleanup - removes all spaces, converts periods to Japanese periods, and adds line breaks
  */
 function cleanupText(text: string): string {
-  // Remove multiple spaces and trim
-  return text.replace(/\s+/g, " ").trim();
+  // Remove all spaces
+  let cleaned = text.replace(/\s+/g, "");
+  
+  // Replace periods with Japanese periods and add line breaks
+  cleaned = cleaned.replace(/\./g, "。\n");
+  
+  // Remove trailing line breaks
+  cleaned = cleaned.trimEnd();
+  
+  return cleaned;
 }
 
 /**
@@ -49,7 +57,7 @@ function cleanupTranscript(guid: string): void {
 
   // Update transcript
   transcript.utterances = cleanedUtterances;
-  transcript.fullText = cleanedUtterances.map((u: any) => u.text).join(" ");
+  transcript.fullText = cleanedUtterances.map((u: any) => u.text).join("");
 
   // Save cleaned transcript
   fs.writeFileSync(jsonPath, JSON.stringify(transcript, null, 2), "utf-8");

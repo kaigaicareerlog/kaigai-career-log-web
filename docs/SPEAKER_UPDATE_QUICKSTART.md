@@ -49,7 +49,7 @@ Speaker A: こんにちは
 ### Guests (Default Display)
 
 - Any name accepted (e.g., "John Smith", "Dr. Lee")
-- Default gray avatar (favicon)
+- Default person icon avatar
 - Use quotes for multi-word names in local commands
 
 ---

@@ -59,6 +59,6 @@ jobs:
             - Speaker identification
             - Timestamps
             - Full text of the episode
-            - Text cleanup (extra spaces removed)
+            - Text cleanup (spaces removed, periods converted to 。, line breaks added)
           labels: transcription
           draft: false

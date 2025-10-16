@@ -187,13 +187,16 @@ AssemblyAI を使用してエピソードの自動文字起こしを生成でき
 export ASSEMBLYAI_API_KEY="your-api-key"
 npm run transcribe <episode-guid>
 
-# ステップ2: テキスト整形（余分なスペース削除）
-npm run cleanup <episode-guid>
+# ステップ2: テキスト整形（スペース削除）
+npm run cleanup-transcript <episode-guid>
 ```
 
 ### テキスト整形
 
-文字起こし後、テキスト内の余分なスペースを自動的に削除して読みやすくします。
+文字起こし後、テキストを自動整形します：
+- すべてのスペースを削除
+- ピリオド (.) を日本語の句点 (。) に変換
+- 句点で改行を追加
 
 ### スピーカー名の更新 🎙️
 
