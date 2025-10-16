@@ -57,15 +57,15 @@ Speaker A: こんにちは
 ## 💻 Local Command
 
 ```bash
-tsx scripts/update-transcript-speakers.ts <guid> <old> <new>
+npm run update-speakers <guid> <old> <new>
 
 # Host examples
-tsx scripts/update-transcript-speakers.ts cc15a703... A Ryo
-tsx scripts/update-transcript-speakers.ts cc15a703... B Senna
+npm run update-speakers cc15a703... A Ryo
+npm run update-speakers cc15a703... B Senna
 
 # Guest examples (use quotes for multi-word names)
-tsx scripts/update-transcript-speakers.ts cc15a703... C "John Smith"
-tsx scripts/update-transcript-speakers.ts cc15a703... D Ayaka
+npm run update-speakers cc15a703... C "John Smith"
+npm run update-speakers cc15a703... D Ayaka
 ```
 
 ---

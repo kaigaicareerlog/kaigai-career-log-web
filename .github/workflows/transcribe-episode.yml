@@ -7,14 +7,6 @@ on:
         description: "Episode GUID to transcribe"
         required: true
         type: string
-      cleanup_method:
-        description: "Cleanup method (groq or gemini)"
-        required: true
-        type: choice
-        options:
-          - groq
-          - gemini
-        default: groq
 
 permissions:
   contents: write
@@ -45,11 +37,8 @@ jobs:
           ASSEMBLYAI_API_KEY: ${{ secrets.ASSEMBLYAI_API_KEY }}
         run: npm run transcribe ${{ inputs.episode_guid }}
 
-      - name: Cleanup transcript with AI
-        env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: npx tsx scripts/cleanup-transcript.ts ${{ inputs.episode_guid }} ${{ inputs.cleanup_method }}
+      - name: Cleanup transcript
+        run: npx tsx scripts/cleanup-transcript.ts ${{ inputs.episode_guid }}
 
       - name: Create Pull Request
         id: cpr
@@ -70,11 +59,6 @@ jobs:
             - Speaker identification
             - Timestamps
             - Full text of the episode
-            - Japanese language support
-
-            **AI Cleanup:**
-            - Method: ${{ inputs.cleanup_method }}
-            - Natural Japanese text (spaces removed)
-            - Proper punctuation added
+            - Text cleanup (extra spaces removed)
           labels: transcription
           draft: false

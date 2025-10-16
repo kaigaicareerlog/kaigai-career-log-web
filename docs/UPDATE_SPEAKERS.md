@@ -103,23 +103,23 @@ If you prefer to update speakers locally:
 ### Command
 
 ```bash
-tsx scripts/update-transcript-speakers.ts <guid> <old-speaker> <new-speaker>
+npm run update-speakers <guid> <old-speaker> <new-speaker>
 ```
 
 ### Examples
 
 ```bash
 # Update speaker A to Ryo (Host)
-tsx scripts/update-transcript-speakers.ts cc15a703-73c7-406b-8abc-ad7d0a192d05 A Ryo
+npm run update-speakers cc15a703-73c7-406b-8abc-ad7d0a192d05 A Ryo
 
 # Update speaker B to Senna (Host)
-tsx scripts/update-transcript-speakers.ts cc15a703-73c7-406b-8abc-ad7d0a192d05 B Senna
+npm run update-speakers cc15a703-73c7-406b-8abc-ad7d0a192d05 B Senna
 
 # Update speaker C to a guest (use quotes for multi-word names)
-tsx scripts/update-transcript-speakers.ts cc15a703-73c7-406b-8abc-ad7d0a192d05 C "John Smith"
+npm run update-speakers cc15a703-73c7-406b-8abc-ad7d0a192d05 C "John Smith"
 
 # Update speaker D to Ayaka (Host)
-tsx scripts/update-transcript-speakers.ts cc15a703-73c7-406b-8abc-ad7d0a192d05 D Ayaka
+npm run update-speakers cc15a703-73c7-406b-8abc-ad7d0a192d05 D Ayaka
 ```
 
 ### Commit and Push
@@ -197,10 +197,10 @@ Update all speakers in one go:
 
 ```bash
 # Update all speakers for an episode (hosts and guests)
-tsx scripts/update-transcript-speakers.ts {guid} A Ryo
-tsx scripts/update-transcript-speakers.ts {guid} B "Jane Doe"
-tsx scripts/update-transcript-speakers.ts {guid} C Senna
-tsx scripts/update-transcript-speakers.ts {guid} D "Dr. Smith"
+npm run update-speakers {guid} A Ryo
+npm run update-speakers {guid} B "Jane Doe"
+npm run update-speakers {guid} C Senna
+npm run update-speakers {guid} D "Dr. Smith"
 ```
 
 Or use GitHub Actions to update them one at a time (creates separate PRs).
@@ -229,7 +229,7 @@ If you made a mistake, just run the script again with the correct mapping:
 
 ```bash
 # Oops, Speaker A was actually Senna, not Ryo
-tsx scripts/update-transcript-speakers.ts {guid} Ryo Senna
+npm run update-speakers {guid} Ryo Senna
 ```
 
 ---
@@ -302,13 +302,13 @@ After updating speakers:
 
 ## Quick Reference
 
-| Task                         | Command                                                        |
-| ---------------------------- | -------------------------------------------------------------- |
-| Update via GitHub Actions    | Actions → Update Transcript Speakers → Fill form → Run         |
-| Update locally               | `tsx scripts/update-transcript-speakers.ts <guid> <old> <new>` |
-| Check current speakers       | `cat public/transcripts/{guid}.json \| grep speaker`           |
-| Host names (special display) | Ryo, Senna, Ayaka (get custom avatars/colors)                  |
-| Guest names                  | Any name (e.g., "John Smith" - gets default appearance)        |
+| Task                         | Command                                                 |
+| ---------------------------- | ------------------------------------------------------- |
+| Update via GitHub Actions    | Actions → Update Transcript Speakers → Fill form → Run  |
+| Update locally               | `npm run update-speakers <guid> <old> <new>`            |
+| Check current speakers       | `cat public/transcripts/{guid}.json \| grep speaker`    |
+| Host names (special display) | Ryo, Senna, Ayaka (get custom avatars/colors)           |
+| Guest names                  | Any name (e.g., "John Smith" - gets default appearance) |
 
 ---
 

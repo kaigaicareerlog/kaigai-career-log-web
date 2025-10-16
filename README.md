@@ -165,24 +165,20 @@ AssemblyAI を使用してエピソードの自動文字起こしを生成でき
 
 ### セットアップ
 
-1. API キーを取得（無料）：
+1. API キーを取得：
    - [AssemblyAI](https://www.assemblyai.com/) で API キーを取得
-   - [Groq](https://console.groq.com/) または [Gemini](https://makersuite.google.com/app/apikey) で API キーを取得
-   - 📖 詳細な手順: [API キー取得ガイド](docs/GET_API_KEYS.md)
-2. GitHub リポジトリの Secrets に以下を追加：
+2. GitHub リポジトリの Secrets に追加：
    - `ASSEMBLYAI_API_KEY`
-   - `GROQ_API_KEY`（推奨）または `GEMINI_API_KEY`
 3. GitHub Actions から「Transcribe Episode」ワークフローを実行
 
 ### 使い方
 
-**GitHub Actions（推奨・自動クリーンアップ付き）:**
+**GitHub Actions（推奨）:**
 
 1. Actions タブ → Transcribe Episode を選択
 2. Episode GUID を入力
-3. クリーンアップ方法を選択（groq または gemini）
-4. 実行 - 文字起こし + AI 整形が自動で完了！
-5. 自動的にプルリクエストが作成されます
+3. 実行 - 文字起こし + テキスト整形が自動で完了！
+4. 自動的にプルリクエストが作成されます
 
 **ローカル実行:**
 
@@ -191,21 +187,13 @@ AssemblyAI を使用してエピソードの自動文字起こしを生成でき
 export ASSEMBLYAI_API_KEY="your-api-key"
 npm run transcribe <episode-guid>
 
-# ステップ2: AI でテキスト整形（無料）
-tsx scripts/cleanup-transcript.ts <episode-guid> groq    # Groq AI（推奨）
-tsx scripts/cleanup-transcript.ts <episode-guid> gemini  # Google Gemini
+# ステップ2: テキスト整形（余分なスペース削除）
+npm run cleanup <episode-guid>
 ```
 
-### AI テキスト整形（スペース削除・句読点追加）
+### テキスト整形
 
-2 つの**無料 AI**オプションから選択：
-
-- **groq**: Groq AI（無料枠、高品質、Llama 3.1 70B、[API キー取得](https://console.groq.com/)）
-- **gemini**: Google Gemini（無料枠、高品質、[API キー取得](https://makersuite.google.com/app/apikey)）
-
-**コスト保護機能**: 無料枠内で自動停止、予期しない課金なし。
-
-詳細は [文字起こしガイド](docs/TRANSCRIPTION_GUIDE.md) と [整形オプション](docs/CLEANUP_OPTIONS.md) を参照してください。
+文字起こし後、テキスト内の余分なスペースを自動的に削除して読みやすくします。
 
 ### スピーカー名の更新 🎙️
 
@@ -226,12 +214,12 @@ tsx scripts/cleanup-transcript.ts <episode-guid> gemini  # Google Gemini
 
 ```bash
 # ホストの場合
-tsx scripts/update-transcript-speakers.ts <guid> A Ryo
-tsx scripts/update-transcript-speakers.ts <guid> B Senna
+npm run update-speakers <guid> A Ryo
+npm run update-speakers <guid> B Senna
 
 # ゲストの場合（複数単語の名前は引用符で囲む）
-tsx scripts/update-transcript-speakers.ts <guid> C "John Smith"
-tsx scripts/update-transcript-speakers.ts <guid> D Ayaka
+npm run update-speakers <guid> C "John Smith"
+npm run update-speakers <guid> D Ayaka
 ```
 
 詳細は [スピーカー更新ガイド](docs/UPDATE_SPEAKERS.md) を参照してください。
