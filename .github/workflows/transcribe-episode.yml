@@ -7,6 +7,11 @@ on:
         description: "Episode GUID to transcribe"
         required: true
         type: string
+      generate_highlights:
+        description: "Generate highlights after transcription"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -40,6 +45,12 @@ jobs:
       - name: Cleanup transcript
         run: npx tsx scripts/cleanup-transcript.ts ${{ inputs.episode_guid }}
 
+      - name: Generate highlights
+        if: ${{ inputs.generate_highlights }}
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: npm run generate-highlights ${{ inputs.episode_guid }}
+
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v5
@@ -60,5 +71,6 @@ jobs:
             - Timestamps
             - Full text of the episode
             - Text cleanup (spaces removed, periods converted to 。, line breaks added)
+            ${{ inputs.generate_highlights && '- Viral-optimized highlights for X (Twitter) posts' || '' }}
           labels: transcription
           draft: false

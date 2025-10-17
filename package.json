@@ -12,6 +12,7 @@
     "transcribe": "tsx scripts/transcribe-episode.ts",
     "cleanup-transcript": "tsx scripts/cleanup-transcript.ts",
     "update-speakers": "tsx scripts/update-transcript-speakers.ts",
+    "generate-highlights": "tsx scripts/generate-highlights.ts",
     "find-spotify-url": "tsx scripts/find-spotify-url.ts",
     "update-spotify-urls": "tsx scripts/update-spotify-urls.ts",
     "update-youtube-urls": "tsx scripts/update-youtube-urls.ts",

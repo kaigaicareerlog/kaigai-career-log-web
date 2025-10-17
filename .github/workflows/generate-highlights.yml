@@ -1,0 +1,74 @@
+name: Generate Episode Highlights
+
+on:
+  workflow_dispatch:
+    inputs:
+      episode_guid:
+        description: "Episode GUID to generate highlights for"
+        required: true
+        type: string
+      force:
+        description: "Force regenerate even if highlights exist"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-highlights:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          persist-credentials: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate highlights
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          if [ "${{ inputs.force }}" = "true" ]; then
+            npm run generate-highlights ${{ inputs.episode_guid }} -- --force
+          else
+            npm run generate-highlights ${{ inputs.episode_guid }}
+          fi
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          commit-message: "Add highlights for episode ${{ inputs.episode_guid }}"
+          committer: GitHub <noreply@github.com>
+          author: GitHub <noreply@github.com>
+          signoff: false
+          branch: highlights-episode-${{ inputs.episode_guid }}
+          delete-branch: true
+          title: "Add highlights for episode ${{ inputs.episode_guid }}"
+          body: |
+            This PR adds viral-optimized highlights for episode ${{ inputs.episode_guid }}.
+
+            **Generated highlights:**
+            - 3 attention-grabbing highlights
+            - Optimized for X (Twitter) posts
+            - Under 140 Japanese characters each
+            - Uses emotional triggers and specific data points
+            - Ready for social media posting
+
+            The highlights are saved as `highlight1`, `highlight2`, and `highlight3` in the transcript JSON file.
+          labels: highlights
+          draft: false

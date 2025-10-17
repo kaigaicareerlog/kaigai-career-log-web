@@ -177,8 +177,9 @@ AssemblyAI を使用してエピソードの自動文字起こしを生成でき
 
 1. Actions タブ → Transcribe Episode を選択
 2. Episode GUID を入力
-3. 実行 - 文字起こし + テキスト整形が自動で完了！
-4. 自動的にプルリクエストが作成されます
+3. （オプション）"Generate highlights after transcription" にチェックを入れる
+4. 実行 - 文字起こし + テキスト整形（+ ハイライト生成）が自動で完了！
+5. 自動的にプルリクエストが作成されます
 
 **ローカル実行:**
 
@@ -194,9 +195,47 @@ npm run cleanup-transcript <episode-guid>
 ### テキスト整形
 
 文字起こし後、テキストを自動整形します：
+
 - すべてのスペースを削除
 - ピリオド (.) を日本語の句点 (。) に変換
 - 句点で改行を追加
+
+### ハイライト生成
+
+Groq AI を使用してエピソードから X (Twitter) 投稿用のハイライトを自動生成できます。
+
+**セットアップ:**
+
+1. [Groq](https://console.groq.com/) で API キーを取得
+2. GitHub リポジトリの Secrets に追加：`GROQ_API_KEY`
+
+**使い方:**
+
+**GitHub Actions（推奨）:**
+
+1. Actions タブ → Generate Episode Highlights を選択
+2. Episode GUID を入力
+3. （オプション）"Force regenerate even if highlights exist" にチェックを入れる
+4. 実行 - ハイライトが自動生成され、プルリクエストが作成されます
+
+**ローカル実行:**
+
+```bash
+# ハイライト生成
+export GROQ_API_KEY="your-api-key"
+npm run generate-highlights <episode-guid>
+
+# 既存のハイライトを上書き
+npm run generate-highlights <episode-guid> --force
+```
+
+**生成されるハイライト:**
+
+- 140 文字以内の日本語
+- バイラル最適化（衝撃的、数字入り、感情を引き起こす）
+- X (Twitter) 投稿に最適化
+- 海外キャリアに興味がある日本人向け
+- 3 つのハイライトが `highlight1`, `highlight2`, `highlight3` として保存
 
 ### スピーカー名の更新 🎙️
 
