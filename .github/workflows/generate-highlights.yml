@@ -15,7 +15,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   generate-highlights:
@@ -47,28 +46,10 @@ jobs:
             npm run generate-highlights ${{ inputs.episode_guid }}
           fi
 
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
-          commit-message: "Add highlights for episode ${{ inputs.episode_guid }}"
-          committer: GitHub <noreply@github.com>
-          author: GitHub <noreply@github.com>
-          signoff: false
-          branch: highlights-episode-${{ inputs.episode_guid }}
-          delete-branch: true
-          title: "Add highlights for episode ${{ inputs.episode_guid }}"
-          body: |
-            This PR adds viral-optimized highlights for episode ${{ inputs.episode_guid }}.
-
-            **Generated highlights:**
-            - 3 attention-grabbing highlights
-            - Optimized for X (Twitter) posts
-            - Under 140 Japanese characters each
-            - Uses emotional triggers and specific data points
-            - Ready for social media posting
-
-            The highlights are saved as `highlight1`, `highlight2`, and `highlight3` in the transcript JSON file.
-          labels: highlights
-          draft: false
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/transcripts/${{ inputs.episode_guid }}.json
+          git diff --staged --quiet || git commit -m "Add highlights for episode ${{ inputs.episode_guid }}"
+          git push

@@ -33,7 +33,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   update-speakers:
@@ -67,25 +66,10 @@ jobs:
       - name: Update speaker labels
         run: npx tsx scripts/update-transcript-speakers.ts ${{ inputs.episode_guid }} "${{ inputs.old_speaker }}" "${{ steps.speaker.outputs.name }}"
 
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
-          commit-message: "Update transcript speakers for ${{ inputs.episode_guid }}: ${{ inputs.old_speaker }} → ${{ steps.speaker.outputs.name }}"
-          committer: GitHub <noreply@github.com>
-          author: GitHub <noreply@github.com>
-          signoff: false
-          branch: update-speakers-${{ inputs.episode_guid }}-${{ github.run_number }}
-          delete-branch: true
-          title: "Update speakers for episode ${{ inputs.episode_guid }}"
-          body: |
-            This PR updates speaker labels for episode ${{ inputs.episode_guid }}.
-
-            **Changes:**
-            - Old speaker: `${{ inputs.old_speaker }}`
-            - New speaker: `${{ steps.speaker.outputs.name }}` (${{ inputs.speaker_type }})
-
-            The transcript will now show the correct speaker names.
-          labels: transcript,speakers
-          draft: false
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/transcripts/${{ inputs.episode_guid }}.json
+          git diff --staged --quiet || git commit -m "Update transcript speakers for ${{ inputs.episode_guid }}: ${{ inputs.old_speaker }} → ${{ steps.speaker.outputs.name }}"
+          git push

@@ -179,7 +179,7 @@ AssemblyAI を使用してエピソードの自動文字起こしを生成でき
 2. Episode GUID を入力
 3. （オプション）"Generate highlights after transcription" にチェックを入れる
 4. 実行 - 文字起こし + テキスト整形（+ ハイライト生成）が自動で完了！
-5. 自動的にプルリクエストが作成されます
+5. 変更が自動的に main ブランチにコミットされます
 
 **ローカル実行:**
 
@@ -216,7 +216,7 @@ Groq AI を使用してエピソードから X (Twitter) 投稿用のハイラ�
 1. Actions タブ → Generate Episode Highlights を選択
 2. Episode GUID を入力
 3. （オプション）"Force regenerate even if highlights exist" にチェックを入れる
-4. 実行 - ハイライトが自動生成され、プルリクエストが作成されます
+4. 実行 - ハイライトが自動生成され、main ブランチにコミットされます
 
 **ローカル実行:**
 
@@ -250,7 +250,7 @@ npm run generate-highlights <episode-guid> --force
    - スピーカータイプ（Host または Guest）
    - **Host の場合:** Ryo, Senna, Ayaka から選択（カスタムアバター付き）
    - **Guest の場合:** ゲスト名を入力（例: "John Smith"）
-3. 実行 → PR を確認してマージ
+3. 実行 → 変更が自動的に main ブランチにコミットされます
 
 **ローカル実行:**
 
