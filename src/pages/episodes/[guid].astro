@@ -182,7 +182,7 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
   <EpisodeUrlModal />
   <EpisodeGuidModal />
 
-  <script define:vars={{ episode }}>
+  <script define:vars={{ episode, transcript }}>
     // Make episode data available globally for the modals
     window.__EPISODE_DATA__ = {
       title: episode.title,
@@ -191,6 +191,9 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
       spotifyUrl: episode.spotifyUrl || '',
       youtubeUrl: episode.youtubeUrl || '',
       amazonMusicUrl: episode.amazonMusicUrl || '',
+      highlight1: transcript?.highlight1 || '',
+      highlight2: transcript?.highlight2 || '',
+      highlight3: transcript?.highlight3 || '',
     };
   </script>
 

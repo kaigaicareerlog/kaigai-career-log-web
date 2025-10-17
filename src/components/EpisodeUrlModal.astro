@@ -4,21 +4,68 @@ import Modal from './common/Modal.astro';
 ---
 
 <Modal id="episode-url-modal" title="Episode URLs">
-  <div class="url-section">
-    <h3>Apple Podcasts</h3>
-    <input type="text" id="apple-url" readonly class="url-input" />
+  <!-- Highlights Section -->
+  <div id="highlights-container" class="highlights-container">
+    <h3>✨ Highlights</h3>
+    <div class="highlights-list">
+      <div class="highlight-item">
+        <div class="highlight-number">1</div>
+        <div class="highlight-input-container">
+          <input type="text" id="highlight-1" readonly class="highlight-input" />
+          <button class="copy-highlight-btn" data-highlight="1" title="Copy highlight">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-number">2</div>
+        <div class="highlight-input-container">
+          <input type="text" id="highlight-2" readonly class="highlight-input" />
+          <button class="copy-highlight-btn" data-highlight="2" title="Copy highlight">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="highlight-item">
+        <div class="highlight-number">3</div>
+        <div class="highlight-input-container">
+          <input type="text" id="highlight-3" readonly class="highlight-input" />
+          <button class="copy-highlight-btn" data-highlight="3" title="Copy highlight">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2 2v1"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="url-section">
-    <h3>Spotify</h3>
-    <input type="text" id="spotify-url" readonly class="url-input" />
-  </div>
-  <div class="url-section">
-    <h3>YouTube</h3>
-    <input type="text" id="youtube-url" readonly class="url-input" />
-  </div>
-  <div class="url-section">
-    <h3>Amazon Music</h3>
-    <input type="text" id="amazon-url" readonly class="url-input" />
+
+  <!-- URLs Section -->
+  <div class="urls-container">
+    <h3 class="section-title">🔗 Platform URLs</h3>
+    <div class="url-section">
+      <h3>Apple Podcasts</h3>
+      <input type="text" id="apple-url" readonly class="url-input" />
+    </div>
+    <div class="url-section">
+      <h3>Spotify</h3>
+      <input type="text" id="spotify-url" readonly class="url-input" />
+    </div>
+    <div class="url-section">
+      <h3>YouTube</h3>
+      <input type="text" id="youtube-url" readonly class="url-input" />
+    </div>
+    <div class="url-section">
+      <h3>Amazon Music</h3>
+      <input type="text" id="amazon-url" readonly class="url-input" />
+    </div>
   </div>
 
   <div slot="footer" class="footer-content">
@@ -82,6 +129,17 @@ import Modal from './common/Modal.astro';
   copyAllBtn?.addEventListener('click', copyAllToClipboard);
   setupModalOutsideClick(modal, () => hideModal(modal));
 
+  // Setup highlight copy buttons
+  document.querySelectorAll('.copy-highlight-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const highlightNum = btn.getAttribute('data-highlight');
+      const input = document.getElementById(`highlight-${highlightNum}`) as HTMLInputElement;
+      if (input && input.value) {
+        await copyToClipboard(input.value, copyFeedback);
+      }
+    });
+  });
+
   function openModal() {
     if (!modal) return;
 
@@ -97,6 +155,12 @@ import Modal from './common/Modal.astro';
       const spotifyInput = document.getElementById('spotify-url') as HTMLInputElement;
       const youtubeInput = document.getElementById('youtube-url') as HTMLInputElement;
       const amazonInput = document.getElementById('amazon-url') as HTMLInputElement;
+      
+      // Highlight textareas
+      const highlight1 = document.getElementById('highlight-1') as HTMLTextAreaElement;
+      const highlight2 = document.getElementById('highlight-2') as HTMLTextAreaElement;
+      const highlight3 = document.getElementById('highlight-3') as HTMLTextAreaElement;
+      const highlightsContainer = document.getElementById('highlights-container');
 
       if (titleEl && episodeData.title) {
         titleEl.textContent = episodeData.title;
@@ -106,6 +170,20 @@ import Modal from './common/Modal.astro';
       if (spotifyInput) spotifyInput.value = episodeData.spotifyUrl || '';
       if (youtubeInput) youtubeInput.value = episodeData.youtubeUrl || '';
       if (amazonInput) amazonInput.value = episodeData.amazonMusicUrl || '';
+
+      // Populate highlights if available
+      const hasHighlights = episodeData.highlight1 || episodeData.highlight2 || episodeData.highlight3;
+      
+      if (highlightsContainer) {
+        if (hasHighlights) {
+          highlightsContainer.style.display = 'block';
+          if (highlight1) highlight1.value = episodeData.highlight1 || '';
+          if (highlight2) highlight2.value = episodeData.highlight2 || '';
+          if (highlight3) highlight3.value = episodeData.highlight3 || '';
+        } else {
+          highlightsContainer.style.display = 'none';
+        }
+      }
 
       showModal(modal);
     }
@@ -145,6 +223,108 @@ import Modal from './common/Modal.astro';
 </script>
 
 <style>
+  .highlights-container {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+  }
+
+  .highlights-container h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .highlights-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .highlight-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .highlight-number {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  .highlight-input-container {
+    flex: 1;
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .highlight-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid rgba(59, 130, 246, 0.2);
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    background-color: rgba(59, 130, 246, 0.05);
+    color: var(--color-text);
+    font-family: system-ui, -apple-system, sans-serif;
+    transition: all 0.2s ease;
+  }
+
+  .highlight-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+
+  .copy-highlight-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    background-color: rgba(59, 130, 246, 0.1);
+    border: 2px solid rgba(59, 130, 246, 0.2);
+    border-radius: 0.5rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .copy-highlight-btn:hover {
+    background-color: rgba(59, 130, 246, 0.2);
+    border-color: var(--color-primary);
+  }
+
+  .copy-highlight-btn:active {
+    transform: scale(0.95);
+  }
+
+  .copy-highlight-btn svg {
+    display: block;
+  }
+
+  .urls-container {
+    margin-top: 1rem;
+  }
+
+  .section-title {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
   .url-section {
     margin-bottom: 1.5rem;
   }
