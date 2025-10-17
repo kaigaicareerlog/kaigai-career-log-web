@@ -1,6 +1,6 @@
 ---
 interface Contact {
-  type: 'email' | 'marshmallow';
+  type: 'email' | 'form';
   href: string;
   icon: string;
   text: string;
@@ -14,10 +14,10 @@ const contacts: Contact[] = [
     text: 'Email'
   },
   {
-    type: 'marshmallow',
-    href: 'https://marshmallow-qa.com/pnyvljc4559xpz9?t=A6BDdq&utm_medium=url_text&utm_source=promotion',
-    icon: '🍬',
-    text: 'マシュマロ'
+    type: "form",
+    href: "https://forms.gle/pPThnBsCKX38MzT36",
+    icon: "💬",
+    text: "お便りフォーム"
   }
 ];
 ---
@@ -28,8 +28,8 @@ const contacts: Contact[] = [
     {contacts.map((contact) => (
       <a 
         href={contact.href}
-        target={contact.type === 'marshmallow' ? '_blank' : undefined}
-        rel={contact.type === 'marshmallow' ? 'noopener noreferrer' : undefined}
+        target={contact.type === 'form' ? '_blank' : undefined}
+        rel={contact.type === 'form' ? 'noopener noreferrer' : undefined}
         class={`contact-link ${contact.type}`}
       >
         <span class="contact-icon">{contact.icon}</span>
@@ -96,7 +96,7 @@ const contacts: Contact[] = [
     background: rgba(59, 130, 246, 0.05);
   }
 
-  .contact-link.marshmallow:hover {
+  .contact-link.form:hover {
     background: rgba(255, 182, 193, 0.1);
     border-color: rgba(255, 182, 193, 0.5);
   }
