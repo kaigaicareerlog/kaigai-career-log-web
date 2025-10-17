@@ -220,28 +220,6 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
         });
       }
 
-      // Auto-open URL modal if query parameter ?m=urls is present
-      const urlParams = new URLSearchParams(window.location.search);
-      const hasUrlsParam = urlParams.get('m') === 'urls';
-      
-      if (hasUrlsParam) {
-        // Wait for modal scripts to load with retry logic
-        let attempts = 0;
-        const maxAttempts = 10;
-        const tryOpenModal = () => {
-          const openModal = (window as any).__openEpisodeUrlModal;
-          if (openModal) {
-            openModal();
-            // Remove the query parameter from URL without reloading
-            const newUrl = window.location.pathname;
-            window.history.replaceState({}, '', newUrl);
-          } else if (attempts < maxAttempts) {
-            attempts++;
-            setTimeout(tryOpenModal, 100);
-          }
-        };
-        setTimeout(tryOpenModal, 100);
-      }
     });
   </script>
 </BaseLayout>

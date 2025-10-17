@@ -9,7 +9,6 @@ import Modal from './common/Modal.astro';
     <h3>✨ Highlights</h3>
     <div class="highlights-list">
       <div class="highlight-item">
-        <div class="highlight-number">1</div>
         <div class="highlight-input-container">
           <input type="text" id="highlight-1" readonly class="highlight-input" />
           <button class="copy-highlight-btn" data-highlight="1" title="Copy highlight">
@@ -21,7 +20,6 @@ import Modal from './common/Modal.astro';
         </div>
       </div>
       <div class="highlight-item">
-        <div class="highlight-number">2</div>
         <div class="highlight-input-container">
           <input type="text" id="highlight-2" readonly class="highlight-input" />
           <button class="copy-highlight-btn" data-highlight="2" title="Copy highlight">
@@ -33,7 +31,6 @@ import Modal from './common/Modal.astro';
         </div>
       </div>
       <div class="highlight-item">
-        <div class="highlight-number">3</div>
         <div class="highlight-input-container">
           <input type="text" id="highlight-3" readonly class="highlight-input" />
           <button class="copy-highlight-btn" data-highlight="3" title="Copy highlight">
@@ -246,20 +243,6 @@ import Modal from './common/Modal.astro';
     display: flex;
     gap: 0.75rem;
     align-items: center;
-  }
-
-  .highlight-number {
-    flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-    color: white;
-    border-radius: 50%;
-    font-weight: 700;
-    font-size: 0.9rem;
   }
 
   .highlight-input-container {
