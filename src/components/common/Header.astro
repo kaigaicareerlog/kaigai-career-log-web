@@ -13,7 +13,6 @@ const navLinks = [
         <img src="/logo.png" alt="Kaigai Career Log Logo" class="logo" />
         <span class="brand-text">海外キャリアログ</span>
       </a>
-      <button id="hidden-url-trigger" class="hidden-trigger" aria-label="Secret URL modal trigger"></button>
     </div>
     
     <div class="nav-menu">
@@ -52,7 +51,6 @@ const navLinks = [
   .nav-brand {
     display: flex;
     align-items: center;
-    position: relative;
   }
 
   .brand-link {
@@ -91,20 +89,6 @@ const navLinks = [
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-  }
-
-  .hidden-trigger {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 50px;
-    height: 50px;
-    opacity: 0;
-    cursor: default;
-    background: transparent;
-    border: none;
-    padding: 0;
-    z-index: 10;
   }
 
   .nav-menu {
@@ -195,37 +179,3 @@ const navLinks = [
     }
   }
 </style>
-
-<script>
-  // Triple-click easter egg to open URL modal
-  const hiddenTrigger = document.getElementById('hidden-url-trigger');
-  
-  if (hiddenTrigger) {
-    let clickCount = 0;
-    let clickTimeout: ReturnType<typeof setTimeout> | null = null;
-
-    hiddenTrigger.addEventListener('click', () => {
-      clickCount++;
-
-      // Clear any existing timeout
-      if (clickTimeout) {
-        clearTimeout(clickTimeout);
-      }
-
-      // If we've reached 3 clicks, try to open the modal
-      if (clickCount === 3) {
-        const openModal = (window as any).__openEpisodeUrlModal;
-        if (openModal) {
-          openModal();
-        }
-        clickCount = 0;
-      } else {
-        // Reset click count after 1 second if not completed
-        clickTimeout = setTimeout(() => {
-          clickCount = 0;
-        }, 1000);
-      }
-    });
-  }
-</script>
-

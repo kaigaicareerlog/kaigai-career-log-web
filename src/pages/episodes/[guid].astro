@@ -55,8 +55,14 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
 >
   <main class="episode-page">
     <div class="container">
-      <!-- Back Button -->
-      <a href="/" class="back-link">← エピソード一覧に戻る</a>
+      <!-- Navigation Bar -->
+      <div class="nav-bar">
+        <a href="/" class="back-link">← エピソード一覧に戻る</a>
+        <div class="action-buttons">
+          <button id="open-guid-modal-btn" class="action-btn hidden-btn" aria-label="Secret GUID modal trigger (triple-click)"></button>
+          <button id="open-urls-modal-btn" class="action-btn hidden-btn" aria-label="Secret URLs modal trigger (triple-click)"></button>
+        </div>
+      </div>
 
       <!-- Episode Header -->
       <article class="episode-header">
@@ -220,6 +226,61 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
         });
       }
 
+      // Modal button functionality - triple-click to open
+      const openGuidModalBtn = document.getElementById('open-guid-modal-btn');
+      const openUrlsModalBtn = document.getElementById('open-urls-modal-btn');
+
+      // GUID modal triple-click handler
+      if (openGuidModalBtn) {
+        let guidClickCount = 0;
+        let guidClickTimeout: ReturnType<typeof setTimeout> | null = null;
+
+        openGuidModalBtn.addEventListener('click', () => {
+          guidClickCount++;
+
+          if (guidClickTimeout) {
+            clearTimeout(guidClickTimeout);
+          }
+
+          if (guidClickCount === 3) {
+            const openModalFunc = (window as any).__openEpisodeGuidModal;
+            if (openModalFunc) {
+              openModalFunc();
+            }
+            guidClickCount = 0;
+          } else {
+            guidClickTimeout = setTimeout(() => {
+              guidClickCount = 0;
+            }, 1000);
+          }
+        });
+      }
+
+      // URLs modal triple-click handler
+      if (openUrlsModalBtn) {
+        let urlsClickCount = 0;
+        let urlsClickTimeout: ReturnType<typeof setTimeout> | null = null;
+
+        openUrlsModalBtn.addEventListener('click', () => {
+          urlsClickCount++;
+
+          if (urlsClickTimeout) {
+            clearTimeout(urlsClickTimeout);
+          }
+
+          if (urlsClickCount === 3) {
+            const openModalFunc = (window as any).__openEpisodeUrlModal;
+            if (openModalFunc) {
+              openModalFunc();
+            }
+            urlsClickCount = 0;
+          } else {
+            urlsClickTimeout = setTimeout(() => {
+              urlsClickCount = 0;
+            }, 1000);
+          }
+        });
+      }
     });
   </script>
 </BaseLayout>
@@ -254,6 +315,15 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     height: fit-content;
   }
 
+  .nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
   .back-link {
     display: inline-flex;
     align-items: center;
@@ -261,13 +331,31 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     color: var(--color-primary);
     text-decoration: none;
     font-weight: 500;
-    margin-bottom: 2rem;
     transition: all 0.3s ease;
   }
 
   .back-link:hover {
     transform: translateX(-4px);
     color: var(--color-secondary);
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .action-btn {
+    width: 60px;
+    height: 30px;
+    opacity: 0;
+    cursor: default;
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .action-btn.hidden-btn {
+    opacity: 0;
   }
 
   .episode-header {
@@ -485,6 +573,10 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
   @media (max-width: 768px) {
     .episode-page {
       padding: 1.5rem 0;
+    }
+
+    .nav-bar {
+      gap: 1rem;
     }
 
     .content-grid {

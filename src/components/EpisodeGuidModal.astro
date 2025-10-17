@@ -108,6 +108,9 @@ import Modal from './common/Modal.astro';
     }
   }
 
+  // Expose openModal function globally
+  (window as any).__openEpisodeGuidModal = openModal;
+
   async function handleCopy() {
     if (!guidInput || !guidInput.value) return;
     await copyToClipboard(guidInput.value, copyFeedback);
