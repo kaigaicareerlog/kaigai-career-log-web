@@ -111,31 +111,6 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
             </section>
           ) : null}
 
-          <!-- Spotify Player -->
-          {spotifyEmbedUrl ? (
-            <section class="audio-section">
-              <h2>再生</h2>
-              <iframe
-                class="spotify-player"
-                src={spotifyEmbedUrl}
-                width="100%"
-                height="352"
-                frameborder="0"
-                allowfullscreen
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-              ></iframe>
-            </section>
-          ) : episode.audioUrl && (
-            <section class="audio-section">
-              <h2>再生</h2>
-              <audio controls class="audio-player">
-                <source src={episode.audioUrl} type="audio/mpeg" />
-                お使いのブラウザは音声再生に対応していません。
-              </audio>
-            </section>
-          )}
-
           <!-- Transcript Section -->
           {transcript && (
             <section class="transcript-section">
@@ -175,6 +150,7 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
 
         <!-- Sidebar -->
         <aside class="sidebar">
+
           <!-- Platform Links -->
           <section class="platform-section">
         <h2>このエピソードを聴く</h2>
@@ -207,6 +183,21 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
           )}
         </div>
       </section>
+      <!-- Spotify Player -->
+      {spotifyEmbedUrl ? (
+        <section class="audio-section">
+          <iframe
+            class="spotify-player"
+            src={spotifyEmbedUrl}
+            width="100%"
+            height="352"
+            frameborder="0"
+            allowfullscreen
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+          ></iframe>
+        </section>
+      ) : null}
         </aside>
       </div>
     </div>
@@ -518,14 +509,7 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
   }
 
   .audio-section {
-    margin-bottom: 2rem;
-  }
-
-  .audio-section h2 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: var(--color-text);
+    margin-top: 1.5rem;
   }
 
   .audio-player {
@@ -740,6 +724,11 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     .highlight-item:hover {
       border-color: rgba(59, 130, 246, 0.4);
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+
+    .audio-section {
+      background: rgba(15, 23, 42, 0.8);
+      border-color: rgba(59, 130, 246, 0.2);
     }
 
     .transcript-container {
