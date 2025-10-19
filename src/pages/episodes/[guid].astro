@@ -18,10 +18,10 @@ import path from 'path';
 
 export async function getStaticPaths() {
   const data = await parseJSONFeed();
-  
+
   return data.episodes.map((episode) => ({
     params: { guid: episode.guid },
-    props: { episode }
+    props: { episode },
   }));
 }
 
@@ -30,7 +30,12 @@ const { episode } = Astro.props;
 // Load transcript if available
 let transcript = null;
 try {
-  const transcriptPath = path.join(process.cwd(), 'public', 'transcripts', `${episode.guid}.json`);
+  const transcriptPath = path.join(
+    process.cwd(),
+    'public',
+    'transcripts',
+    `${episode.guid}.json`
+  );
   if (fs.existsSync(transcriptPath)) {
     const transcriptContent = fs.readFileSync(transcriptPath, 'utf-8');
     transcript = JSON.parse(transcriptContent);
@@ -59,15 +64,21 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
       <div class="nav-bar">
         <a href="/" class="back-link">← エピソード一覧に戻る</a>
         <div class="action-buttons">
-          <button id="open-guid-modal-btn" class="action-btn hidden-btn" aria-label="Secret GUID modal trigger (triple-click)"></button>
-          <button id="open-urls-modal-btn" class="action-btn hidden-btn" aria-label="Secret URLs modal trigger (triple-click)"></button>
+          <button
+            id="open-guid-modal-btn"
+            class="action-btn hidden-btn"
+            aria-label="Secret GUID modal trigger (triple-click)"></button>
+          <button
+            id="open-urls-modal-btn"
+            class="action-btn hidden-btn"
+            aria-label="Secret URLs modal trigger (triple-click)"></button>
         </div>
       </div>
 
       <!-- Episode Header -->
       <article class="episode-header">
         <h1 class="episode-title">{episode.title}</h1>
-        
+
         <div class="episode-meta">
           <span class="meta-item">📅 {formatDate(episode.date)}</span>
           <span class="meta-item">📻 {formatDuration(episode.duration)}</span>
@@ -82,122 +93,142 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
           <section class="episode-description">
             <h2>エピソード詳細</h2>
             <p>{episode.description}</p>
+
+            <!-- Highlights Section -->
+            {
+              transcript?.highlight1 ||
+              transcript?.highlight2 ||
+              transcript?.highlight3 ? (
+                <div class="highlights-section">
+                  <h3>エピソードの見どころ（聞きどころ）</h3>
+                  <ul class="highlights-list">
+                    {transcript.highlight1 && (
+                      <li class="highlight-item">
+                        <span class="highlight-icon">✨</span>
+                        <p>{transcript.highlight1}</p>
+                      </li>
+                    )}
+                    {transcript.highlight2 && (
+                      <li class="highlight-item">
+                        <span class="highlight-icon">✨</span>
+                        <p>{transcript.highlight2}</p>
+                      </li>
+                    )}
+                    {transcript.highlight3 && (
+                      <li class="highlight-item">
+                        <span class="highlight-icon">✨</span>
+                        <p>{transcript.highlight3}</p>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              ) : null
+            }
           </section>
 
-          <!-- Highlights Section -->
-          {transcript?.highlight1 || transcript?.highlight2 || transcript?.highlight3 ? (
-            <section class="highlights-section">
-              <h2>エピソードの見どころ（聞きどころ）</h2>
-              <ul class="highlights-list">
-                {transcript.highlight1 && (
-                  <li class="highlight-item">
-                    <span class="highlight-icon">✨</span>
-                    <p>{transcript.highlight1}</p>
-                  </li>
-                )}
-                {transcript.highlight2 && (
-                  <li class="highlight-item">
-                    <span class="highlight-icon">✨</span>
-                    <p>{transcript.highlight2}</p>
-                  </li>
-                )}
-                {transcript.highlight3 && (
-                  <li class="highlight-item">
-                    <span class="highlight-icon">✨</span>
-                    <p>{transcript.highlight3}</p>
-                  </li>
-                )}
-              </ul>
-            </section>
-          ) : null}
-
           <!-- Transcript Section -->
-          {transcript && (
-            <section class="transcript-section">
-              <button class="transcript-toggle" id="transcript-toggle">
-                <h2>文字起こし</h2>
-                <svg class="toggle-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-              </button>
-              <div class="transcript-container" id="transcript-container">
-                {transcript.utterances.map((utterance: any) => {
-                  const hostInfo = getHostInfo(utterance.speaker);
-                  return (
-                    <div class="transcript-utterance">
-                      <div class="speaker-info">
-                        <img 
-                          src={hostInfo.image} 
-                          alt={hostInfo.name}
-                          class="speaker-avatar"
-                          style={`border-color: ${hostInfo.color}`}
-                        />
-                        <div class="speaker-details">
-                          <span class="speaker-name" style={`color: ${hostInfo.color}`}>
-                            {hostInfo.name}
-                          </span>
-                          <span class="timestamp">{utterance.timestamp}</span>
+          {
+            transcript && (
+              <section class="transcript-section">
+                <button class="transcript-toggle" id="transcript-toggle">
+                  <h2>文字起こし</h2>
+                  <svg
+                    class="toggle-icon"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                <div class="transcript-container" id="transcript-container">
+                  {transcript.utterances.map((utterance: any) => {
+                    const hostInfo = getHostInfo(utterance.speaker);
+                    return (
+                      <div class="transcript-utterance">
+                        <div class="speaker-info">
+                          <img
+                            src={hostInfo.image}
+                            alt={hostInfo.name}
+                            class="speaker-avatar"
+                            style={`border-color: ${hostInfo.color}`}
+                          />
+                          <div class="speaker-details">
+                            <span
+                              class="speaker-name"
+                              style={`color: ${hostInfo.color}`}
+                            >
+                              {hostInfo.name}
+                            </span>
+                            <span class="timestamp">{utterance.timestamp}</span>
+                          </div>
                         </div>
+                        <p class="transcript-text">{utterance.text}</p>
                       </div>
-                      <p class="transcript-text">{utterance.text}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </section>
-          )}
+                    );
+                  })}
+                </div>
+              </section>
+            )
+          }
         </div>
 
         <!-- Sidebar -->
         <aside class="sidebar">
-
           <!-- Platform Links -->
           <section class="platform-section">
-        <h2>このエピソードを聴く</h2>
-        <div class="platform-links">
-          <PlatformButton
-            platform="spotify"
-            href={spotifyUrl}
-            label="Spotify"
-            iconSrc="https://open.spotify.com/favicon.ico"
-          />
-          <PlatformButton
-            platform="apple"
-            href={applePodcastUrl}
-            label="Apple Podcasts"
-            iconSrc="https://www.apple.com/favicon.ico"
-          />
-          <PlatformButton
-            platform="youtube"
-            href={youtubeUrl}
-            label="YouTube"
-            iconSrc="https://www.youtube.com/favicon.ico"
-          />
-          {amazonMusicUrl && (
-            <PlatformButton
-              platform="amazon"
-              href={amazonMusicUrl}
-              label="Amazon Music"
-              iconSrc="https://www.amazon.com/favicon.ico"
-            />
-          )}
-        </div>
-      </section>
-      <!-- Spotify Player -->
-      {spotifyEmbedUrl ? (
-        <section class="audio-section">
-          <iframe
-            class="spotify-player"
-            src={spotifyEmbedUrl}
-            width="100%"
-            height="352"
-            frameborder="0"
-            allowfullscreen
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"
-          ></iframe>
-        </section>
-      ) : null}
+            <h2>このエピソードを聴く</h2>
+            <div class="platform-links">
+              <PlatformButton
+                platform="spotify"
+                href={spotifyUrl}
+                label="Spotify"
+                iconSrc="https://open.spotify.com/favicon.ico"
+              />
+              <PlatformButton
+                platform="apple"
+                href={applePodcastUrl}
+                label="Apple Podcasts"
+                iconSrc="https://www.apple.com/favicon.ico"
+              />
+              <PlatformButton
+                platform="youtube"
+                href={youtubeUrl}
+                label="YouTube"
+                iconSrc="https://www.youtube.com/favicon.ico"
+              />
+              {
+                amazonMusicUrl && (
+                  <PlatformButton
+                    platform="amazon"
+                    href={amazonMusicUrl}
+                    label="Amazon Music"
+                    iconSrc="https://www.amazon.com/favicon.ico"
+                  />
+                )
+              }
+            </div>
+          </section>
+          <!-- Spotify Player -->
+          {
+            spotifyEmbedUrl ? (
+              <section class="audio-section">
+                <iframe
+                  class="spotify-player"
+                  src={spotifyEmbedUrl}
+                  width="100%"
+                  height="352"
+                  frameborder="0"
+                  allowfullscreen
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                />
+              </section>
+            ) : null
+          }
         </aside>
       </div>
     </div>
@@ -225,15 +256,18 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     // Transcript toggle functionality
     document.addEventListener('DOMContentLoaded', () => {
       const toggleButton = document.getElementById('transcript-toggle');
-      const transcriptContainer = document.getElementById('transcript-container');
-      
+      const transcriptContainer = document.getElementById(
+        'transcript-container'
+      );
+
       if (toggleButton && transcriptContainer) {
         // Set initial state to collapsed
         transcriptContainer.classList.add('collapsed');
-        
+
         toggleButton.addEventListener('click', () => {
-          const isCollapsed = transcriptContainer.classList.contains('collapsed');
-          
+          const isCollapsed =
+            transcriptContainer.classList.contains('collapsed');
+
           if (isCollapsed) {
             transcriptContainer.classList.remove('collapsed');
             toggleButton.classList.add('open');
@@ -372,10 +406,6 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     padding: 0;
   }
 
-  .action-btn.hidden-btn {
-    opacity: 0;
-  }
-
   .episode-header {
     margin-bottom: 2rem;
   }
@@ -385,7 +415,11 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     font-weight: 700;
     line-height: 1.3;
     margin-bottom: 1rem;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-secondary)
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -430,18 +464,15 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
 
   /* Highlights Section */
   .highlights-section {
-    margin-bottom: 2rem;
-    padding: 2rem;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(147, 51, 234, 0.05));
-    border-radius: 1rem;
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid rgba(59, 130, 246, 0.15);
   }
 
-  .highlights-section h2 {
-    font-size: 1.3rem;
+  .highlights-section h3 {
+    font-size: 1.15rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
     color: var(--color-text);
     display: flex;
     align-items: center;
@@ -454,30 +485,20 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
   .highlight-item {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    padding: 1rem;
-    background: var(--color-background);
-    border-radius: 0.75rem;
-    border: 1px solid rgba(59, 130, 246, 0.1);
-    transition: all 0.3s ease;
-  }
-
-  .highlight-item:hover {
-    transform: translateX(4px);
-    border-color: rgba(59, 130, 246, 0.3);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+    gap: 0.75rem;
+    padding: 0;
   }
 
   .highlight-icon {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     flex-shrink: 0;
-    line-height: 1;
+    line-height: 1.6;
   }
 
   .highlight-item p {
@@ -510,12 +531,6 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
 
   .audio-section {
     margin-top: 1.5rem;
-  }
-
-  .audio-player {
-    width: 100%;
-    border-radius: 0.75rem;
-    outline: none;
   }
 
   .spotify-player {
@@ -573,7 +588,10 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
     max-height: 600px;
     overflow-y: auto;
-    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+    transition:
+      max-height 0.3s ease,
+      opacity 0.3s ease,
+      padding 0.3s ease;
   }
 
   .transcript-container.collapsed {
@@ -678,15 +696,8 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     }
 
     .highlights-section {
-      padding: 1.5rem;
-    }
-
-    .highlight-item {
-      padding: 0.75rem;
-    }
-
-    .highlight-icon {
-      font-size: 1.25rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
     }
 
     .transcript-container {
@@ -712,18 +723,7 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     }
 
     .highlights-section {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
-      border-color: rgba(59, 130, 246, 0.3);
-    }
-
-    .highlight-item {
-      background: rgba(15, 23, 42, 0.8);
-      border-color: rgba(59, 130, 246, 0.2);
-    }
-
-    .highlight-item:hover {
-      border-color: rgba(59, 130, 246, 0.4);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+      border-color: rgba(59, 130, 246, 0.25);
     }
 
     .audio-section {
@@ -739,10 +739,5 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     .transcript-utterance {
       border-bottom-color: rgba(255, 255, 255, 0.1);
     }
-
-    .speaker-label {
-      background: rgba(59, 130, 246, 0.2);
-    }
   }
 </style>
-

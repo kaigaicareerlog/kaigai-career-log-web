@@ -4,26 +4,26 @@ on:
   workflow_dispatch:
     inputs:
       guid:
-        description: "Episode GUID (leave empty to update all episodes)"
+        description: 'Episode GUID (leave empty to update all episodes)'
         required: false
         type: string
       update_spotify:
-        description: "Update Spotify URLs"
+        description: 'Update Spotify URLs'
         required: false
         default: true
         type: boolean
       update_youtube:
-        description: "Update YouTube URLs"
+        description: 'Update YouTube URLs'
         required: false
         default: true
         type: boolean
       update_apple:
-        description: "Update Apple Podcast URLs"
+        description: 'Update Apple Podcast URLs'
         required: false
         default: true
         type: boolean
       update_amazon:
-        description: "Update Amazon Music URLs"
+        description: 'Update Amazon Music URLs'
         required: false
         default: true
         type: boolean
@@ -41,8 +41,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -120,8 +120,8 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: "chore: update episode URLs (${{ env.PLATFORMS_UPDATED }})"
-          title: "🔗 Update Episode URLs (${{ env.PLATFORMS_UPDATED }})"
+          commit-message: 'chore: update episode URLs (${{ env.PLATFORMS_UPDATED }})'
+          title: '🔗 Update Episode URLs (${{ env.PLATFORMS_UPDATED }})'
           body: |
             ## 🔗 Automated Episode URL Update
 

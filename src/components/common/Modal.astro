@@ -19,18 +19,22 @@ const { id, title, showFooter = true } = Astro.props;
       <h2 id={`${id}-title`} class="modal-title">
         {title || <slot name="title" />}
       </h2>
-      <button class="close-btn" id={`${id}-close`} aria-label="Close modal">×</button>
+      <button class="close-btn" id={`${id}-close`} aria-label="Close modal"
+        >×</button
+      >
     </div>
-    
+
     <div class="modal-body">
       <slot />
     </div>
-    
-    {showFooter && (
-      <div class="modal-footer">
-        <slot name="footer" />
-      </div>
-    )}
+
+    {
+      showFooter && (
+        <div class="modal-footer">
+          <slot name="footer" />
+        </div>
+      )
+    }
   </div>
 </div>
 
@@ -156,4 +160,3 @@ const { id, title, showFooter = true } = Astro.props;
     }
   }
 </style>
-

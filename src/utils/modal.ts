@@ -22,7 +22,7 @@ export function getModalElements(modalId: string): ModalElements {
  */
 export function showModal(modal: HTMLElement | null): void {
   if (!modal) return;
-  modal.classList.add("active");
+  modal.classList.add('active');
 }
 
 /**
@@ -30,7 +30,7 @@ export function showModal(modal: HTMLElement | null): void {
  */
 export function hideModal(modal: HTMLElement | null): void {
   if (!modal) return;
-  modal.classList.remove("active");
+  modal.classList.remove('active');
 }
 
 /**
@@ -38,7 +38,7 @@ export function hideModal(modal: HTMLElement | null): void {
  */
 export function toggleModal(modal: HTMLElement | null): void {
   if (!modal) return;
-  if (modal.classList.contains("active")) {
+  if (modal.classList.contains('active')) {
     hideModal(modal);
   } else {
     showModal(modal);
@@ -59,7 +59,7 @@ export function setupModalKeyboardShortcut(
 
   const handleKeyDown = (e: KeyboardEvent) => {
     // Track Tab key state
-    if (e.key === "Tab") {
+    if (e.key === 'Tab') {
       tabPressed = true;
     }
 
@@ -74,24 +74,24 @@ export function setupModalKeyboardShortcut(
     }
 
     // Close modal on Escape
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       callback();
     }
   };
 
   const handleKeyUp = (e: KeyboardEvent) => {
-    if (e.key === "Tab") {
+    if (e.key === 'Tab') {
       tabPressed = false;
     }
   };
 
-  document.addEventListener("keydown", handleKeyDown);
-  document.addEventListener("keyup", handleKeyUp);
+  document.addEventListener('keydown', handleKeyDown);
+  document.addEventListener('keyup', handleKeyUp);
 
   // Return cleanup function
   return () => {
-    document.removeEventListener("keydown", handleKeyDown);
-    document.removeEventListener("keyup", handleKeyUp);
+    document.removeEventListener('keydown', handleKeyDown);
+    document.removeEventListener('keyup', handleKeyUp);
   };
 }
 
@@ -102,7 +102,7 @@ export function setupModalOutsideClick(
   modal: HTMLElement | null,
   onClose: () => void
 ): void {
-  modal?.addEventListener("click", (e: MouseEvent) => {
+  modal?.addEventListener('click', (e: MouseEvent) => {
     if (e.target === modal) {
       onClose();
     }
@@ -121,15 +121,15 @@ export async function copyToClipboard(
 
     // Show feedback if element provided
     if (feedbackElement) {
-      feedbackElement.classList.add("show");
+      feedbackElement.classList.add('show');
       setTimeout(() => {
-        feedbackElement.classList.remove("show");
+        feedbackElement.classList.remove('show');
       }, 2000);
     }
 
     return true;
   } catch (err) {
-    console.error("Failed to copy to clipboard:", err);
+    console.error('Failed to copy to clipboard:', err);
     return false;
   }
 }

@@ -23,21 +23,23 @@ const { name, bio, avatar, socialLinks } = Astro.props;
     <p class="bio">{bio}</p>
   </div>
   <div class="host-social">
-    {socialLinks.map((link) => (
-      <a 
-        href={link.href} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        class={`social-link ${link.isEmoji ? 'emoji' : ''}`}
-        title={link.title}
-      >
-        {link.isEmoji ? (
-          <span>{link.icon}</span>
-        ) : (
-          <img src={link.icon} alt={link.title} class="social-icon" />
-        )}
-      </a>
-    ))}
+    {
+      socialLinks.map((link) => (
+        <a
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={`social-link ${link.isEmoji ? 'emoji' : ''}`}
+          title={link.title}
+        >
+          {link.isEmoji ? (
+            <span>{link.icon}</span>
+          ) : (
+            <img src={link.icon} alt={link.title} class="social-icon" />
+          )}
+        </a>
+      ))
+    }
   </div>
 </div>
 
@@ -50,7 +52,12 @@ const { name, bio, avatar, socialLinks } = Astro.props;
     background: var(--color-background);
     border-radius: 1rem;
     border-left: 4px solid transparent;
-    border-image: linear-gradient(135deg, var(--color-primary), var(--color-secondary)) 1;
+    border-image: linear-gradient(
+        135deg,
+        var(--color-primary),
+        var(--color-secondary)
+      )
+      1;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
   }
@@ -81,7 +88,11 @@ const { name, bio, avatar, socialLinks } = Astro.props;
   .host-item h3 {
     font-size: 1.5rem;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-secondary)
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -167,4 +178,3 @@ const { name, bio, avatar, socialLinks } = Astro.props;
     }
   }
 </style>
-

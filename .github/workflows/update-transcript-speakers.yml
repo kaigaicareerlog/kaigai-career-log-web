@@ -4,22 +4,22 @@ on:
   workflow_dispatch:
     inputs:
       episode_guid:
-        description: "Episode GUID"
+        description: 'Episode GUID'
         required: true
         type: string
       old_speaker:
-        description: "Old speaker label (e.g., A, B, C)"
+        description: 'Old speaker label (e.g., A, B, C)'
         required: true
         type: string
       speaker_type:
-        description: "Speaker type"
+        description: 'Speaker type'
         required: true
         type: choice
         options:
           - Host
           - Guest
       new_speaker_host:
-        description: "Host name (if Host selected)"
+        description: 'Host name (if Host selected)'
         required: false
         type: choice
         options:
@@ -27,7 +27,7 @@ on:
           - Senna
           - Ayaka
       new_speaker_guest:
-        description: "Guest name (if Guest selected)"
+        description: 'Guest name (if Guest selected)'
         required: false
         type: string
 
@@ -48,8 +48,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci

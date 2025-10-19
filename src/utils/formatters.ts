@@ -4,10 +4,10 @@
 export function formatDate(dateString: string): string {
   try {
     const date = new Date(dateString);
-    return date.toLocaleDateString("ja-JP", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return date.toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   } catch (error) {
     return dateString;
@@ -21,8 +21,8 @@ export function formatDuration(duration: string): string {
   let totalSeconds: number;
 
   // HH:MM:SS形式の場合
-  if (duration.includes(":")) {
-    const parts = duration.split(":");
+  if (duration.includes(':')) {
+    const parts = duration.split(':');
     if (parts.length === 3) {
       // HH:MM:SS
       totalSeconds =

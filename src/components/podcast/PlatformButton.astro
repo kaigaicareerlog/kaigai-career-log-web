@@ -9,10 +9,10 @@ interface Props {
 const { platform, href, label, iconSrc } = Astro.props;
 ---
 
-<a 
-  href={href} 
-  target="_blank" 
-  rel="noopener noreferrer" 
+<a
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
   class={`platform-btn ${platform}`}
 >
   <img src={iconSrc} alt={label} class="platform-icon" />
@@ -101,4 +101,3 @@ const { platform, href, label, iconSrc } = Astro.props;
     }
   }
 </style>
-

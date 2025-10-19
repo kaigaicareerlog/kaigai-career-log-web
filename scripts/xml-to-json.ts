@@ -3,7 +3,7 @@
  * Usage: node scripts/xml-to-json.ts <input-xml-file> <output-json-file>
  */
 
-import fs from "fs";
+import fs from 'fs';
 
 interface PodcastEpisode {
   title: string;
@@ -31,7 +31,7 @@ interface PodcastData {
  * Extract text content from CDATA or regular text
  */
 function extractText(text: string | undefined): string {
-  if (!text) return "";
+  if (!text) return '';
 
   // Remove CDATA wrapper
   const cdataMatch = text.match(/<!\[CDATA\[([\s\S]*?)\]\]>/);
@@ -47,24 +47,24 @@ function extractText(text: string | undefined): string {
  */
 function extractWithRegex(text: string, regex: RegExp): string {
   const match = text.match(regex);
-  if (!match) return "";
+  if (!match) return '';
 
-  let content = match[1] || "";
+  let content = match[1] || '';
   content = extractText(content);
 
   // Remove HTML tags
-  content = content.replace(/<[^>]+>/g, "");
+  content = content.replace(/<[^>]+>/g, '');
 
   // Decode HTML entities
   content = content
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'");
 
   // Remove "ゲスト：" and everything after it
-  const guestIndex = content.indexOf("ゲスト：");
+  const guestIndex = content.indexOf('ゲスト：');
   if (guestIndex !== -1) {
     content = content.substring(0, guestIndex).trim();
   }
@@ -85,12 +85,12 @@ function parseRSSToJSON(xmlText: string): PodcastData {
   const link = extractWithRegex(xmlText, /<link>(.*?)<\/link>/);
   const language = extractWithRegex(xmlText, /<language>(.*?)<\/language>/);
   const imageMatch = xmlText.match(/<itunes:image\s+href="([^"]+)"/);
-  const image = imageMatch ? imageMatch[1] : "";
+  const image = imageMatch ? imageMatch[1] : '';
 
   // Extract items
-  const itemMatches = xmlText.split("<item>").slice(1);
+  const itemMatches = xmlText.split('<item>').slice(1);
   const episodes: PodcastEpisode[] = itemMatches.map((itemText) => {
-    const itemContent = itemText.split("</item>")[0];
+    const itemContent = itemText.split('</item>')[0];
 
     const title = extractWithRegex(itemContent, /<title>(.*?)<\/title>/s);
     const description = extractWithRegex(
@@ -106,7 +106,7 @@ function parseRSSToJSON(xmlText: string): PodcastData {
     );
 
     const enclosureMatch = itemContent.match(/<enclosure\s+url="([^"]+)"/);
-    const audioUrl = enclosureMatch ? enclosureMatch[1] : "";
+    const audioUrl = enclosureMatch ? enclosureMatch[1] : '';
 
     return {
       title,
@@ -137,7 +137,7 @@ const args = process.argv.slice(2);
 
 if (args.length < 2) {
   console.error(
-    "Usage: node scripts/xml-to-json.ts <input-xml-file> <output-json-file>"
+    'Usage: node scripts/xml-to-json.ts <input-xml-file> <output-json-file>'
   );
   process.exit(1);
 }
@@ -147,18 +147,18 @@ const outputFile = args[1];
 
 try {
   console.log(`Reading XML from: ${inputFile}`);
-  const xmlContent = fs.readFileSync(inputFile, "utf-8");
+  const xmlContent = fs.readFileSync(inputFile, 'utf-8');
 
-  console.log("Parsing XML to JSON...");
+  console.log('Parsing XML to JSON...');
   const jsonData = parseRSSToJSON(xmlContent);
 
   console.log(`Writing JSON to: ${outputFile}`);
-  fs.writeFileSync(outputFile, JSON.stringify(jsonData, null, 2), "utf-8");
+  fs.writeFileSync(outputFile, JSON.stringify(jsonData, null, 2), 'utf-8');
 
   console.log(`✅ Successfully converted ${jsonData.episodes.length} episodes`);
   console.log(`   Channel: ${jsonData.channel.title}`);
   console.log(`   Output: ${outputFile}`);
 } catch (error) {
-  console.error("❌ Error:", (error as Error).message);
+  console.error('❌ Error:', (error as Error).message);
   process.exit(1);
 }

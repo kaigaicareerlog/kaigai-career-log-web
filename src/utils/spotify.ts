@@ -58,15 +58,15 @@ export async function getSpotifyAccessToken(
   clientId: string,
   clientSecret: string
 ): Promise<string> {
-  const response = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
+  const response = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
+      'Content-Type': 'application/x-www-form-urlencoded',
       Authorization: `Basic ${Buffer.from(
         `${clientId}:${clientSecret}`
-      ).toString("base64")}`,
+      ).toString('base64')}`,
     },
-    body: "grant_type=client_credentials",
+    body: 'grant_type=client_credentials',
   });
 
   if (!response.ok) {
@@ -87,9 +87,8 @@ export async function getSpotifyShowEpisodes(
   accessToken: string
 ): Promise<SpotifyEpisode[]> {
   const episodes: SpotifyEpisode[] = [];
-  let nextUrl:
-    | string
-    | null = `https://api.spotify.com/v1/shows/${showId}/episodes?limit=50`;
+  let nextUrl: string | null =
+    `https://api.spotify.com/v1/shows/${showId}/episodes?limit=50`;
 
   while (nextUrl) {
     const response = await fetch(nextUrl, {
@@ -129,9 +128,9 @@ export function findSpotifyEpisodeByTitle(
   }
 
   // Try normalized match (remove extra spaces, normalize characters)
-  const normalizedTitle = title.trim().replace(/\s+/g, " ");
+  const normalizedTitle = title.trim().replace(/\s+/g, ' ');
   const normalizedMatch = validEpisodes.find(
-    (ep) => ep.name.trim().replace(/\s+/g, " ") === normalizedTitle
+    (ep) => ep.name.trim().replace(/\s+/g, ' ') === normalizedTitle
   );
   if (normalizedMatch) {
     return normalizedMatch.external_urls.spotify;

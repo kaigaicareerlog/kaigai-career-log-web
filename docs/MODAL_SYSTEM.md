@@ -62,7 +62,7 @@ import Modal from './common/Modal.astro';
 モーダルの要素を取得
 
 ```typescript
-const { modal, closeBtn } = getModalElements("my-modal");
+const { modal, closeBtn } = getModalElements('my-modal');
 ```
 
 ### `showModal(modal: HTMLElement | null)`
@@ -94,7 +94,7 @@ toggleModal(modal);
 キーボードショートカットを設定
 
 ```typescript
-setupModalKeyboardShortcut("e", () => {
+setupModalKeyboardShortcut('e', () => {
   showModal(modal);
 });
 ```
@@ -112,7 +112,7 @@ setupModalOutsideClick(modal, () => hideModal(modal));
 クリップボードにコピー＆フィードバック表示
 
 ```typescript
-await copyToClipboard("text to copy", feedbackElement);
+await copyToClipboard('text to copy', feedbackElement);
 ```
 
 ## 📝 Creating a New Modal

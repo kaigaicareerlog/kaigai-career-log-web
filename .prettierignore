@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+.astro/
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+
+# OS files
+.DS_Store
+
+# Public assets that shouldn't be formatted
+public/transcripts/
+public/rss/
+
+# Lock files
+package-lock.json
+

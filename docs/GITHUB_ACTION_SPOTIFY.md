@@ -224,9 +224,9 @@ on:
     # ... existing inputs ...
   schedule:
     # Run daily at 2:00 AM UTC
-    - cron: "0 2 * * *"
+    - cron: '0 2 * * *'
     # Or run weekly on Mondays at 9:00 AM UTC
-    - cron: "0 9 * * 1"
+    - cron: '0 9 * * 1'
 ```
 
 Use [crontab.guru](https://crontab.guru/) to create cron schedules.

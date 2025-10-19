@@ -14,14 +14,14 @@
  *   SPOTIFY_SHOW_ID - Your Spotify Show ID (optional, defaults to hardcoded value)
  */
 
-import "dotenv/config";
-import { readFile } from "fs/promises";
-import { resolve } from "path";
+import 'dotenv/config';
+import { readFile } from 'fs/promises';
+import { resolve } from 'path';
 import {
   getSpotifyAccessToken,
   getSpotifyShowEpisodes,
   findSpotifyEpisodeByTitle,
-} from "../src/utils/spotify.ts";
+} from '../src/utils/spotify.ts';
 
 interface Episode {
   guid: string;
@@ -34,7 +34,7 @@ interface EpisodesData {
 }
 
 // Your Spotify Show ID - from https://open.spotify.com/show/0bj38cgbe71oCr5Q0emwvA
-const DEFAULT_SHOW_ID = "0bj38cgbe71oCr5Q0emwvA";
+const DEFAULT_SHOW_ID = '0bj38cgbe71oCr5Q0emwvA';
 
 async function findSpotifyUrlByGuid(guid: string): Promise<void> {
   // 1. Get environment variables
@@ -43,11 +43,11 @@ async function findSpotifyUrlByGuid(guid: string): Promise<void> {
   const showId = process.env.SPOTIFY_SHOW_ID || DEFAULT_SHOW_ID;
 
   if (!clientId) {
-    throw new Error("SPOTIFY_CLIENT_ID environment variable is required");
+    throw new Error('SPOTIFY_CLIENT_ID environment variable is required');
   }
 
   if (!clientSecret) {
-    throw new Error("SPOTIFY_CLIENT_SECRET environment variable is required");
+    throw new Error('SPOTIFY_CLIENT_SECRET environment variable is required');
   }
 
   console.log(`🔍 Searching for episode with GUID: ${guid}\n`);
@@ -55,9 +55,9 @@ async function findSpotifyUrlByGuid(guid: string): Promise<void> {
   // 2. Load episodes.json
   const episodesPath = resolve(
     process.cwd(),
-    "public/rss/20251015-1451-episodes.json"
+    'public/rss/20251015-1451-episodes.json'
   );
-  const episodesContent = await readFile(episodesPath, "utf-8");
+  const episodesContent = await readFile(episodesPath, 'utf-8');
   const episodesData: EpisodesData = JSON.parse(episodesContent);
 
   // 3. Find episode by GUID
@@ -106,17 +106,17 @@ async function findSpotifyUrlByGuid(guid: string): Promise<void> {
 const guid = process.argv[2];
 
 if (!guid) {
-  console.error("❌ Error: GUID is required");
-  console.log("\nUsage:");
-  console.log("  npm run find-spotify-url <guid>");
-  console.log("\nExample:");
+  console.error('❌ Error: GUID is required');
+  console.log('\nUsage:');
+  console.log('  npm run find-spotify-url <guid>');
+  console.log('\nExample:');
   console.log(
-    "  npm run find-spotify-url cc15a703-73c7-406b-8abc-ad7d0a192d05"
+    '  npm run find-spotify-url cc15a703-73c7-406b-8abc-ad7d0a192d05'
   );
-  console.log("\nEnvironment Variables Required:");
-  console.log("  SPOTIFY_CLIENT_ID=your_client_id");
-  console.log("  SPOTIFY_CLIENT_SECRET=your_client_secret");
-  console.log("  SPOTIFY_SHOW_ID=your_show_id (optional)");
+  console.log('\nEnvironment Variables Required:');
+  console.log('  SPOTIFY_CLIENT_ID=your_client_id');
+  console.log('  SPOTIFY_CLIENT_SECRET=your_client_secret');
+  console.log('  SPOTIFY_SHOW_ID=your_show_id (optional)');
   process.exit(1);
 }
 

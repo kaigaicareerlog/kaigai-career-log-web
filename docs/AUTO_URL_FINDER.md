@@ -40,7 +40,6 @@ For Spotify and YouTube URL finding, you need to configure the following secrets
 ### Spotify API Credentials (Optional for Spotify URLs)
 
 1. **SPOTIFY_CLIENT_ID**
-
    - Go to: https://developer.spotify.com/dashboard
    - Create a new app or use an existing one
    - Copy the Client ID

@@ -10,11 +10,11 @@
  *   Prints the path to the latest episodes.json file
  */
 
-import { readdir } from "fs/promises";
-import { resolve } from "path";
+import { readdir } from 'fs/promises';
+import { resolve } from 'path';
 
 async function findLatestEpisodesFile(): Promise<string> {
-  const rssDir = resolve(process.cwd(), "public/rss");
+  const rssDir = resolve(process.cwd(), 'public/rss');
 
   try {
     const files = await readdir(rssDir);
@@ -26,7 +26,7 @@ async function findLatestEpisodesFile(): Promise<string> {
       .reverse(); // Sort in descending order (latest first)
 
     if (episodesFiles.length === 0) {
-      throw new Error("No episodes.json files found in public/rss directory");
+      throw new Error('No episodes.json files found in public/rss directory');
     }
 
     const latestFile = resolve(rssDir, episodesFiles[0]);
@@ -45,6 +45,6 @@ findLatestEpisodesFile()
     console.log(latestFile);
   })
   .catch((error) => {
-    console.error(`Error: ${error.message}`, { stream: "stderr" });
+    console.error(`Error: ${error.message}`, { stream: 'stderr' });
     process.exit(1);
   });

@@ -11,22 +11,22 @@ export interface HostInfo {
 
 const HOSTS: Record<string, HostInfo> = {
   Ryo: {
-    name: "Ryo",
-    image: "/ryo.JPG",
-    color: "#3b82f6", // blue
-    bio: "Host",
+    name: 'Ryo',
+    image: '/ryo.JPG',
+    color: '#3b82f6', // blue
+    bio: 'Host',
   },
   Senna: {
-    name: "Senna",
-    image: "/senna.jpg",
-    color: "#ec4899", // pink
-    bio: "Host",
+    name: 'Senna',
+    image: '/senna.jpg',
+    color: '#ec4899', // pink
+    bio: 'Host',
   },
   Ayaka: {
-    name: "Ayaka",
-    image: "/ayaka.jpg",
-    color: "#8b5cf6", // purple
-    bio: "Host",
+    name: 'Ayaka',
+    image: '/ayaka.jpg',
+    color: '#8b5cf6', // purple
+    bio: 'Host',
   },
 };
 
@@ -37,8 +37,8 @@ export function getHostInfo(speaker: string): HostInfo {
   return (
     HOSTS[speaker] || {
       name: speaker,
-      image: "/guest-avatar.svg",
-      color: "#6b7280", // gray
+      image: '/guest-avatar.svg',
+      color: '#6b7280', // gray
     }
   );
 }

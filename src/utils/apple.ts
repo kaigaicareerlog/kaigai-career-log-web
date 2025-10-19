@@ -38,10 +38,10 @@ export async function getApplePodcastEpisodes(
   podcastId: string,
   limit: number = 200
 ): Promise<ApplePodcastEpisode[]> {
-  const url = new URL("https://itunes.apple.com/lookup");
-  url.searchParams.append("id", podcastId);
-  url.searchParams.append("entity", "podcastEpisode");
-  url.searchParams.append("limit", limit.toString());
+  const url = new URL('https://itunes.apple.com/lookup');
+  url.searchParams.append('id', podcastId);
+  url.searchParams.append('entity', 'podcastEpisode');
+  url.searchParams.append('limit', limit.toString());
 
   const response = await fetch(url.toString());
 
@@ -83,10 +83,10 @@ export function findApplePodcastEpisodeByTitle(
   }
 
   // Try normalized match (remove extra spaces, normalize characters)
-  const normalizedTitle = title.trim().replace(/\s+/g, " ");
+  const normalizedTitle = title.trim().replace(/\s+/g, ' ');
   const normalizedMatch = validEpisodes.find(
     (episode) =>
-      episode.trackName.trim().replace(/\s+/g, " ") === normalizedTitle
+      episode.trackName.trim().replace(/\s+/g, ' ') === normalizedTitle
   );
   if (normalizedMatch) {
     return normalizedMatch.trackViewUrl;
@@ -119,11 +119,11 @@ export async function searchPodcastByName(
     collectionViewUrl: string;
   }>
 > {
-  const url = new URL("https://itunes.apple.com/search");
-  url.searchParams.append("term", podcastName);
-  url.searchParams.append("media", "podcast");
-  url.searchParams.append("entity", "podcast");
-  url.searchParams.append("limit", limit.toString());
+  const url = new URL('https://itunes.apple.com/search');
+  url.searchParams.append('term', podcastName);
+  url.searchParams.append('media', 'podcast');
+  url.searchParams.append('entity', 'podcast');
+  url.searchParams.append('limit', limit.toString());
 
   const response = await fetch(url.toString());
 

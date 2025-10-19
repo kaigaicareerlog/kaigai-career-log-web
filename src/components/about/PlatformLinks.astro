@@ -11,43 +11,45 @@ const platforms: Platform[] = [
     name: 'Spotify',
     href: 'https://open.spotify.com/show/0bj38cgbe71oCr5Q0emwvA?si=c86d054e572146bd',
     icon: 'https://open.spotify.com/favicon.ico',
-    class: 'spotify'
+    class: 'spotify',
   },
   {
     name: 'Apple Podcasts',
     href: 'https://podcasts.apple.com/ca/podcast/%E6%B5%B7%E5%A4%96%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%AD%E3%82%B0/id1818019572',
     icon: 'https://www.apple.com/favicon.ico',
-    class: 'apple'
+    class: 'apple',
   },
   {
     name: 'YouTube',
     href: 'https://www.youtube.com/@kaigaicareerlog',
     icon: 'https://www.youtube.com/favicon.ico',
-    class: 'youtube'
+    class: 'youtube',
   },
   {
     name: 'X (Twitter)',
     href: 'https://x.com/kaigaicareerlog',
     icon: 'https://x.com/favicon.ico',
-    class: 'twitter'
-  }
+    class: 'twitter',
+  },
 ];
 ---
 
 <section class="podcast-links">
   <h2>Listen On</h2>
   <div class="platform-grid">
-    {platforms.map((platform) => (
-      <a 
-        href={platform.href} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        class={`platform-link ${platform.class}`}
-      >
-        <img src={platform.icon} alt={platform.name} class="platform-icon" />
-        <span>{platform.name}</span>
-      </a>
-    ))}
+    {
+      platforms.map((platform) => (
+        <a
+          href={platform.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={`platform-link ${platform.class}`}
+        >
+          <img src={platform.icon} alt={platform.name} class="platform-icon" />
+          <span>{platform.name}</span>
+        </a>
+      ))
+    }
   </div>
 </section>
 
@@ -140,4 +142,3 @@ const platforms: Platform[] = [
     }
   }
 </style>
-

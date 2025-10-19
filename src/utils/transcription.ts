@@ -35,19 +35,19 @@ export async function transcribeAudio(
   audioUrl: string,
   apiKey: string
 ): Promise<TranscriptionResult> {
-  const baseUrl = "https://api.assemblyai.com/v2";
+  const baseUrl = 'https://api.assemblyai.com/v2';
 
   // Submit transcription job
   const uploadResponse = await fetch(`${baseUrl}/transcript`, {
-    method: "POST",
+    method: 'POST',
     headers: {
       authorization: apiKey,
-      "content-type": "application/json",
+      'content-type': 'application/json',
     },
     body: JSON.stringify({
       audio_url: audioUrl,
       speaker_labels: true,
-      language_code: "ja", // Japanese language
+      language_code: 'ja', // Japanese language
       punctuate: true,
       format_text: true,
     }),
@@ -82,15 +82,15 @@ export async function transcribeAudio(
 
     const result = await transcriptResponse.json();
 
-    if (result.status === "completed") {
-      console.log("Transcription completed successfully");
+    if (result.status === 'completed') {
+      console.log('Transcription completed successfully');
       return {
         text: result.text,
         utterances: result.utterances || [],
         words: result.words || [],
         audio_duration: result.audio_duration || 0,
       };
-    } else if (result.status === "error") {
+    } else if (result.status === 'error') {
       throw new Error(`Transcription failed: ${result.error}`);
     }
 
@@ -98,7 +98,7 @@ export async function transcribeAudio(
     attempts++;
   }
 
-  throw new Error("Transcription timed out");
+  throw new Error('Transcription timed out');
 }
 
 /**
@@ -110,9 +110,9 @@ export function formatTimestamp(milliseconds: number): string {
   const totalSeconds = Math.floor(milliseconds / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
-  return `${minutes.toString().padStart(2, "0")}:${seconds
+  return `${minutes.toString().padStart(2, '0')}:${seconds
     .toString()
-    .padStart(2, "0")}`;
+    .padStart(2, '0')}`;
 }
 
 /**
@@ -123,10 +123,10 @@ export function formatTimestamp(milliseconds: number): string {
 export function generateMarkdownTranscript(
   result: TranscriptionResult
 ): string {
-  let markdown = "# Transcript\n\n";
+  let markdown = '# Transcript\n\n';
 
   if (result.utterances.length > 0) {
-    markdown += "## Speakers\n\n";
+    markdown += '## Speakers\n\n';
 
     result.utterances.forEach((utterance) => {
       const timestamp = formatTimestamp(utterance.start);

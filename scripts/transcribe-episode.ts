@@ -3,13 +3,13 @@
  * Usage: tsx scripts/transcribe-episode.ts <episode-guid>
  */
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import {
   transcribeAudio,
   generateJSONTranscript,
-} from "../src/utils/transcription.js";
+} from '../src/utils/transcription.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,7 +41,7 @@ function findLatestEpisodesFile(rssDir: string): string {
     .reverse();
 
   if (episodesFiles.length === 0) {
-    throw new Error("No episodes files found");
+    throw new Error('No episodes files found');
   }
 
   return path.join(rssDir, episodesFiles[0]);
@@ -51,11 +51,11 @@ function findLatestEpisodesFile(rssDir: string): string {
  * Get episode by GUID
  */
 function getEpisodeByGuid(guid: string): Episode {
-  const rssDir = path.join(__dirname, "..", "public", "rss");
+  const rssDir = path.join(__dirname, '..', 'public', 'rss');
   const latestFile = findLatestEpisodesFile(rssDir);
 
   console.log(`Reading episodes from: ${latestFile}`);
-  const data: EpisodesData = JSON.parse(fs.readFileSync(latestFile, "utf-8"));
+  const data: EpisodesData = JSON.parse(fs.readFileSync(latestFile, 'utf-8'));
 
   const episode = data.episodes.find((ep) => ep.guid === guid);
 
@@ -70,7 +70,7 @@ function getEpisodeByGuid(guid: string): Episode {
  * Save transcript JSON file
  */
 function saveTranscript(guid: string, json: object): void {
-  const transcriptsDir = path.join(__dirname, "..", "public", "transcripts");
+  const transcriptsDir = path.join(__dirname, '..', 'public', 'transcripts');
 
   // Create transcripts directory if it doesn't exist
   if (!fs.existsSync(transcriptsDir)) {
@@ -79,7 +79,7 @@ function saveTranscript(guid: string, json: object): void {
 
   // Save JSON
   const jsonPath = path.join(transcriptsDir, `${guid}.json`);
-  fs.writeFileSync(jsonPath, JSON.stringify(json, null, 2), "utf-8");
+  fs.writeFileSync(jsonPath, JSON.stringify(json, null, 2), 'utf-8');
   console.log(`✅ Saved JSON transcript: ${jsonPath}`);
 }
 
@@ -92,7 +92,7 @@ async function transcribeEpisode(guid: string): Promise<void> {
   // Get API keys from environment
   const assemblyAiKey = process.env.ASSEMBLYAI_API_KEY;
   if (!assemblyAiKey) {
-    throw new Error("ASSEMBLYAI_API_KEY environment variable is required");
+    throw new Error('ASSEMBLYAI_API_KEY environment variable is required');
   }
 
   // Get episode info
@@ -101,16 +101,16 @@ async function transcribeEpisode(guid: string): Promise<void> {
   console.log(`Audio URL: ${episode.audioUrl}\n`);
 
   // Check if transcript already exists
-  const transcriptsDir = path.join(__dirname, "..", "public", "transcripts");
+  const transcriptsDir = path.join(__dirname, '..', 'public', 'transcripts');
   const jsonPath = path.join(transcriptsDir, `${guid}.json`);
 
   if (fs.existsSync(jsonPath)) {
-    console.log("⚠️  Transcript already exists for this episode");
-    console.log("   Overwriting existing transcript...\n");
+    console.log('⚠️  Transcript already exists for this episode');
+    console.log('   Overwriting existing transcript...\n');
   }
 
   // Transcribe audio
-  console.log("🔄 Submitting transcription job to AssemblyAI...");
+  console.log('🔄 Submitting transcription job to AssemblyAI...');
   const result = await transcribeAudio(episode.audioUrl, assemblyAiKey);
 
   console.log(`\n📊 Transcription Stats:`);
@@ -127,15 +127,15 @@ async function transcribeEpisode(guid: string): Promise<void> {
   // Save transcript
   saveTranscript(guid, json);
 
-  console.log("\n✨ Transcription complete!");
-  console.log("   Run cleanup script next to improve text quality.\n");
+  console.log('\n✨ Transcription complete!');
+  console.log('   Run cleanup script next to improve text quality.\n');
 }
 
 // Main execution
 const args = process.argv.slice(2);
 
 if (args.length < 1) {
-  console.error("Usage: tsx scripts/transcribe-episode.ts <episode-guid>");
+  console.error('Usage: tsx scripts/transcribe-episode.ts <episode-guid>');
   process.exit(1);
 }
 
@@ -146,6 +146,6 @@ transcribeEpisode(episodeGuid)
     process.exit(0);
   })
   .catch((error) => {
-    console.error("\n❌ Error:", (error as Error).message);
+    console.error('\n❌ Error:', (error as Error).message);
     process.exit(1);
   });

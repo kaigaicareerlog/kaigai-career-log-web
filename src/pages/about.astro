@@ -6,159 +6,161 @@ import PlatformLinks from '../components/about/PlatformLinks.astro';
 import ContactLinks from '../components/about/ContactLinks.astro';
 
 const hosts = [
-	{
-		name: 'Ryo',
-		bio: 'VancouverのAsanaでソフトウェアエンジニアをしています。バレー/テニス/サッカー/ストレッチ好き',
-		avatar: '/ryo.JPG',
-		socialLinks: [
-			{
-				href: 'https://x.com/togashi_ryo',
-				icon: 'https://abs.twimg.com/favicons/twitter.3.ico',
-				title: 'X (Twitter)'
-			},
-			{
-				href: 'https://www.linkedin.com/in/ryotogashi/',
-				icon: 'https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca',
-				title: 'LinkedIn'
-			}
-		]
-	},
-	{
-		name: 'Senna',
-		bio: '日本で最も多くのIT専門職の海外就職者をサポートしてきたFrog代表。アメリカのスタートアップを中心に投資。カナダの海外就職やキャリア情報の発信は主にXから行うことが多いです！',
-		avatar: '/senna.jpg',
-		socialLinks: [
-			{
-				href: 'https://x.com/onepercentdsgn',
-				icon: 'https://abs.twimg.com/favicons/twitter.3.ico',
-				title: 'X (Twitter)'
-			},
-		]
-	},
-	{
-		name: 'Ayaka',
-		bio: '未経験からVancouverでソフトウェアエンジニアになりました。暮らすように旅するのが好き。現在の目標は朝型人間になる。',
-		avatar: '/ayaka.jpg',
-		socialLinks: [
-			{
-				href: 'https://x.com/ayacappuccino',
-				icon: 'https://abs.twimg.com/favicons/twitter.3.ico',
-				title: 'X (Twitter)'
-			},
-			{
-				href: 'https://www.linkedin.com/in/ayaka-yasuda-7ab597197/',
-				icon: 'https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca',
-				title: 'LinkedIn'
-			}
-		]
-	}
+  {
+    name: 'Ryo',
+    bio: 'VancouverのAsanaでソフトウェアエンジニアをしています。バレー/テニス/サッカー/ストレッチ好き',
+    avatar: '/ryo.JPG',
+    socialLinks: [
+      {
+        href: 'https://x.com/togashi_ryo',
+        icon: 'https://abs.twimg.com/favicons/twitter.3.ico',
+        title: 'X (Twitter)',
+      },
+      {
+        href: 'https://www.linkedin.com/in/ryotogashi/',
+        icon: 'https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca',
+        title: 'LinkedIn',
+      },
+    ],
+  },
+  {
+    name: 'Senna',
+    bio: '日本で最も多くのIT専門職の海外就職者をサポートしてきたFrog代表。アメリカのスタートアップを中心に投資。カナダの海外就職やキャリア情報の発信は主にXから行うことが多いです！',
+    avatar: '/senna.jpg',
+    socialLinks: [
+      {
+        href: 'https://x.com/onepercentdsgn',
+        icon: 'https://abs.twimg.com/favicons/twitter.3.ico',
+        title: 'X (Twitter)',
+      },
+    ],
+  },
+  {
+    name: 'Ayaka',
+    bio: '未経験からVancouverでソフトウェアエンジニアになりました。暮らすように旅するのが好き。現在の目標は朝型人間になる。',
+    avatar: '/ayaka.jpg',
+    socialLinks: [
+      {
+        href: 'https://x.com/ayacappuccino',
+        icon: 'https://abs.twimg.com/favicons/twitter.3.ico',
+        title: 'X (Twitter)',
+      },
+      {
+        href: 'https://www.linkedin.com/in/ayaka-yasuda-7ab597197/',
+        icon: 'https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca',
+        title: 'LinkedIn',
+      },
+    ],
+  },
 ];
 ---
 
-<BaseLayout 
-	title="About - 海外キャリアログ"
-	description="海外キャリアログについて - ホスト紹介とポッドキャストの詳細"
+<BaseLayout
+  title="About - 海外キャリアログ"
+  description="海外キャリアログについて - ホスト紹介とポッドキャストの詳細"
 >
-	<main class="about-page">
-		<div class="container">
-			<!-- Hero Section -->
-			<section class="hero">
-				<h1>About</h1>
-				<p class="tagline">海外キャリアログについて</p>
-			</section>
+  <main class="about-page">
+    <div class="container">
+      <!-- Hero Section -->
+      <section class="hero">
+        <h1>About</h1>
+        <p class="tagline">海外キャリアログについて</p>
+      </section>
 
-			<!-- Hosts Section -->
-			<section class="hosts-section">
-				<h2>ホスト</h2>
-				<div class="hosts-list">
-					{hosts.map((host) => (
-						<HostItem {...host} />
-					))}
-				</div>
-			</section>
+      <!-- Hosts Section -->
+      <section class="hosts-section">
+        <h2>ホスト</h2>
+        <div class="hosts-list">
+          {hosts.map((host) => <HostItem {...host} />)}
+        </div>
+      </section>
 
-			<!-- Sponsor Section -->
-			<SponsorSection />
+      <!-- Sponsor Section -->
+      <SponsorSection />
 
-			<!-- Podcast Links Section -->
-			<PlatformLinks />
+      <!-- Podcast Links Section -->
+      <PlatformLinks />
 
-			<!-- Contact Section -->
-			<ContactLinks />
-		</div>
-	</main>
+      <!-- Contact Section -->
+      <ContactLinks />
+    </div>
+  </main>
 </BaseLayout>
 
 <style>
-	.about-page {
-		flex: 1;
-		width: 100%;
-		padding: 2rem 0;
-	}
+  .about-page {
+    flex: 1;
+    width: 100%;
+    padding: 2rem 0;
+  }
 
-	.container {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 0 1rem;
-	}
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
 
-	/* Hero Section */
-	.hero {
-		text-align: center;
-		margin-bottom: 3rem;
-		padding-top: 1rem;
-	}
+  /* Hero Section */
+  .hero {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-top: 1rem;
+  }
 
-	.hero h1 {
-		font-size: clamp(2.5rem, 6vw, 4rem);
-		font-weight: 700;
-		background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
-		margin-bottom: 0.5rem;
-	}
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 700;
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-secondary)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
 
-	.tagline {
-		font-size: clamp(1rem, 2vw, 1.3rem);
-		color: var(--color-muted);
-		font-weight: 400;
-		margin-bottom: 0;
-	}
+  .tagline {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: var(--color-muted);
+    font-weight: 400;
+    margin-bottom: 0;
+  }
 
-	/* Hosts Section */
-	.hosts-section {
-		margin-bottom: 4rem;
-	}
+  /* Hosts Section */
+  .hosts-section {
+    margin-bottom: 4rem;
+  }
 
-	.hosts-section h2 {
-		font-size: 1.8rem;
-		font-weight: 600;
-		text-align: center;
-		margin-bottom: 2rem;
-		color: var(--color-text);
-	}
+  .hosts-section h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--color-text);
+  }
 
-	.hosts-list {
-		max-width: 700px;
-		margin: 0 auto;
-		display: flex;
-		flex-direction: column;
-		gap: 1.5rem;
-	}
+  .hosts-list {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
 
-	/* Mobile responsive */
-	@media (max-width: 768px) {
-		.about-page {
-			padding: 1.5rem 0;
-		}
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .about-page {
+      padding: 1.5rem 0;
+    }
 
-		.hero {
-			margin-bottom: 2rem;
-		}
+    .hero {
+      margin-bottom: 2rem;
+    }
 
-		.hosts-section {
-			margin-bottom: 3rem;
-		}
-	}
+    .hosts-section {
+      margin-bottom: 3rem;
+    }
+  }
 </style>

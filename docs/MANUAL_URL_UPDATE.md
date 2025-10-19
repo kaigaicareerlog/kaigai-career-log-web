@@ -16,7 +16,6 @@ The **Update Episode URLs Manually** workflow allows you to update URLs for a sp
 ### Step 1: Find the Episode GUID
 
 1. Go to your repository and open the latest episodes file:
-
    - Path: `public/rss/YYYYMMDD-HHMM-episodes.json`
    - Or view on GitHub: `https://github.com/YOUR_USERNAME/kaigai-career-log-web/blob/main/public/rss/`
    - Look for the most recent file (highest timestamp)

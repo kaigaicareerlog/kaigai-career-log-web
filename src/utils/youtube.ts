@@ -58,12 +58,12 @@ export async function getChannelIdFromHandle(
   apiKey: string
 ): Promise<string> {
   // Remove @ if present
-  const cleanHandle = handle.startsWith("@") ? handle.slice(1) : handle;
+  const cleanHandle = handle.startsWith('@') ? handle.slice(1) : handle;
 
-  const url = new URL("https://www.googleapis.com/youtube/v3/channels");
-  url.searchParams.append("part", "id");
-  url.searchParams.append("forHandle", cleanHandle);
-  url.searchParams.append("key", apiKey);
+  const url = new URL('https://www.googleapis.com/youtube/v3/channels');
+  url.searchParams.append('part', 'id');
+  url.searchParams.append('forHandle', cleanHandle);
+  url.searchParams.append('key', apiKey);
 
   const response = await fetch(url.toString());
 
@@ -92,21 +92,21 @@ export async function getYouTubeChannelVideos(
 
   // If channelId starts with @, resolve it first
   let resolvedChannelId = channelId;
-  if (channelId.startsWith("@")) {
+  if (channelId.startsWith('@')) {
     resolvedChannelId = await getChannelIdFromHandle(channelId, apiKey);
   }
 
   do {
-    const searchUrl = new URL("https://www.googleapis.com/youtube/v3/search");
-    searchUrl.searchParams.append("part", "snippet");
-    searchUrl.searchParams.append("channelId", resolvedChannelId);
-    searchUrl.searchParams.append("type", "video");
-    searchUrl.searchParams.append("order", "date");
-    searchUrl.searchParams.append("maxResults", "50");
-    searchUrl.searchParams.append("key", apiKey);
+    const searchUrl = new URL('https://www.googleapis.com/youtube/v3/search');
+    searchUrl.searchParams.append('part', 'snippet');
+    searchUrl.searchParams.append('channelId', resolvedChannelId);
+    searchUrl.searchParams.append('type', 'video');
+    searchUrl.searchParams.append('order', 'date');
+    searchUrl.searchParams.append('maxResults', '50');
+    searchUrl.searchParams.append('key', apiKey);
 
     if (nextPageToken) {
-      searchUrl.searchParams.append("pageToken", nextPageToken);
+      searchUrl.searchParams.append('pageToken', nextPageToken);
     }
 
     const response = await fetch(searchUrl.toString());
@@ -153,9 +153,9 @@ export function findYouTubeVideoByTitle(
   }
 
   // Try normalized match (remove extra spaces, normalize characters)
-  const normalizedTitle = title.trim().replace(/\s+/g, " ");
+  const normalizedTitle = title.trim().replace(/\s+/g, ' ');
   const normalizedMatch = validVideos.find(
-    (video) => video.title.trim().replace(/\s+/g, " ") === normalizedTitle
+    (video) => video.title.trim().replace(/\s+/g, ' ') === normalizedTitle
   );
   if (normalizedMatch) {
     return normalizedMatch.url;

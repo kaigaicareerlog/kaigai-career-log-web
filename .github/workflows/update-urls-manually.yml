@@ -4,29 +4,29 @@ on:
   workflow_dispatch:
     inputs:
       guid:
-        description: "Episode GUID (found in episodes.json)"
+        description: 'Episode GUID (found in episodes.json)'
         required: true
         type: string
       spotify_url:
-        description: "Spotify URL (leave empty to skip)"
+        description: 'Spotify URL (leave empty to skip)'
         required: false
         type: string
-        default: ""
+        default: ''
       youtube_url:
-        description: "YouTube URL (leave empty to skip)"
+        description: 'YouTube URL (leave empty to skip)'
         required: false
         type: string
-        default: ""
+        default: ''
       apple_podcast_url:
-        description: "Apple Podcast URL (leave empty to skip)"
+        description: 'Apple Podcast URL (leave empty to skip)'
         required: false
         type: string
-        default: ""
+        default: ''
       amazon_music_url:
-        description: "Amazon Music URL (leave empty to skip)"
+        description: 'Amazon Music URL (leave empty to skip)'
         required: false
         type: string
-        default: ""
+        default: ''
 
 jobs:
   update-urls:
@@ -41,7 +41,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install

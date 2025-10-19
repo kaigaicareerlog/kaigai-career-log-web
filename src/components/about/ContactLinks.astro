@@ -11,31 +11,33 @@ const contacts: Contact[] = [
     type: 'email',
     href: 'mailto:kaigai.career.log@gmail.com',
     icon: '📧',
-    text: 'Email'
+    text: 'Email',
   },
   {
-    type: "form",
-    href: "https://forms.gle/pPThnBsCKX38MzT36",
-    icon: "💬",
-    text: "お便りフォーム"
-  }
+    type: 'form',
+    href: 'https://forms.gle/pPThnBsCKX38MzT36',
+    icon: '💬',
+    text: 'お便りフォーム',
+  },
 ];
 ---
 
 <section class="contact-section">
   <h2>お問い合わせ・質問</h2>
   <div class="contact-grid">
-    {contacts.map((contact) => (
-      <a 
-        href={contact.href}
-        target={contact.type === 'form' ? '_blank' : undefined}
-        rel={contact.type === 'form' ? 'noopener noreferrer' : undefined}
-        class={`contact-link ${contact.type}`}
-      >
-        <span class="contact-icon">{contact.icon}</span>
-        <span class="contact-text">{contact.text}</span>
-      </a>
-    ))}
+    {
+      contacts.map((contact) => (
+        <a
+          href={contact.href}
+          target={contact.type === 'form' ? '_blank' : undefined}
+          rel={contact.type === 'form' ? 'noopener noreferrer' : undefined}
+          class={`contact-link ${contact.type}`}
+        >
+          <span class="contact-icon">{contact.icon}</span>
+          <span class="contact-text">{contact.text}</span>
+        </a>
+      ))
+    }
   </div>
 </section>
 
@@ -125,4 +127,3 @@ const contacts: Contact[] = [
     }
   }
 </style>
-

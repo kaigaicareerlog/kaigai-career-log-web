@@ -29,15 +29,15 @@ export function extractShowIdFromUrl(url: string): string | null {
  */
 export async function getAmazonMusicEpisodes(
   showId: string,
-  region: string = "co.jp"
+  region: string = 'co.jp'
 ): Promise<AmazonMusicEpisode[]> {
   // Dynamically import puppeteer
   let puppeteer;
   try {
-    puppeteer = await import("puppeteer");
+    puppeteer = await import('puppeteer');
   } catch (error) {
     throw new Error(
-      "Puppeteer is not installed. Install with: npm install -D puppeteer"
+      'Puppeteer is not installed. Install with: npm install -D puppeteer'
     );
   }
 
@@ -47,12 +47,12 @@ export async function getAmazonMusicEpisodes(
     const url = `https://music.amazon.${region}/podcasts/${showId}`;
 
     browser = await puppeteer.default.launch({
-      headless: "new" as any,
+      headless: 'new' as any,
       args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu",
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
       ],
     });
 
@@ -61,10 +61,10 @@ export async function getAmazonMusicEpisodes(
     // Set viewport and user agent
     await page.setViewport({ width: 1280, height: 800 });
     await page.setUserAgent(
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     );
 
-    await page.goto(url, { waitUntil: "networkidle2", timeout: 30000 });
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
 
     // Wait for episode list to be rendered
     await page
@@ -84,17 +84,17 @@ export async function getAmazonMusicEpisodes(
       const links = document.querySelectorAll('a[href*="/episodes/"]');
 
       links.forEach((link) => {
-        const href = link.getAttribute("href");
+        const href = link.getAttribute('href');
         if (href && href.includes(`/podcasts/${podcastShowId}/episodes/`)) {
           // Extract episode ID from href
           const match = href.match(/\/episodes\/([a-zA-Z0-9-]+)/);
           if (match) {
             const episodeId = match[1];
-            let titleText = "";
+            let titleText = '';
 
             // Try to find title in aria-label first
-            if (link.getAttribute("aria-label")) {
-              titleText = link.getAttribute("aria-label") || "";
+            if (link.getAttribute('aria-label')) {
+              titleText = link.getAttribute('aria-label') || '';
             }
 
             // If no aria-label, look for text in parent containers
@@ -106,7 +106,7 @@ export async function getAmazonMusicEpisodes(
 
                   // Look for elements with substantial text
                   const textElements = current.querySelectorAll(
-                    "div, span, p, h1, h2, h3, h4"
+                    'div, span, p, h1, h2, h3, h4'
                   );
                   for (const el of textElements) {
                     const text = el.textContent?.trim();
@@ -134,18 +134,18 @@ export async function getAmazonMusicEpisodes(
 
             // Clean up the title
             if (titleText) {
-              titleText = titleText.replace(/\s+/g, " ").trim();
+              titleText = titleText.replace(/\s+/g, ' ').trim();
             }
 
             episodeLinks.push({
               id: episodeId,
               name: titleText || `Episode ${episodeId}`,
-              url: href.startsWith("http")
+              url: href.startsWith('http')
                 ? href
                 : `https://music.amazon.${window.location.hostname
-                    .split(".")
+                    .split('.')
                     .slice(-2)
-                    .join(".")}${href}`,
+                    .join('.')}${href}`,
             });
           }
         }
@@ -166,21 +166,21 @@ export async function getAmazonMusicEpisodes(
 
     if (episodes.length === 0) {
       throw new Error(
-        "Could not find any episodes. The page might require authentication or have a different structure."
+        'Could not find any episodes. The page might require authentication or have a different structure.'
       );
     }
 
     return episodes;
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message.includes("timeout")) {
+      if (error.message.includes('timeout')) {
         throw new Error(
-          "Page loading timed out. Amazon Music might require authentication or be unavailable."
+          'Page loading timed out. Amazon Music might require authentication or be unavailable.'
         );
       }
       throw error;
     }
-    throw new Error("Unknown error fetching Amazon Music episodes");
+    throw new Error('Unknown error fetching Amazon Music episodes');
   } finally {
     if (browser) {
       await browser.close();
@@ -206,9 +206,9 @@ export function findAmazonMusicEpisodeByTitle(
   }
 
   // Try normalized match (remove extra spaces, normalize characters)
-  const normalizedTitle = title.trim().replace(/\s+/g, " ");
+  const normalizedTitle = title.trim().replace(/\s+/g, ' ');
   const normalizedMatch = validEpisodes.find(
-    (episode) => episode.name.trim().replace(/\s+/g, " ") === normalizedTitle
+    (episode) => episode.name.trim().replace(/\s+/g, ' ') === normalizedTitle
   );
   if (normalizedMatch) {
     return normalizedMatch.url;

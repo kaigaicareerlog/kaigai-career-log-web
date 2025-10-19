@@ -17,13 +17,13 @@
  * Note: This script uses Puppeteer for browser automation and may take 30-60 seconds to run.
  */
 
-import "dotenv/config";
-import { readFile, writeFile } from "fs/promises";
-import { resolve } from "path";
+import 'dotenv/config';
+import { readFile, writeFile } from 'fs/promises';
+import { resolve } from 'path';
 import {
   getAmazonMusicEpisodes,
   findAmazonMusicEpisodeByTitle,
-} from "../src/utils/amazon.ts";
+} from '../src/utils/amazon.ts';
 
 interface Episode {
   guid: string;
@@ -39,8 +39,8 @@ interface EpisodesData {
 
 // Your Amazon Music Show ID
 // Extract from: https://music.amazon.ca/podcasts/118b5e6b-1f97-4c62-97a5-754714381b40
-const DEFAULT_SHOW_ID = "118b5e6b-1f97-4c62-97a5-754714381b40";
-const DEFAULT_REGION = "co.jp";
+const DEFAULT_SHOW_ID = '118b5e6b-1f97-4c62-97a5-754714381b40';
+const DEFAULT_REGION = 'co.jp';
 
 async function updateAmazonMusicUrls(specificGuid?: string): Promise<void> {
   // 1. Get environment variables
@@ -50,9 +50,9 @@ async function updateAmazonMusicUrls(specificGuid?: string): Promise<void> {
   // 2. Load episodes.json
   const episodesPath = resolve(
     process.cwd(),
-    "public/rss/20251015-1451-episodes.json"
+    'public/rss/20251015-1451-episodes.json'
   );
-  const episodesContent = await readFile(episodesPath, "utf-8");
+  const episodesContent = await readFile(episodesPath, 'utf-8');
   const episodesData: EpisodesData = JSON.parse(episodesContent);
 
   // 3. Find episodes that need Amazon Music URLs
@@ -69,7 +69,7 @@ async function updateAmazonMusicUrls(specificGuid?: string): Promise<void> {
     episodesToUpdate = [episode];
   } else {
     episodesToUpdate = episodesData.episodes.filter(
-      (ep) => !ep.amazonMusicUrl || ep.amazonMusicUrl === ""
+      (ep) => !ep.amazonMusicUrl || ep.amazonMusicUrl === ''
     );
     console.log(
       `🔍 Found ${episodesToUpdate.length} episodes without Amazon Music URLs\n`
@@ -77,7 +77,7 @@ async function updateAmazonMusicUrls(specificGuid?: string): Promise<void> {
   }
 
   if (episodesToUpdate.length === 0) {
-    console.log("✅ All episodes already have Amazon Music URLs!");
+    console.log('✅ All episodes already have Amazon Music URLs!');
     return;
   }
 
@@ -114,8 +114,8 @@ async function updateAmazonMusicUrls(specificGuid?: string): Promise<void> {
   if (updatedCount > 0) {
     await writeFile(
       episodesPath,
-      JSON.stringify(episodesData, null, 2) + "\n",
-      "utf-8"
+      JSON.stringify(episodesData, null, 2) + '\n',
+      'utf-8'
     );
     console.log(
       `\n✅ Successfully updated ${updatedCount} episode(s) in ${episodesPath}`
@@ -134,7 +134,7 @@ const specificGuid = process.argv[2];
 
 updateAmazonMusicUrls(specificGuid).catch((error) => {
   console.error(`\n❌ Error: ${error.message}`);
-  if (error.message?.includes("Puppeteer")) {
+  if (error.message?.includes('Puppeteer')) {
     console.log(`\n💡 Install Puppeteer with: npm install -D puppeteer`);
   }
   process.exit(1);

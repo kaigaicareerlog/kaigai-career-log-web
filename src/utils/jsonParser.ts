@@ -1,6 +1,6 @@
-import fs from "fs";
-import path from "path";
-import type { RSSChannel } from "./types";
+import fs from 'fs';
+import path from 'path';
+import type { RSSChannel } from './types';
 
 interface PodcastData {
   channel: {
@@ -30,7 +30,7 @@ interface PodcastData {
  * 最新のepisodes.jsonファイルを取得する
  */
 function getLatestEpisodesFile(): string {
-  const rssDir = path.join(process.cwd(), "public", "rss");
+  const rssDir = path.join(process.cwd(), 'public', 'rss');
 
   // 最新の日付付きファイルを探す
   const files = fs.readdirSync(rssDir);
@@ -43,7 +43,7 @@ function getLatestEpisodesFile(): string {
     return path.join(rssDir, episodesFiles[0]);
   }
 
-  throw new Error("No episodes files found");
+  throw new Error('No episodes files found');
 }
 
 /**
@@ -53,7 +53,7 @@ export async function parseJSONFeed(): Promise<RSSChannel> {
   try {
     // 最新のepisodes.jsonを読み込む
     const jsonPath = getLatestEpisodesFile();
-    const jsonText = fs.readFileSync(jsonPath, "utf-8");
+    const jsonText = fs.readFileSync(jsonPath, 'utf-8');
     const data: PodcastData = JSON.parse(jsonText);
 
     // RSSChannel形式に変換
@@ -78,7 +78,7 @@ export async function parseJSONFeed(): Promise<RSSChannel> {
       })),
     };
   } catch (error) {
-    console.error("Error parsing JSON feed:", error);
+    console.error('Error parsing JSON feed:', error);
     throw error;
   }
 }

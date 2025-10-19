@@ -27,11 +27,11 @@ const amazonMusicUrl = podcast.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL;
     <div class="podcast-header">
       <h3 class="podcast-title">{podcast.title}</h3>
     </div>
-    
+
     <div class="podcast-content">
       <p class="podcast-description">{podcast.description}</p>
     </div>
-    
+
     <div class="podcast-footer">
       <div class="podcast-meta">
         <span class="date">📅 {formatDate(podcast.date)}</span>
@@ -39,35 +39,37 @@ const amazonMusicUrl = podcast.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL;
       </div>
     </div>
   </a>
-  
+
   <div class="podcast-actions">
     <div class="platform-links">
-      <PlatformButton 
+      <PlatformButton
         platform="spotify"
         href={spotifyUrl}
         label="Spotify"
         iconSrc="https://open.spotify.com/favicon.ico"
       />
-      <PlatformButton 
+      <PlatformButton
         platform="apple"
         href={applePodcastUrl}
         label="Apple Podcasts"
         iconSrc="https://www.apple.com/favicon.ico"
       />
-      <PlatformButton 
+      <PlatformButton
         platform="youtube"
         href={youtubeUrl}
         label="YouTube"
         iconSrc="https://www.youtube.com/favicon.ico"
       />
-      {amazonMusicUrl && (
-        <PlatformButton 
-          platform="amazon"
-          href={amazonMusicUrl}
-          label="Amazon Music"
-          iconSrc="https://www.amazon.com/favicon.ico"
-        />
-      )}
+      {
+        amazonMusicUrl && (
+          <PlatformButton
+            platform="amazon"
+            href={amazonMusicUrl}
+            label="Amazon Music"
+            iconSrc="https://www.amazon.com/favicon.ico"
+          />
+        )
+      }
     </div>
   </div>
 </article>
@@ -92,7 +94,11 @@ const amazonMusicUrl = podcast.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL;
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-secondary)
+    );
   }
 
   .podcast-card:hover {
@@ -205,4 +211,3 @@ const amazonMusicUrl = podcast.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL;
     }
   }
 </style>
-

@@ -3,8 +3,8 @@
  * Usage: node scripts/generate-episodes.ts <input-json-file> <output-episodes-file>
  */
 
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
 interface PodcastEpisode {
   title: string;
@@ -83,7 +83,7 @@ function loadExistingEpisodes(
   if (latestFile && fs.existsSync(latestFile)) {
     try {
       const existingData: EpisodesData = JSON.parse(
-        fs.readFileSync(latestFile, "utf-8")
+        fs.readFileSync(latestFile, 'utf-8')
       );
       existingData.episodes.forEach((episode) => {
         episodeMap.set(episode.guid, episode);
@@ -95,12 +95,12 @@ function loadExistingEpisodes(
       );
     } catch (error) {
       console.warn(
-        "Could not load existing episodes file:",
+        'Could not load existing episodes file:',
         (error as Error).message
       );
     }
   } else {
-    console.log("No existing episodes files found, creating new file");
+    console.log('No existing episodes files found, creating new file');
   }
 
   return episodeMap;
@@ -130,10 +130,10 @@ function generateEpisodes(
         // New episode - empty URLs
         const newEpisode: EpisodeWithMetadata = {
           ...episode,
-          spotifyUrl: "",
-          youtubeUrl: "",
-          applePodcastUrl: "",
-          amazonMusicUrl: "",
+          spotifyUrl: '',
+          youtubeUrl: '',
+          applePodcastUrl: '',
+          amazonMusicUrl: '',
         };
         return newEpisode;
       }
@@ -149,7 +149,7 @@ const args = process.argv.slice(2);
 
 if (args.length < 2) {
   console.error(
-    "Usage: node scripts/generate-episodes.ts <input-json-file> <output-episodes-file>"
+    'Usage: node scripts/generate-episodes.ts <input-json-file> <output-episodes-file>'
   );
   process.exit(1);
 }
@@ -160,7 +160,7 @@ const outputFile = args[1];
 try {
   console.log(`Reading podcast data from: ${inputFile}`);
   const podcastData: PodcastData = JSON.parse(
-    fs.readFileSync(inputFile, "utf-8")
+    fs.readFileSync(inputFile, 'utf-8')
   );
 
   console.log(`Found ${podcastData.episodes.length} episodes in podcast data`);
@@ -179,7 +179,7 @@ try {
   };
 
   console.log(`Writing episodes to: ${outputFile}`);
-  fs.writeFileSync(outputFile, JSON.stringify(outputData, null, 2), "utf-8");
+  fs.writeFileSync(outputFile, JSON.stringify(outputData, null, 2), 'utf-8');
 
   console.log(`✅ Successfully generated ${episodes.length} episodes`);
 
@@ -194,6 +194,6 @@ try {
     console.log(`   No new episodes`);
   }
 } catch (error) {
-  console.error("❌ Error:", (error as Error).message);
+  console.error('❌ Error:', (error as Error).message);
   process.exit(1);
 }

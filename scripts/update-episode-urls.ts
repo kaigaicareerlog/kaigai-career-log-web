@@ -3,9 +3,9 @@
  * Usage: tsx scripts/update-episode-urls.ts <guid> [spotify_url] [youtube_url] [apple_podcast_url] [amazon_music_url]
  */
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -51,7 +51,7 @@ function findLatestEpisodesFile(rssDir: string): string {
     .reverse();
 
   if (episodesFiles.length === 0) {
-    throw new Error("No episodes files found");
+    throw new Error('No episodes files found');
   }
 
   return path.join(rssDir, episodesFiles[0]);
@@ -67,11 +67,11 @@ function updateEpisodeUrls(
   applePodcastUrl: string,
   amazonMusicUrl: string
 ): void {
-  const rssDir = path.join(__dirname, "..", "public", "rss");
+  const rssDir = path.join(__dirname, '..', 'public', 'rss');
   const latestFile = findLatestEpisodesFile(rssDir);
 
   console.log(`Reading episodes from: ${latestFile}`);
-  const data: EpisodesData = JSON.parse(fs.readFileSync(latestFile, "utf-8"));
+  const data: EpisodesData = JSON.parse(fs.readFileSync(latestFile, 'utf-8'));
 
   // Find episode by GUID
   const episode = data.episodes.find((ep) => ep.guid === guid);
@@ -106,7 +106,7 @@ function updateEpisodeUrls(
   }
 
   if (!updated) {
-    console.log("No URLs provided to update");
+    console.log('No URLs provided to update');
     return;
   }
 
@@ -114,7 +114,7 @@ function updateEpisodeUrls(
   data.lastUpdated = new Date().toISOString();
 
   // Write back to file
-  fs.writeFileSync(latestFile, JSON.stringify(data, null, 2), "utf-8");
+  fs.writeFileSync(latestFile, JSON.stringify(data, null, 2), 'utf-8');
   console.log(
     `✅ Successfully updated episode URLs in ${path.basename(latestFile)}`
   );
@@ -125,7 +125,7 @@ const args = process.argv.slice(2);
 
 if (args.length < 1) {
   console.error(
-    "Usage: tsx scripts/update-episode-urls.ts <guid> [spotify_url] [youtube_url] [apple_podcast_url] [amazon_music_url]"
+    'Usage: tsx scripts/update-episode-urls.ts <guid> [spotify_url] [youtube_url] [apple_podcast_url] [amazon_music_url]'
   );
   process.exit(1);
 }
@@ -135,12 +135,12 @@ const [guid, spotifyUrl, youtubeUrl, applePodcastUrl, amazonMusicUrl] = args;
 try {
   updateEpisodeUrls(
     guid,
-    spotifyUrl || "",
-    youtubeUrl || "",
-    applePodcastUrl || "",
-    amazonMusicUrl || ""
+    spotifyUrl || '',
+    youtubeUrl || '',
+    applePodcastUrl || '',
+    amazonMusicUrl || ''
   );
 } catch (error) {
-  console.error("❌ Error:", (error as Error).message);
+  console.error('❌ Error:', (error as Error).message);
   process.exit(1);
 }

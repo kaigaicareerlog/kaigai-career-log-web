@@ -16,13 +16,13 @@
  * Note: Apple Podcasts uses iTunes Search API which is FREE and requires NO authentication! 🎉
  */
 
-import "dotenv/config";
-import { readFile, writeFile } from "fs/promises";
-import { resolve } from "path";
+import 'dotenv/config';
+import { readFile, writeFile } from 'fs/promises';
+import { resolve } from 'path';
 import {
   getApplePodcastEpisodes,
   findApplePodcastEpisodeByTitle,
-} from "../src/utils/apple.ts";
+} from '../src/utils/apple.ts';
 
 interface Episode {
   guid: string;
@@ -38,7 +38,7 @@ interface EpisodesData {
 
 // Your Apple Podcasts Show ID
 // Extract from: https://podcasts.apple.com/ca/podcast/id1818019572
-const DEFAULT_PODCAST_ID = "1818019572";
+const DEFAULT_PODCAST_ID = '1818019572';
 
 async function updateAppleUrls(specificGuid?: string): Promise<void> {
   // 1. Get environment variables (optional - has default)
@@ -47,9 +47,9 @@ async function updateAppleUrls(specificGuid?: string): Promise<void> {
   // 2. Load episodes.json
   const episodesPath = resolve(
     process.cwd(),
-    "public/rss/20251015-1451-episodes.json"
+    'public/rss/20251015-1451-episodes.json'
   );
-  const episodesContent = await readFile(episodesPath, "utf-8");
+  const episodesContent = await readFile(episodesPath, 'utf-8');
   const episodesData: EpisodesData = JSON.parse(episodesContent);
 
   // 3. Find episodes that need Apple Podcasts URLs
@@ -66,7 +66,7 @@ async function updateAppleUrls(specificGuid?: string): Promise<void> {
     episodesToUpdate = [episode];
   } else {
     episodesToUpdate = episodesData.episodes.filter(
-      (ep) => !ep.applePodcastUrl || ep.applePodcastUrl === ""
+      (ep) => !ep.applePodcastUrl || ep.applePodcastUrl === ''
     );
     console.log(
       `🔍 Found ${episodesToUpdate.length} episodes without Apple Podcasts URLs\n`
@@ -74,7 +74,7 @@ async function updateAppleUrls(specificGuid?: string): Promise<void> {
   }
 
   if (episodesToUpdate.length === 0) {
-    console.log("✅ All episodes already have Apple Podcasts URLs!");
+    console.log('✅ All episodes already have Apple Podcasts URLs!');
     return;
   }
 
@@ -111,8 +111,8 @@ async function updateAppleUrls(specificGuid?: string): Promise<void> {
   if (updatedCount > 0) {
     await writeFile(
       episodesPath,
-      JSON.stringify(episodesData, null, 2) + "\n",
-      "utf-8"
+      JSON.stringify(episodesData, null, 2) + '\n',
+      'utf-8'
     );
     console.log(
       `\n✅ Successfully updated ${updatedCount} episode(s) in ${episodesPath}`

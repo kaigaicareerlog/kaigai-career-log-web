@@ -15,13 +15,13 @@
  *   YOUTUBE_CHANNEL_ID - Your YouTube Channel ID or @handle (optional, defaults to hardcoded value)
  */
 
-import "dotenv/config";
-import { readFile, writeFile } from "fs/promises";
-import { resolve } from "path";
+import 'dotenv/config';
+import { readFile, writeFile } from 'fs/promises';
+import { resolve } from 'path';
 import {
   getYouTubeChannelVideos,
   findYouTubeVideoByTitle,
-} from "../src/utils/youtube.ts";
+} from '../src/utils/youtube.ts';
 
 interface Episode {
   guid: string;
@@ -37,7 +37,7 @@ interface EpisodesData {
 
 // Your YouTube Channel ID or @handle
 // Extract from: https://www.youtube.com/@kaigaicareerlog
-const DEFAULT_CHANNEL_ID = "@kaigaicareerlog";
+const DEFAULT_CHANNEL_ID = '@kaigaicareerlog';
 
 async function updateYouTubeUrls(specificGuid?: string): Promise<void> {
   // 1. Get environment variables
@@ -45,15 +45,15 @@ async function updateYouTubeUrls(specificGuid?: string): Promise<void> {
   const channelId = process.env.YOUTUBE_CHANNEL_ID || DEFAULT_CHANNEL_ID;
 
   if (!apiKey) {
-    throw new Error("YOUTUBE_API_KEY environment variable is required");
+    throw new Error('YOUTUBE_API_KEY environment variable is required');
   }
 
   // 2. Load episodes.json
   const episodesPath = resolve(
     process.cwd(),
-    "public/rss/20251015-1451-episodes.json"
+    'public/rss/20251015-1451-episodes.json'
   );
-  const episodesContent = await readFile(episodesPath, "utf-8");
+  const episodesContent = await readFile(episodesPath, 'utf-8');
   const episodesData: EpisodesData = JSON.parse(episodesContent);
 
   // 3. Find episodes that need YouTube URLs
@@ -70,7 +70,7 @@ async function updateYouTubeUrls(specificGuid?: string): Promise<void> {
     episodesToUpdate = [episode];
   } else {
     episodesToUpdate = episodesData.episodes.filter(
-      (ep) => !ep.youtubeUrl || ep.youtubeUrl === ""
+      (ep) => !ep.youtubeUrl || ep.youtubeUrl === ''
     );
     console.log(
       `🔍 Found ${episodesToUpdate.length} episodes without YouTube URLs\n`
@@ -78,7 +78,7 @@ async function updateYouTubeUrls(specificGuid?: string): Promise<void> {
   }
 
   if (episodesToUpdate.length === 0) {
-    console.log("✅ All episodes already have YouTube URLs!");
+    console.log('✅ All episodes already have YouTube URLs!');
     return;
   }
 
@@ -110,8 +110,8 @@ async function updateYouTubeUrls(specificGuid?: string): Promise<void> {
   if (updatedCount > 0) {
     await writeFile(
       episodesPath,
-      JSON.stringify(episodesData, null, 2) + "\n",
-      "utf-8"
+      JSON.stringify(episodesData, null, 2) + '\n',
+      'utf-8'
     );
     console.log(
       `\n✅ Successfully updated ${updatedCount} episode(s) in ${episodesPath}`

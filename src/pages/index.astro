@@ -3,77 +3,81 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PodcastEpisodeCardList from '../components/podcast/PodcastEpisodeCardList.astro';
 ---
 
-<BaseLayout 
-	title="Kaigai Career Log - 海外キャリアログ"
-	description="日本から海外に飛び出し、IT業界で活躍する専門家たちにインタビュー"
+<BaseLayout
+  title="Kaigai Career Log - 海外キャリアログ"
+  description="日本から海外に飛び出し、IT業界で活躍する専門家たちにインタビュー"
 >
-	<main>
-		<div class="container">
-			<section class="hero-section">
-				<h1>海外キャリアログ</h1>
-				<p class="subtitle">Kaigai Career Log</p>
-				<p class="description">
-					日本から海外に飛び出し、IT業界で活躍する専門家たちにインタビュー。なぜ海外を目指したのか？英語の壁、就活のリアル、ビザや生活事情まで、リアルな声を記録していきます。これから海外キャリアを目指すあなたへ、道しるべとなるログをお届けします。
-				</p>
-			</section>
-		</div>
-	</main>
+  <main>
+    <div class="container">
+      <section class="hero-section">
+        <h1>海外キャリアログ</h1>
+        <p class="subtitle">Kaigai Career Log</p>
+        <p class="description">
+          日本から海外に飛び出し、IT業界で活躍する専門家たちにインタビュー。なぜ海外を目指したのか？英語の壁、就活のリアル、ビザや生活事情まで、リアルな声を記録していきます。これから海外キャリアを目指すあなたへ、道しるべとなるログをお届けします。
+        </p>
+      </section>
+    </div>
+  </main>
 
-	<PodcastEpisodeCardList />
+  <PodcastEpisodeCardList />
 </BaseLayout>
 
 <style>
-	main {
-		flex: 1;
-		width: 100%;
-	}
+  main {
+    flex: 1;
+    width: 100%;
+  }
 
-	.container {
-		max-width: 1200px;
-		margin: 0 auto;
-	}
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-	.hero-section {
-		text-align: center;
-		margin-bottom: 2rem;
-		padding-top: 2rem;
-	}
+  .hero-section {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-top: 2rem;
+  }
 
-	h1 {
-		font-size: clamp(2rem, 5vw, 3.5rem);
-		font-weight: 700;
-		background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
-		margin-bottom: 0.5rem;
-	}
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-secondary)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
 
-	.subtitle {
-		font-size: clamp(1rem, 2vw, 1.3rem);
-		color: var(--color-muted);
-		font-weight: 400;
-		margin-bottom: 1.5rem;
-	}
+  .subtitle {
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    color: var(--color-muted);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+  }
 
-	.description {
-		font-size: clamp(0.95rem, 2vw, 1.1rem);
-		line-height: 1.8;
-		color: var(--color-text);
-		max-width: 800px;
-		margin: 0 auto;
-		padding: 0 1rem;
-	}
+  .description {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    line-height: 1.8;
+    color: var(--color-text);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
 
-	@media (max-width: 768px) {
-		.hero-section {
-			margin-bottom: 1.5rem;
-			padding-top: 1rem;
-		}
+  @media (max-width: 768px) {
+    .hero-section {
+      margin-bottom: 1.5rem;
+      padding-top: 1rem;
+    }
 
-		.description {
-			font-size: 0.95rem;
-			line-height: 1.6;
-		}
-	}
+    .description {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+  }
 </style>

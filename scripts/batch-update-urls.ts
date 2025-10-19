@@ -3,9 +3,9 @@
  * Usage: tsx scripts/batch-update-urls.ts <updates-json-file>
  */
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,7 +59,7 @@ function findLatestEpisodesFile(rssDir: string): string {
     .reverse();
 
   if (episodesFiles.length === 0) {
-    throw new Error("No episodes files found");
+    throw new Error('No episodes files found');
   }
 
   return path.join(rssDir, episodesFiles[0]);
@@ -69,26 +69,26 @@ function findLatestEpisodesFile(rssDir: string): string {
  * Batch update episode URLs
  */
 function batchUpdateUrls(updatesFile: string): void {
-  const rssDir = path.join(__dirname, "..", "public", "rss");
+  const rssDir = path.join(__dirname, '..', 'public', 'rss');
   const latestFile = findLatestEpisodesFile(rssDir);
 
   console.log(`Reading episodes from: ${latestFile}`);
-  const data: EpisodesData = JSON.parse(fs.readFileSync(latestFile, "utf-8"));
+  const data: EpisodesData = JSON.parse(fs.readFileSync(latestFile, 'utf-8'));
 
   console.log(`Reading updates from: ${updatesFile}`);
   const updates: EpisodeUpdate[] = JSON.parse(
-    fs.readFileSync(updatesFile, "utf-8")
+    fs.readFileSync(updatesFile, 'utf-8')
   );
 
   if (!Array.isArray(updates)) {
-    throw new Error("Updates file must contain an array of episode updates");
+    throw new Error('Updates file must contain an array of episode updates');
   }
 
   let totalUpdated = 0;
 
   updates.forEach((update) => {
     if (!update.guid) {
-      console.warn("Skipping update without GUID:", update);
+      console.warn('Skipping update without GUID:', update);
       return;
     }
 
@@ -130,7 +130,7 @@ function batchUpdateUrls(updatesFile: string): void {
   });
 
   if (totalUpdated === 0) {
-    console.log("\nNo episodes were updated");
+    console.log('\nNo episodes were updated');
     return;
   }
 
@@ -138,7 +138,7 @@ function batchUpdateUrls(updatesFile: string): void {
   data.lastUpdated = new Date().toISOString();
 
   // Write back to file
-  fs.writeFileSync(latestFile, JSON.stringify(data, null, 2), "utf-8");
+  fs.writeFileSync(latestFile, JSON.stringify(data, null, 2), 'utf-8');
   console.log(
     `\n✅ Successfully updated ${totalUpdated} episode(s) in ${path.basename(
       latestFile
@@ -150,7 +150,7 @@ function batchUpdateUrls(updatesFile: string): void {
 const args = process.argv.slice(2);
 
 if (args.length < 1) {
-  console.error("Usage: tsx scripts/batch-update-urls.ts <updates-json-file>");
+  console.error('Usage: tsx scripts/batch-update-urls.ts <updates-json-file>');
   process.exit(1);
 }
 
@@ -159,6 +159,6 @@ const updatesFile = args[0];
 try {
   batchUpdateUrls(updatesFile);
 } catch (error) {
-  console.error("❌ Error:", (error as Error).message);
+  console.error('❌ Error:', (error as Error).message);
   process.exit(1);
 }

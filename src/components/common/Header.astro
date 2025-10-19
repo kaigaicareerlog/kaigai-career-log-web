@@ -2,7 +2,7 @@
 // Navigation links - you can customize these
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' }
+  { href: '/about', label: 'About' },
 ];
 ---
 
@@ -14,14 +14,18 @@ const navLinks = [
         <span class="brand-text">海外キャリアログ</span>
       </a>
     </div>
-    
+
     <div class="nav-menu">
       <ul class="nav-links">
-        {navLinks.map((link) => (
-          <li class="nav-item">
-            <a href={link.href} class="nav-link">{link.label}</a>
-          </li>
-        ))}
+        {
+          navLinks.map((link) => (
+            <li class="nav-item">
+              <a href={link.href} class="nav-link">
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </div>
   </nav>
@@ -85,7 +89,11 @@ const navLinks = [
   .brand-text {
     font-size: 1.5rem;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-secondary)
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -118,7 +126,11 @@ const navLinks = [
   }
 
   .nav-link:hover {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.1),
+      rgba(139, 92, 246, 0.1)
+    );
     color: var(--color-primary);
     transform: translateY(-2px);
   }
@@ -130,7 +142,11 @@ const navLinks = [
     left: 50%;
     width: 0;
     height: 2px;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-secondary)
+    );
     transition: all 0.3s ease;
     transform: translateX(-50%);
   }

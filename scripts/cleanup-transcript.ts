@@ -3,9 +3,9 @@
  * Usage: tsx scripts/cleanup-transcript.ts <episode-guid>
  */
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,14 +15,14 @@ const __dirname = path.dirname(__filename);
  */
 function cleanupText(text: string): string {
   // Remove all spaces
-  let cleaned = text.replace(/\s+/g, "");
-  
+  let cleaned = text.replace(/\s+/g, '');
+
   // Replace periods with Japanese periods and add line breaks
-  cleaned = cleaned.replace(/\./g, "。\n");
-  
+  cleaned = cleaned.replace(/\./g, '。\n');
+
   // Remove trailing line breaks
   cleaned = cleaned.trimEnd();
-  
+
   return cleaned;
 }
 
@@ -33,14 +33,14 @@ function cleanupTranscript(guid: string): void {
   console.log(`\n🧹 Cleaning up transcript for: ${guid}\n`);
 
   // Load existing transcript
-  const transcriptsDir = path.join(__dirname, "..", "public", "transcripts");
+  const transcriptsDir = path.join(__dirname, '..', 'public', 'transcripts');
   const jsonPath = path.join(transcriptsDir, `${guid}.json`);
 
   if (!fs.existsSync(jsonPath)) {
     throw new Error(`Transcript not found: ${jsonPath}`);
   }
 
-  const transcript = JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
+  const transcript = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
   const utterances = transcript.utterances;
 
   console.log(`   Total utterances: ${utterances.length}\n`);
@@ -57,10 +57,10 @@ function cleanupTranscript(guid: string): void {
 
   // Update transcript
   transcript.utterances = cleanedUtterances;
-  transcript.fullText = cleanedUtterances.map((u: any) => u.text).join("");
+  transcript.fullText = cleanedUtterances.map((u: any) => u.text).join('');
 
   // Save cleaned transcript
-  fs.writeFileSync(jsonPath, JSON.stringify(transcript, null, 2), "utf-8");
+  fs.writeFileSync(jsonPath, JSON.stringify(transcript, null, 2), 'utf-8');
 
   console.log(`\n✨ Cleanup complete!`);
   console.log(`   Cleaned: ${cleanedUtterances.length} utterances\n`);
@@ -70,10 +70,10 @@ function cleanupTranscript(guid: string): void {
 const args = process.argv.slice(2);
 
 if (args.length < 1) {
-  console.error("Usage: tsx scripts/cleanup-transcript.ts <guid>");
-  console.error("\nExample:");
+  console.error('Usage: tsx scripts/cleanup-transcript.ts <guid>');
+  console.error('\nExample:');
   console.error(
-    "  tsx scripts/cleanup-transcript.ts cc15a703-73c7-406b-8abc-ad7d0a192d05"
+    '  tsx scripts/cleanup-transcript.ts cc15a703-73c7-406b-8abc-ad7d0a192d05'
   );
   process.exit(1);
 }
@@ -84,6 +84,6 @@ try {
   cleanupTranscript(guid);
   process.exit(0);
 } catch (error) {
-  console.error("\n❌ Error:", (error as Error).message);
+  console.error('\n❌ Error:', (error as Error).message);
   process.exit(1);
 }

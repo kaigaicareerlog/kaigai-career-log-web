@@ -1,7 +1,7 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { config } from "dotenv";
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { config } from 'dotenv';
 
 // Load environment variables from .env file
 config();
@@ -16,7 +16,7 @@ async function generateHighlights(fullText: string): Promise<string[]> {
   const apiKey = process.env.GROQ_API_KEY;
 
   if (!apiKey) {
-    throw new Error("GROQ_API_KEY environment variable is not set");
+    throw new Error('GROQ_API_KEY environment variable is not set');
   }
 
   // Truncate text to fit within token limits (approximately 15,000 characters ≈ 4,000 tokens)
@@ -24,7 +24,7 @@ async function generateHighlights(fullText: string): Promise<string[]> {
   const maxChars = 15000;
   const truncatedText =
     fullText.length > maxChars
-      ? fullText.substring(0, maxChars) + "..."
+      ? fullText.substring(0, maxChars) + '...'
       : fullText;
 
   if (fullText.length > maxChars) {
@@ -59,21 +59,21 @@ ${truncatedText}
 
 Please provide exactly 3 distinct highlights with varied styles, one per line, without any numbering or bullet points.`;
 
-  console.log("   Calling Groq API to generate highlights...");
+  console.log('   Calling Groq API to generate highlights...');
 
   const response = await fetch(
-    "https://api.groq.com/openai/v1/chat/completions",
+    'https://api.groq.com/openai/v1/chat/completions',
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: 'llama-3.3-70b-versatile',
         messages: [
           {
-            role: "user",
+            role: 'user',
             content: prompt,
           },
         ],
@@ -93,7 +93,7 @@ Please provide exactly 3 distinct highlights with varied styles, one per line, w
 
   // Parse the response - split by newlines and filter out empty lines
   const highlights = content
-    .split("\n")
+    .split('\n')
     .map((line: string) => line.trim())
     .filter((line: string) => line.length > 0);
 
@@ -113,35 +113,35 @@ async function generateTranscriptHighlights(guid: string): Promise<void> {
   console.log(`\n✨ Generating highlights for: ${guid}\n`);
 
   // Load existing transcript
-  const transcriptsDir = path.join(__dirname, "..", "public", "transcripts");
+  const transcriptsDir = path.join(__dirname, '..', 'public', 'transcripts');
   const jsonPath = path.join(transcriptsDir, `${guid}.json`);
 
   if (!fs.existsSync(jsonPath)) {
     throw new Error(`Transcript not found: ${jsonPath}`);
   }
 
-  const transcript = JSON.parse(fs.readFileSync(jsonPath, "utf-8"));
+  const transcript = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
 
   // Check if highlights already exist
   if (transcript.highlight1 || transcript.highlight2 || transcript.highlight3) {
-    const answer = process.argv.includes("--force");
+    const answer = process.argv.includes('--force');
     if (!answer) {
-      console.log("   Highlights already exist. Use --force to regenerate.");
+      console.log('   Highlights already exist. Use --force to regenerate.');
       return;
     }
-    console.log("   Regenerating highlights (--force flag used)...");
+    console.log('   Regenerating highlights (--force flag used)...');
   }
 
   // Generate highlights
   const highlights = await generateHighlights(transcript.fullText);
 
   // Add highlights to transcript
-  transcript.highlight1 = highlights[0] || "";
-  transcript.highlight2 = highlights[1] || "";
-  transcript.highlight3 = highlights[2] || "";
+  transcript.highlight1 = highlights[0] || '';
+  transcript.highlight2 = highlights[1] || '';
+  transcript.highlight3 = highlights[2] || '';
 
   // Save updated transcript
-  fs.writeFileSync(jsonPath, JSON.stringify(transcript, null, 2), "utf-8");
+  fs.writeFileSync(jsonPath, JSON.stringify(transcript, null, 2), 'utf-8');
 
   console.log(`\n✅ Highlights generated successfully!`);
   console.log(`   Highlight 1: ${transcript.highlight1}`);
@@ -150,20 +150,20 @@ async function generateTranscriptHighlights(guid: string): Promise<void> {
 }
 
 // Main execution
-const args = process.argv.slice(2).filter((arg) => !arg.startsWith("--"));
+const args = process.argv.slice(2).filter((arg) => !arg.startsWith('--'));
 
 if (args.length < 1) {
-  console.error("Usage: tsx scripts/generate-highlights.ts <guid> [--force]");
-  console.error("\nExample:");
+  console.error('Usage: tsx scripts/generate-highlights.ts <guid> [--force]');
+  console.error('\nExample:');
   console.error(
-    "  tsx scripts/generate-highlights.ts cc15a703-73c7-406b-8abc-ad7d0a192d05"
+    '  tsx scripts/generate-highlights.ts cc15a703-73c7-406b-8abc-ad7d0a192d05'
   );
   console.error(
-    "  tsx scripts/generate-highlights.ts cc15a703-73c7-406b-8abc-ad7d0a192d05 --force"
+    '  tsx scripts/generate-highlights.ts cc15a703-73c7-406b-8abc-ad7d0a192d05 --force'
   );
-  console.error("\nOptions:");
+  console.error('\nOptions:');
   console.error(
-    "  --force    Regenerate highlights even if they already exist"
+    '  --force    Regenerate highlights even if they already exist'
   );
   process.exit(1);
 }
@@ -172,9 +172,9 @@ const [guid] = args;
 
 generateTranscriptHighlights(guid)
   .then(() => {
-    console.log("Done!");
+    console.log('Done!');
   })
   .catch((error) => {
-    console.error("\n❌ Error:", error.message);
+    console.error('\n❌ Error:', error.message);
     process.exit(1);
   });
