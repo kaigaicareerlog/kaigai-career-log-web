@@ -84,6 +84,33 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
             <p>{episode.description}</p>
           </section>
 
+          <!-- Highlights Section -->
+          {transcript?.highlight1 || transcript?.highlight2 || transcript?.highlight3 ? (
+            <section class="highlights-section">
+              <h2>エピソードの見どころ（聞きどころ）</h2>
+              <ul class="highlights-list">
+                {transcript.highlight1 && (
+                  <li class="highlight-item">
+                    <span class="highlight-icon">✨</span>
+                    <p>{transcript.highlight1}</p>
+                  </li>
+                )}
+                {transcript.highlight2 && (
+                  <li class="highlight-item">
+                    <span class="highlight-icon">✨</span>
+                    <p>{transcript.highlight2}</p>
+                  </li>
+                )}
+                {transcript.highlight3 && (
+                  <li class="highlight-item">
+                    <span class="highlight-icon">✨</span>
+                    <p>{transcript.highlight3}</p>
+                  </li>
+                )}
+              </ul>
+            </section>
+          ) : null}
+
           <!-- Spotify Player -->
           {spotifyEmbedUrl ? (
             <section class="audio-section">
@@ -410,6 +437,65 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     white-space: pre-wrap;
   }
 
+  /* Highlights Section */
+  .highlights-section {
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(147, 51, 234, 0.05));
+    border-radius: 1rem;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .highlights-section h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .highlights-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .highlight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--color-background);
+    border-radius: 0.75rem;
+    border: 1px solid rgba(59, 130, 246, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .highlight-item:hover {
+    transform: translateX(4px);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+  }
+
+  .highlight-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .highlight-item p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text);
+  }
+
   .platform-section {
     padding: 1.5rem;
     background: var(--color-background);
@@ -607,6 +693,18 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
       padding: 1.5rem;
     }
 
+    .highlights-section {
+      padding: 1.5rem;
+    }
+
+    .highlight-item {
+      padding: 0.75rem;
+    }
+
+    .highlight-icon {
+      font-size: 1.25rem;
+    }
+
     .transcript-container {
       padding: 1.5rem;
       max-height: 500px;
@@ -627,6 +725,21 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
     .episode-description {
       background: rgba(15, 23, 42, 0.8);
       border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .highlights-section {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .highlight-item {
+      background: rgba(15, 23, 42, 0.8);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .highlight-item:hover {
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
     }
 
     .transcript-container {
