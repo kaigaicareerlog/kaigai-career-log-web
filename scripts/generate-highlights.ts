@@ -33,23 +33,31 @@ async function generateHighlights(fullText: string): Promise<string[]> {
     );
   }
 
-  const prompt = `Generate 3 viral highlights from this podcast episode. Each highlight should be in 140 Japanese characters maximum. These will be posted on X (Twitter) to go viral.
+  const prompt = `Generate 3 engaging highlights from this podcast episode. Each highlight should be in 140 Japanese characters maximum. These will be posted on X (Twitter).
 
 Target audience: Japanese people who want to have a career outside of Japan.
 
 Requirements for each highlight:
-- Must be shocking, controversial, or surprising to catch attention
-- Use emotional triggers (fear, excitement, curiosity)
-- Include specific numbers or facts when possible (e.g., "300-500人と競争", "4-5ヶ月かかった")
-- Start with impact words like "衝撃", "知らないと損", "99%が失敗", "実は", "驚愕" etc.
-- Create FOMO (fear of missing out) or urgency
-- Make people want to click and read more
-- Use conversational, punchy Japanese that feels authentic
+- Extract the MOST interesting, valuable, or surprising insights from the actual content
+- Be truthful and authentic - DO NOT exaggerate or make false claims
+- Include specific numbers, facts, or concrete examples when they exist in the transcript
+- Use varied, natural Japanese openings - avoid repetitive clickbait phrases
+- Make it conversational and relatable, like sharing insider knowledge with a friend
+- Focus on what's genuinely useful, surprising, or thought-provoking
+- Each highlight should have a different tone and angle (e.g., one factual, one emotional, one actionable)
+
+Writing style variations to use:
+- Direct quotes or paraphrases from speakers
+- Questions that spark curiosity
+- Contrasts or comparisons ("〜だと思ってたけど、実際は〜")
+- Personal stories or experiences
+- Actionable insights or lessons
+- Unexpected revelations or realizations
 
 Transcript:
 ${truncatedText}
 
-Please provide exactly 3 viral-optimized highlights, one per line, without any numbering or bullet points.`;
+Please provide exactly 3 distinct highlights with varied styles, one per line, without any numbering or bullet points.`;
 
   console.log("   Calling Groq API to generate highlights...");
 
@@ -69,7 +77,7 @@ Please provide exactly 3 viral-optimized highlights, one per line, without any n
             content: prompt,
           },
         ],
-        temperature: 0.7,
+        temperature: 0.9,
         max_tokens: 1000,
       }),
     }
