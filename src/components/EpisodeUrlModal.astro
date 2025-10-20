@@ -1,9 +1,39 @@
 ---
-// This component handles the Tab+E modal for showing episode URLs
+// This component handles the Cmd+Shift+E modal for showing episode URLs and GUID
 import Modal from './common/Modal.astro';
 ---
 
-<Modal id="episode-url-modal" title="Episode URLs">
+<Modal id="episode-url-modal" title="Episode Info">
+  <!-- GUID Section -->
+  <div class="guid-section">
+    <div class="guid-label">
+      <h3>🆔 GUID</h3>
+      <p class="guid-description">
+        Use this GUID to update URLs or transcribe this episode
+      </p>
+    </div>
+    <div class="guid-input-container">
+      <input type="text" id="guid-input" readonly class="guid-input" />
+      <button id="copy-guid-btn" class="copy-guid-btn" title="Copy GUID">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
   <!-- Highlights Section -->
   <div id="highlights-container" class="highlights-container">
     <h3>✨ Highlights</h3>
@@ -150,20 +180,22 @@ import Modal from './common/Modal.astro';
 
   // Get modal elements
   const { modal, closeBtn } = getModalElements('episode-url-modal');
+  const guidInput = document.getElementById('guid-input') as HTMLInputElement;
+  const copyGuidBtn = document.getElementById('copy-guid-btn');
   const copyTitleBtn = document.getElementById('copy-title-btn');
   const copyAllBtn = document.getElementById('copy-all-btn');
   const copyFeedback = document.getElementById('copy-feedback');
 
   let currentEpisode: any = null;
-  let tabPressed = false;
 
-  // Listen for Tab + E keypress
+  // Listen for Cmd + Shift + E (Mac) or Ctrl + Shift + E (Windows/Linux)
   document.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === 'Tab') {
-      tabPressed = true;
-    }
-
-    if ((e.key === 'e' || e.key === 'E') && tabPressed) {
+    // Check for Cmd + Shift + E (Mac) or Ctrl + Shift + E (Windows/Linux)
+    if (
+      (e.key === 'e' || e.key === 'E') &&
+      e.shiftKey &&
+      (e.metaKey || e.ctrlKey)
+    ) {
       e.preventDefault();
       openModal();
     }
@@ -173,14 +205,9 @@ import Modal from './common/Modal.astro';
     }
   });
 
-  document.addEventListener('keyup', (e: KeyboardEvent) => {
-    if (e.key === 'Tab') {
-      tabPressed = false;
-    }
-  });
-
   // Setup event listeners
   closeBtn?.addEventListener('click', () => hideModal(modal));
+  copyGuidBtn?.addEventListener('click', copyGuidToClipboard);
   copyTitleBtn?.addEventListener('click', copyTitleToClipboard);
   copyAllBtn?.addEventListener('click', copyAllToClipboard);
   setupModalOutsideClick(modal, () => hideModal(modal));
@@ -240,6 +267,11 @@ import Modal from './common/Modal.astro';
         titleEl.textContent = episodeData.title;
       }
 
+      // Update GUID input
+      if (guidInput && episodeData.guid) {
+        guidInput.value = episodeData.guid;
+      }
+
       if (appleInput) appleInput.value = episodeData.applePodcastUrl || '';
       if (spotifyInput) spotifyInput.value = episodeData.spotifyUrl || '';
       if (youtubeInput) youtubeInput.value = episodeData.youtubeUrl || '';
@@ -268,6 +300,11 @@ import Modal from './common/Modal.astro';
 
   // Expose openModal function globally
   (window as any).__openEpisodeUrlModal = openModal;
+
+  async function copyGuidToClipboard() {
+    if (!guidInput || !guidInput.value) return;
+    await copyToClipboard(guidInput.value, copyFeedback);
+  }
 
   async function copyTitleToClipboard() {
     if (!currentEpisode || !currentEpisode.title) return;
@@ -300,6 +337,76 @@ import Modal from './common/Modal.astro';
 </script>
 
 <style>
+  .guid-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+  }
+
+  .guid-label h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+
+  .guid-description {
+    margin: 0 0 1rem 0;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+  }
+
+  .guid-input-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .guid-input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 2px solid rgba(59, 130, 246, 0.2);
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-family: 'Courier New', monospace;
+    background-color: rgba(59, 130, 246, 0.05);
+    color: var(--color-text);
+    transition: all 0.2s ease;
+  }
+
+  .guid-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background-color: rgba(59, 130, 246, 0.1);
+  }
+
+  .copy-guid-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    background-color: rgba(59, 130, 246, 0.1);
+    border: 2px solid rgba(59, 130, 246, 0.2);
+    border-radius: 0.5rem;
+    color: var(--color-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .copy-guid-btn:hover {
+    background-color: rgba(59, 130, 246, 0.2);
+    border-color: var(--color-primary);
+  }
+
+  .copy-guid-btn:active {
+    transform: scale(0.95);
+  }
+
+  .copy-guid-btn svg {
+    display: block;
+  }
+
   .highlights-container {
     margin-bottom: 2rem;
     padding-bottom: 2rem;

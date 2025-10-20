@@ -66,7 +66,7 @@ npm run preview
 - 🌙 Dark mode support (automatic based on system preference)
 - 📝 TypeScript with strict type checking
 - 🔧 Minimal and maintainable codebase
-- ⌨️ Keyboard shortcuts (Tab+E for URLs, Tab+L for GUID)
+- ⌨️ Keyboard shortcuts (Cmd+Shift+E for episode info modal)
 - 🎭 Abstracted modal system for easy reuse
 
 ## 📝 Available Scripts
@@ -316,8 +316,10 @@ npm run update-spotify-urls <episode-guid>
 
 エピソードページで便利なキーボードショートカットが利用できます。
 
-- **Tab + E**: エピソード URL モーダルを開く（Spotify、Apple Podcasts、YouTube など）
-- **Tab + L**: エピソード GUID モーダルを開く（URL 更新や文字起こしで使用）
+- **Cmd + Shift + E** (Mac) / **Ctrl + Shift + E** (Win/Linux): エピソード情報モーダルを開く
+  - GUID（一意識別子）
+  - ハイライト（AI 生成の見どころ）
+  - 配信プラットフォーム URL（Spotify、Apple Podcasts、YouTube、Amazon Music）
 - **Esc**: モーダルを閉じる
 
 詳細は [キーボードショートカットガイド](docs/KEYBOARD_SHORTCUTS.md) を参照してください。

@@ -47,7 +47,7 @@ export function toggleModal(modal: HTMLElement | null): void {
 
 /**
  * Setup keyboard shortcut for modal
- * @param triggerKey - The key to press with Tab (e.g., 'e', 'l')
+ * @param triggerKey - The key to press with Cmd+Shift (e.g., 'e', 'l')
  * @param callback - Function to call when shortcut is triggered
  * @returns Cleanup function to remove listeners
  */
@@ -55,19 +55,13 @@ export function setupModalKeyboardShortcut(
   triggerKey: string,
   callback: () => void
 ): () => void {
-  let tabPressed = false;
-
   const handleKeyDown = (e: KeyboardEvent) => {
-    // Track Tab key state
-    if (e.key === 'Tab') {
-      tabPressed = true;
-    }
-
-    // Check if trigger key is pressed while Tab is held
+    // Check for Cmd + Shift + Key (Mac) or Ctrl + Shift + Key (Windows/Linux)
     if (
       (e.key === triggerKey.toLowerCase() ||
         e.key === triggerKey.toUpperCase()) &&
-      tabPressed
+      e.shiftKey &&
+      (e.metaKey || e.ctrlKey)
     ) {
       e.preventDefault();
       callback();
@@ -79,19 +73,11 @@ export function setupModalKeyboardShortcut(
     }
   };
 
-  const handleKeyUp = (e: KeyboardEvent) => {
-    if (e.key === 'Tab') {
-      tabPressed = false;
-    }
-  };
-
   document.addEventListener('keydown', handleKeyDown);
-  document.addEventListener('keyup', handleKeyUp);
 
   // Return cleanup function
   return () => {
     document.removeEventListener('keydown', handleKeyDown);
-    document.removeEventListener('keyup', handleKeyUp);
   };
 }
 

@@ -6,7 +6,6 @@ import { getSpotifyEmbedUrl } from '../../utils/spotify';
 import { getHostInfo } from '../../utils/hosts';
 import PlatformButton from '../../components/podcast/PlatformButton.astro';
 import EpisodeUrlModal from '../../components/EpisodeUrlModal.astro';
-import EpisodeGuidModal from '../../components/EpisodeGuidModal.astro';
 import {
   SPOTIFY_CHANNEL_URL,
   YOUTUBE_CHANNEL_URL,
@@ -64,10 +63,6 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
       <div class="nav-bar">
         <a href="/" class="back-link">← エピソード一覧に戻る</a>
         <div class="action-buttons">
-          <button
-            id="open-guid-modal-btn"
-            class="action-btn hidden-btn"
-            aria-label="Secret GUID modal trigger (triple-click)"></button>
           <button
             id="open-urls-modal-btn"
             class="action-btn hidden-btn"
@@ -235,7 +230,6 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
   </main>
 
   <EpisodeUrlModal />
-  <EpisodeGuidModal />
 
   <script define:vars={{ episode, transcript }}>
     // Make episode data available globally for the modals
@@ -279,34 +273,7 @@ const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
       }
 
       // Modal button functionality - triple-click to open
-      const openGuidModalBtn = document.getElementById('open-guid-modal-btn');
       const openUrlsModalBtn = document.getElementById('open-urls-modal-btn');
-
-      // GUID modal triple-click handler
-      if (openGuidModalBtn) {
-        let guidClickCount = 0;
-        let guidClickTimeout: ReturnType<typeof setTimeout> | null = null;
-
-        openGuidModalBtn.addEventListener('click', () => {
-          guidClickCount++;
-
-          if (guidClickTimeout) {
-            clearTimeout(guidClickTimeout);
-          }
-
-          if (guidClickCount === 3) {
-            const openModalFunc = (window as any).__openEpisodeGuidModal;
-            if (openModalFunc) {
-              openModalFunc();
-            }
-            guidClickCount = 0;
-          } else {
-            guidClickTimeout = setTimeout(() => {
-              guidClickCount = 0;
-            }, 1000);
-          }
-        });
-      }
 
       // URLs modal triple-click handler
       if (openUrlsModalBtn) {

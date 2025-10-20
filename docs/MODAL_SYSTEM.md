@@ -16,8 +16,10 @@
 
 ### Modal Implementations
 
-- **`src/components/EpisodeUrlModal.astro`** - エピソード URL 表示モーダル (Tab + E)
-- **`src/components/EpisodeGuidModal.astro`** - エピソード GUID 表示モーダル (Tab + L)
+- **`src/components/EpisodeUrlModal.astro`** - エピソード情報表示モーダル (Cmd/Ctrl + Shift + E)
+  - GUID（一意識別子）
+  - ハイライト（AI 生成）
+  - 配信プラットフォーム URL（Apple Podcasts、Spotify、YouTube、Amazon Music）
 
 ## 🎨 Base Modal Component
 
@@ -147,13 +149,14 @@ import Modal from './common/Modal.astro';
 
   const { modal, closeBtn } = getModalElements('my-custom-modal');
 
-  // Setup keyboard shortcut (e.g., Tab + M)
-  let tabPressed = false;
-
+  // Setup keyboard shortcut (e.g., Cmd/Ctrl + Shift + M)
   document.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.key === 'Tab') tabPressed = true;
-
-    if ((e.key === 'm' || e.key === 'M') && tabPressed) {
+    // Check for Cmd + Shift + M (Mac) or Ctrl + Shift + M (Windows/Linux)
+    if (
+      (e.key === 'm' || e.key === 'M') &&
+      e.shiftKey &&
+      (e.metaKey || e.ctrlKey)
+    ) {
       e.preventDefault();
       showModal(modal);
     }
@@ -161,10 +164,6 @@ import Modal from './common/Modal.astro';
     if (e.key === 'Escape') {
       hideModal(modal);
     }
-  });
-
-  document.addEventListener('keyup', (e: KeyboardEvent) => {
-    if (e.key === 'Tab') tabPressed = false;
   });
 
   closeBtn?.addEventListener('click', () => hideModal(modal));
@@ -198,14 +197,13 @@ import MyCustomModal from '../../components/MyCustomModal.astro';
 ### 1. ID 命名規則
 
 - モーダル ID は `{purpose}-modal` 形式にする
-- 例: `episode-url-modal`, `episode-guid-modal`
+- 例: `episode-url-modal`, `my-custom-modal`
 
 ### 2. キーボードショートカット
 
-- `Tab + [キー]` の組み合わせを使用
+- `Cmd/Ctrl + Shift + [キー]` の組み合わせを使用
 - 既存のショートカット:
-  - `Tab + E`: Episode URLs
-  - `Tab + L`: Episode GUID
+  - `Cmd/Ctrl + Shift + E`: Episode Info（GUID、ハイライト、URL）
 - `Escape` キーで必ず閉じられるようにする
 
 ### 3. アクセシビリティ
