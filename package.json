@@ -22,7 +22,8 @@
     "update-amazon-urls": "tsx scripts/update-amazon-urls.ts",
     "update-new-episode-urls": "tsx scripts/update-new-episode-urls.ts",
     "update-episode-by-guid": "tsx scripts/update-episode-by-guid.ts",
-    "find-latest-episodes": "tsx scripts/find-latest-episodes.ts"
+    "find-latest-episodes": "tsx scripts/find-latest-episodes.ts",
+    "find-episodes-without-transcripts": "tsx scripts/find-episodes-without-transcripts.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",

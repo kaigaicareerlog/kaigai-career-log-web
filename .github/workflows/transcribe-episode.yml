@@ -11,7 +11,7 @@ on:
         description: 'Generate highlights after transcription'
         required: false
         type: boolean
-        default: false
+        default: true
 
 permissions:
   contents: write
