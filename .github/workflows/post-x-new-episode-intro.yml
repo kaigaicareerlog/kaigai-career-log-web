@@ -1,0 +1,79 @@
+name: Post Episode to X (Twitter)
+
+on:
+  workflow_dispatch:
+    inputs:
+      guid:
+        description: 'Episode GUID'
+        required: true
+        type: string
+      host_ryo:
+        description: 'Include @togashi_ryo'
+        required: false
+        type: boolean
+        default: false
+      host_senna:
+        description: 'Include @onepercentdsgn'
+        required: false
+        type: boolean
+        default: false
+      host_ayaka:
+        description: 'Include @ayacappuccino'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  post-to-x:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build host list
+        id: hosts
+        run: |
+          HOSTS=""
+          if [ "${{ inputs.host_ryo }}" = "true" ]; then
+            HOSTS="@togashi_ryo"
+          fi
+          if [ "${{ inputs.host_senna }}" = "true" ]; then
+            if [ -n "$HOSTS" ]; then
+              HOSTS="$HOSTS, @onepercentdsgn"
+            else
+              HOSTS="@onepercentdsgn"
+            fi
+          fi
+          if [ "${{ inputs.host_ayaka }}" = "true" ]; then
+            if [ -n "$HOSTS" ]; then
+              HOSTS="$HOSTS, @ayacappuccino"
+            else
+              HOSTS="@ayacappuccino"
+            fi
+          fi
+
+          if [ -z "$HOSTS" ]; then
+            echo "Error: At least one host must be selected"
+            exit 1
+          fi
+
+          echo "hosts=$HOSTS" >> $GITHUB_OUTPUT
+          echo "Selected hosts: $HOSTS"
+
+      - name: Post to X
+        env:
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+        run: |
+          npx tsx scripts/post-x-new-episode-intro.ts "${{ inputs.guid }}" "${{ steps.hosts.outputs.hosts }}"
