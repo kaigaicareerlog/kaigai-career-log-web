@@ -73,6 +73,7 @@ jobs:
 
       - name: Post new episode to X
         if: steps.episodes.outputs.episodes != '[]' && steps.episodes.outputs.episodes != ''
+        continue-on-error: true
         env:
           X_API_KEY: ${{ secrets.X_API_KEY }}
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
@@ -85,13 +86,14 @@ jobs:
 
           if [ -n "$NEW_GUID" ] && [ "$NEW_GUID" != "null" ]; then
             echo "Posting new episode to X: $NEW_GUID"
-            npx tsx scripts/post-x-new-episode-intro.ts "$NEW_GUID" "@togashi_ryo, @onepercentdsgn" || echo "Warning: Failed to post to X"
+            npx tsx scripts/post-x-new-episode-intro.ts "$NEW_GUID" "@togashi_ryo, @onepercentdsgn"
           else
             echo "No new episode found to post"
           fi
 
       - name: Transcribe and generate highlights for new episodes
         if: steps.episodes.outputs.episodes != '[]' && steps.episodes.outputs.episodes != ''
+        continue-on-error: true
         env:
           ASSEMBLYAI_API_KEY: ${{ secrets.ASSEMBLYAI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
