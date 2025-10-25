@@ -52,14 +52,14 @@ jobs:
           npx tsx scripts/generate-episodes.ts "$JSONFILE" "$EPISODESFILE"
           echo "Generated episodes.json: $EPISODESFILE"
 
-      - name: Update Spotify and YouTube URLs for new episodes
+      - name: Update all platform URLs
         env:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: |
           EPISODESFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-episodes.json"
-          echo "Finding Spotify and YouTube URLs for new episodes..."
+          echo "Finding all platform URLs for new episodes..."
           npx tsx scripts/update-new-episode-urls.ts "$EPISODESFILE"
 
       - name: Find new episodes for transcription
@@ -70,6 +70,25 @@ jobs:
           EPISODES_JSON=$(npx tsx scripts/find-episodes-without-transcripts.ts "$PODCASTFILE")
           echo "New episodes to transcribe: $EPISODES_JSON"
           echo "episodes=$EPISODES_JSON" >> $GITHUB_OUTPUT
+
+      - name: Post new episode to X
+        if: steps.episodes.outputs.episodes != '[]' && steps.episodes.outputs.episodes != ''
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+        run: |
+          # Extract the first new episode GUID from the array
+          NEW_EPISODES='${{ steps.episodes.outputs.episodes }}'
+          NEW_GUID=$(echo "$NEW_EPISODES" | jq -r '.[0].guid')
+
+          if [ -n "$NEW_GUID" ] && [ "$NEW_GUID" != "null" ]; then
+            echo "Posting new episode to X: $NEW_GUID"
+            npx tsx scripts/post-x-new-episode-intro.ts "$NEW_GUID" "@togashi_ryo, @onepercentdsgn" || echo "Warning: Failed to post to X"
+          else
+            echo "No new episode found to post"
+          fi
 
       - name: Transcribe and generate highlights for new episodes
         if: steps.episodes.outputs.episodes != '[]' && steps.episodes.outputs.episodes != ''
