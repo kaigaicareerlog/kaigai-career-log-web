@@ -10,11 +10,12 @@ When the `update-rss.yml` workflow runs (daily or manually):
 
 1. **Downloads RSS feed** - Fetches the latest podcast RSS feed
 2. **Converts to JSON** - Parses episode data into structured format
-3. **Updates URLs** - Finds Spotify and YouTube URLs for new episodes
-4. **🆕 Finds untranscribed episodes** - Checks which episodes don't have transcripts yet
-5. **🆕 Transcribes episodes** - Automatically transcribes any new episodes
-6. **🆕 Generates highlights** - Creates AI-generated highlights for each transcribed episode
-7. **Commits changes** - Saves all updates to the repository
+3. **Generates episodes.json** - Creates/updates episode data with metadata
+4. **Updates URLs** - Finds Spotify and YouTube URLs for new episodes
+5. **🆕 Detects new episodes** - Compares current and previous `podcast-data.json` files to find newly published episodes
+6. **🆕 Transcribes new episodes** - Automatically transcribes any newly detected episodes
+7. **🆕 Generates highlights** - Creates AI-generated highlights for each transcribed episode
+8. **Commits changes** - Saves all updates to the repository
 
 ## Required Secrets
 
@@ -47,15 +48,25 @@ The workflow will:
 
 ### `find-episodes-without-transcripts.ts`
 
-Finds episodes that don't have transcripts yet.
+Detects new episodes by comparing the newest `podcast-data.json` file with the previous one.
+
+**How it works:**
+
+- Compares GUIDs between consecutive `podcast-data.json` files
+- Returns episodes that are present in the new file but not in the previous file
+- Does not check the `public/transcripts` directory
 
 **Usage:**
 
 ```bash
-npm run find-episodes-without-transcripts [episodes-file]
+# Use the latest podcast-data.json file
+npm run find-episodes-without-transcripts
+
+# Or specify a specific podcast-data.json file
+npx tsx scripts/find-episodes-without-transcripts.ts public/rss/20251020-0814-podcast-data.json
 ```
 
-**Output:** JSON array of episodes needing transcription
+**Output:** JSON array of new episodes
 
 **Example:**
 
@@ -67,7 +78,8 @@ npm run find-episodes-without-transcripts
 ## Benefits
 
 ✅ **Fully automated** - No manual intervention needed for new episodes
-✅ **Consistent workflow** - Every episode gets transcribed and highlighted
+✅ **Accurate detection** - Compares RSS data directly to identify truly new episodes
+✅ **Efficient** - Only processes newly published episodes, not all episodes
 ✅ **Time-saving** - Runs automatically during daily RSS updates
 ✅ **Fail-safe** - Continues even if individual episodes fail
 

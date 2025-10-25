@@ -62,13 +62,13 @@ jobs:
           echo "Finding Spotify and YouTube URLs for new episodes..."
           npx tsx scripts/update-new-episode-urls.ts "$EPISODESFILE"
 
-      - name: Find episodes without transcripts
+      - name: Find new episodes for transcription
         id: episodes
         run: |
-          EPISODESFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-episodes.json"
-          echo "Finding episodes without transcripts..."
-          EPISODES_JSON=$(npx tsx scripts/find-episodes-without-transcripts.ts "$EPISODESFILE")
-          echo "Episodes to transcribe: $EPISODES_JSON"
+          PODCASTFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-podcast-data.json"
+          echo "Finding new episodes by comparing podcast data files..."
+          EPISODES_JSON=$(npx tsx scripts/find-episodes-without-transcripts.ts "$PODCASTFILE")
+          echo "New episodes to transcribe: $EPISODES_JSON"
           echo "episodes=$EPISODES_JSON" >> $GITHUB_OUTPUT
 
       - name: Transcribe and generate highlights for new episodes
