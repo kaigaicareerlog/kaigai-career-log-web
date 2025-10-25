@@ -67,7 +67,7 @@ jobs:
         run: |
           EPISODESFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-episodes.json"
           echo "Finding episodes without transcripts..."
-          EPISODES_JSON=$(npm run find-episodes-without-transcripts "$EPISODESFILE")
+          EPISODES_JSON=$(npx tsx scripts/find-episodes-without-transcripts.ts "$EPISODESFILE")
           echo "Episodes to transcribe: $EPISODES_JSON"
           echo "episodes=$EPISODES_JSON" >> $GITHUB_OUTPUT
 
