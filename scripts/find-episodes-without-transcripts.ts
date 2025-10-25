@@ -75,8 +75,8 @@ async function main() {
         title: episode.title,
       }));
 
-    // Output as JSON for GitHub Actions
-    console.log(JSON.stringify(episodesWithoutTranscripts, null, 2));
+    // Output as JSON for GitHub Actions (compact format for proper capture in bash)
+    console.log(JSON.stringify(episodesWithoutTranscripts));
 
     // Exit with code 0 if no episodes need transcription, 1 if there are episodes
     process.exit(episodesWithoutTranscripts.length > 0 ? 0 : 0);
