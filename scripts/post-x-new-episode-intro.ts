@@ -5,11 +5,20 @@
  *
  * Example:
  *   tsx scripts/post-x-new-episode-intro.ts "abc123" "@togashi_ryo, @onepercentdsgn"
+ *
+ * Environment Variables:
+ *   X_API_KEY - Your X API Key (Consumer Key)
+ *   X_API_SECRET - Your X API Secret (Consumer Secret)
+ *   X_ACCESS_TOKEN - Your X Access Token (with Read and Write permissions)
+ *   X_ACCESS_TOKEN_SECRET - Your X Access Token Secret
  */
 
+import 'dotenv/config';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import OAuth from 'oauth-1.0a';
+import crypto from 'crypto';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -122,11 +131,12 @@ function formatUrlsTweet(episode: Episode): string | null {
 }
 
 /**
- * Post a tweet to X (Twitter) using API v2
+ * Post a tweet to X (Twitter) using API v2 with OAuth 1.0a
  */
 async function postTweet(
   text: string,
-  accessToken: string,
+  oauth: OAuth,
+  token: { key: string; secret: string },
   replyToTweetId?: string
 ): Promise<string> {
   const body: any = { text };
@@ -138,11 +148,20 @@ async function postTweet(
     };
   }
 
-  const response = await fetch('https://api.twitter.com/2/tweets', {
+  const url = 'https://api.twitter.com/2/tweets';
+  const requestData = {
+    url,
+    method: 'POST',
+  };
+
+  // Generate OAuth 1.0a authorization header
+  const authHeader = oauth.toHeader(oauth.authorize(requestData, token));
+
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
+      ...authHeader,
     },
     body: JSON.stringify(body),
   });
@@ -162,19 +181,37 @@ async function postTweet(
 async function postToX(
   mainText: string,
   urlsText: string | null,
-  accessToken: string,
   apiKey: string,
-  apiSecret: string
+  apiSecret: string,
+  accessToken: string,
+  accessTokenSecret: string
 ): Promise<void> {
+  // Initialize OAuth 1.0a
+  const oauth = new OAuth({
+    consumer: { key: apiKey, secret: apiSecret },
+    signature_method: 'HMAC-SHA1',
+    hash_function(base_string, key) {
+      return crypto
+        .createHmac('sha1', key)
+        .update(base_string)
+        .digest('base64');
+    },
+  });
+
+  const token = {
+    key: accessToken,
+    secret: accessTokenSecret,
+  };
+
   // Post main tweet
   console.log('📤 Posting main tweet...');
-  const mainTweetId = await postTweet(mainText, accessToken);
+  const mainTweetId = await postTweet(mainText, oauth, token);
   console.log(`✅ Main tweet posted! Tweet ID: ${mainTweetId}`);
 
   // Post URLs as reply if they exist
   if (urlsText) {
     console.log('📤 Posting URLs as reply...');
-    const replyTweetId = await postTweet(urlsText, accessToken, mainTweetId);
+    const replyTweetId = await postTweet(urlsText, oauth, token, mainTweetId);
     console.log(`✅ Reply tweet posted! Tweet ID: ${replyTweetId}`);
   }
 
@@ -260,7 +297,14 @@ async function main() {
 
   // Post to X
   console.log('🐦 Posting to X (as thread)...\n');
-  await postToX(mainTweetText, urlsTweetText, accessToken, apiKey, apiSecret);
+  await postToX(
+    mainTweetText,
+    urlsTweetText,
+    apiKey,
+    apiSecret,
+    accessToken,
+    accessTokenSecret
+  );
 }
 
 main()

@@ -10,6 +10,8 @@ The workflow allows you to post new episode announcements to X with a single cli
 - Host information with X handles
 - Links to all platforms (Apple Podcasts, Spotify, YouTube, Amazon Music)
 
+**Authentication:** This script uses OAuth 1.0a User Context authentication, which is required by the X API v2 for posting tweets.
+
 ## Setup
 
 ### 1. Get X API Credentials
@@ -72,13 +74,25 @@ The workflow will automatically:
 
 ### Via Command Line (Local Testing)
 
-```bash
-# Export your X API credentials
-export X_API_KEY="your_api_key"
-export X_API_SECRET="your_api_secret"
-export X_ACCESS_TOKEN="your_access_token"
-export X_ACCESS_TOKEN_SECRET="your_access_token_secret"
+**Setup (one-time):**
 
+1. Copy the example environment file:
+
+   ```bash
+   cp env.example .env
+   ```
+
+2. Edit `.env` and add your X API credentials:
+   ```
+   X_API_KEY=your_api_key
+   X_API_SECRET=your_api_secret
+   X_ACCESS_TOKEN=your_access_token
+   X_ACCESS_TOKEN_SECRET=your_access_token_secret
+   ```
+
+**Usage:**
+
+```bash
 # Post with single host
 npm run post-x-new-episode-intro "episode-guid" "@togashi_ryo"
 
@@ -152,9 +166,21 @@ This usually means:
 3. Regenerate your Access Token and Secret
 4. Update the GitHub secrets
 
-### "X API error: 403 Forbidden"
+### "X API error: 403 Forbidden" or "Unsupported Authentication"
 
-Your app may not have the necessary permissions or the endpoint is restricted for your access level.
+This error occurs when the authentication method doesn't match what the endpoint requires. The script now uses **OAuth 1.0a User Context** (not OAuth 2.0 Application-Only), which is the correct method for posting tweets.
+
+**Common causes:**
+
+- Your app may not have the necessary permissions
+- The endpoint is restricted for your access level
+- Missing or invalid API credentials
+
+**Solution:**
+
+1. Verify all 4 secrets are correctly set in GitHub (X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN, X_ACCESS_TOKEN_SECRET)
+2. Ensure your Access Token was generated with "Read and Write" permissions
+3. Make sure "User authentication settings" is properly configured in the X Developer Portal
 
 ### "At least one host must be selected"
 
