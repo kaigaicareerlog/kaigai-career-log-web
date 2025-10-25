@@ -80,13 +80,13 @@ export X_ACCESS_TOKEN="your_access_token"
 export X_ACCESS_TOKEN_SECRET="your_access_token_secret"
 
 # Post with single host
-npm run post-to-x "episode-guid" "@togashi_ryo"
+npm run post-x-new-episode-intro "episode-guid" "@togashi_ryo"
 
 # Post with multiple hosts
-npm run post-to-x "episode-guid" "@togashi_ryo, @onepercentdsgn"
+npm run post-x-new-episode-intro "episode-guid" "@togashi_ryo, @onepercentdsgn"
 
 # Example with real GUID
-npm run post-to-x "d44556c1-c327-4716-bb57-4d0a4ed55e14" "@togashi_ryo, @onepercentdsgn"
+npm run post-x-new-episode-intro "d44556c1-c327-4716-bb57-4d0a4ed55e14" "@togashi_ryo, @onepercentdsgn"
 ```
 
 ## Tweet Format

@@ -190,10 +190,12 @@ async function main() {
   const args = process.argv.slice(2);
 
   if (args.length < 2) {
-    console.error('Usage: tsx scripts/post-to-x.ts <guid> <hosts>');
+    console.error(
+      'Usage: tsx scripts/post-x-new-episode-intro.ts <guid> <hosts>'
+    );
     console.error('\nExample:');
     console.error(
-      '  tsx scripts/post-to-x.ts "abc123" "@togashi_ryo, @onepercentdsgn"'
+      '  tsx scripts/post-x-new-episode-intro.ts "abc123" "@togashi_ryo, @onepercentdsgn"'
     );
     process.exit(1);
   }
