@@ -8,6 +8,17 @@ on:
 
   # 手動実行も可能
   workflow_dispatch:
+    inputs:
+      post_to_x:
+        description: 'Post new episode to X'
+        required: true
+        type: boolean
+        default: false
+      transcribe_episodes:
+        description: 'Transcribe and generate highlights for new episodes'
+        required: true
+        type: boolean
+        default: false
 
 jobs:
   update-rss:
@@ -72,7 +83,7 @@ jobs:
           echo "episodes=$EPISODES_JSON" >> $GITHUB_OUTPUT
 
       - name: Post new episode to X
-        if: steps.episodes.outputs.episodes != '[]' && steps.episodes.outputs.episodes != ''
+        if: steps.episodes.outputs.episodes != '[]' && steps.episodes.outputs.episodes != '' && (github.event_name == 'schedule' || inputs.post_to_x == true)
         continue-on-error: true
         env:
           X_API_KEY: ${{ secrets.X_API_KEY }}
@@ -92,7 +103,7 @@ jobs:
           fi
 
       - name: Transcribe and generate highlights for new episodes
-        if: steps.episodes.outputs.episodes != '[]' && steps.episodes.outputs.episodes != ''
+        if: steps.episodes.outputs.episodes != '[]' && steps.episodes.outputs.episodes != '' && (github.event_name == 'schedule' || inputs.transcribe_episodes == true)
         continue-on-error: true
         env:
           ASSEMBLYAI_API_KEY: ${{ secrets.ASSEMBLYAI_API_KEY }}
