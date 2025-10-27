@@ -14,11 +14,6 @@ on:
         required: true
         type: boolean
         default: false
-      transcribe_episodes:
-        description: 'Transcribe and generate highlights for new episodes'
-        required: true
-        type: boolean
-        default: false
 
 jobs:
   update-rss:
@@ -73,13 +68,13 @@ jobs:
           echo "Finding all platform URLs for new episodes..."
           npx tsx scripts/update-new-episode-urls.ts "$EPISODESFILE"
 
-      - name: Find new episodes for transcription
+      - name: Find new episodes
         id: episodes
         run: |
           PODCASTFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-podcast-data.json"
           echo "Finding new episodes by comparing podcast data files..."
           EPISODES_JSON=$(npx tsx scripts/find-episodes-without-transcripts.ts "$PODCASTFILE")
-          echo "New episodes to transcribe: $EPISODES_JSON"
+          echo "New episodes found: $EPISODES_JSON"
           echo "episodes=$EPISODES_JSON" >> $GITHUB_OUTPUT
 
       - name: Post new episode to X
@@ -102,35 +97,6 @@ jobs:
             echo "No new episode found to post"
           fi
 
-      - name: Transcribe and generate highlights for new episodes
-        if: steps.episodes.outputs.episodes != '[]' && steps.episodes.outputs.episodes != '' && (github.event_name == 'schedule' || inputs.transcribe_episodes == true)
-        continue-on-error: true
-        env:
-          ASSEMBLYAI_API_KEY: ${{ secrets.ASSEMBLYAI_API_KEY }}
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-        run: |
-          # Parse the JSON array of episodes
-          EPISODES='${{ steps.episodes.outputs.episodes }}'
-          echo "$EPISODES" | jq -r '.[].guid' | while read -r GUID; do
-            if [ -n "$GUID" ]; then
-              echo "Processing episode: $GUID"
-              
-              # Transcribe episode
-              echo "Transcribing episode $GUID..."
-              npm run transcribe "$GUID" || echo "Warning: Transcription failed for $GUID"
-              
-              # Cleanup transcript
-              echo "Cleaning up transcript for $GUID..."
-              npx tsx scripts/cleanup-transcript.ts "$GUID" || echo "Warning: Cleanup failed for $GUID"
-              
-              # Generate highlights
-              echo "Generating highlights for $GUID..."
-              npm run generate-highlights "$GUID" || echo "Warning: Highlight generation failed for $GUID"
-              
-              echo "Completed processing for episode $GUID"
-            fi
-          done
-
       - name: Delete old files (older than 3 days)
         run: |
           cd public/rss
@@ -144,6 +110,5 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add public/rss/
-          git add public/transcripts/
-          git diff --staged --quiet || git commit -m "chore: Update RSS feed and transcripts - ${{ steps.timestamp.outputs.datetime }}"
+          git diff --staged --quiet || git commit -m "chore: Update RSS feed - ${{ steps.timestamp.outputs.datetime }}"
           git push
