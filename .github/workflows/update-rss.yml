@@ -8,12 +8,6 @@ on:
 
   # 手動実行も可能
   workflow_dispatch:
-    inputs:
-      post_to_x:
-        description: 'Post new episode to X'
-        required: true
-        type: boolean
-        default: false
 
 jobs:
   update-rss:
@@ -67,35 +61,6 @@ jobs:
           EPISODESFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-episodes.json"
           echo "Finding all platform URLs for new episodes..."
           npx tsx scripts/update-new-episode-urls.ts "$EPISODESFILE"
-
-      - name: Find new episodes
-        id: episodes
-        run: |
-          PODCASTFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-podcast-data.json"
-          echo "Finding new episodes by comparing podcast data files..."
-          EPISODES_JSON=$(npx tsx scripts/find-episodes-without-transcripts.ts "$PODCASTFILE")
-          echo "New episodes found: $EPISODES_JSON"
-          echo "episodes=$EPISODES_JSON" >> $GITHUB_OUTPUT
-
-      - name: Post new episode to X
-        if: steps.episodes.outputs.episodes != '[]' && steps.episodes.outputs.episodes != '' && (github.event_name == 'schedule' || inputs.post_to_x == true)
-        continue-on-error: true
-        env:
-          X_API_KEY: ${{ secrets.X_API_KEY }}
-          X_API_SECRET: ${{ secrets.X_API_SECRET }}
-          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
-          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
-        run: |
-          # Extract the first new episode GUID from the array
-          NEW_EPISODES='${{ steps.episodes.outputs.episodes }}'
-          NEW_GUID=$(echo "$NEW_EPISODES" | jq -r '.[0].guid')
-
-          if [ -n "$NEW_GUID" ] && [ "$NEW_GUID" != "null" ]; then
-            echo "Posting new episode to X: $NEW_GUID"
-            npx tsx scripts/post-x-new-episode-intro.ts "$NEW_GUID" "@togashi_ryo, @onepercentdsgn"
-          else
-            echo "No new episode found to post"
-          fi
 
       - name: Delete old files (older than 3 days)
         run: |
