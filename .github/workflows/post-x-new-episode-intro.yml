@@ -26,6 +26,8 @@ on:
 jobs:
   post-to-x:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -77,3 +79,11 @@ jobs:
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
         run: |
           npx tsx scripts/post-x-new-episode-intro.ts "${{ inputs.guid }}" "${{ steps.hosts.outputs.hosts }}"
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add public/rss/
+          git diff --staged --quiet || git commit -m "chore: Update newEpisodeIntroPostedToX flag after posting to X"
+          git push

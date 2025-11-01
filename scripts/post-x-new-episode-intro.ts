@@ -30,13 +30,11 @@ interface Episode {
   youtubeUrl: string;
   applePodcastUrl: string;
   amazonMusicUrl: string;
+  newEpisodeIntroPostedToX?: boolean;
   [key: string]: any;
 }
 
-interface EpisodesData {
-  episodes: Episode[];
-  [key: string]: any;
-}
+type EpisodesData = Episode[];
 
 /**
  * Find the latest episodes file
@@ -62,20 +60,20 @@ function findLatestEpisodesFile(rssDir: string): string {
 /**
  * Get episode by GUID
  */
-function getEpisodeByGuid(guid: string): Episode {
+function getEpisodeByGuid(guid: string): { episode: Episode; filePath: string } {
   const rssDir = path.join(__dirname, '..', 'public', 'rss');
   const latestFile = findLatestEpisodesFile(rssDir);
 
   console.log(`Reading episodes from: ${latestFile}`);
   const data: EpisodesData = JSON.parse(fs.readFileSync(latestFile, 'utf-8'));
 
-  const episode = data.episodes.find((ep) => ep.guid === guid);
+  const episode = data.find((ep) => ep.guid === guid);
 
   if (!episode) {
     throw new Error(`Episode with GUID ${guid} not found`);
   }
 
-  return episode;
+  return { episode, filePath: latestFile };
 }
 
 /**
@@ -221,6 +219,30 @@ async function postToX(
 }
 
 /**
+ * Update episode's newEpisodeIntroPostedToX flag
+ */
+function updateNewEpisodeIntroPostedToX(filePath: string, guid: string): void {
+  console.log(`\n📝 Updating newEpisodeIntroPostedToX flag for episode ${guid}...`);
+  
+  const data: EpisodesData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  
+  const episodeIndex = data.findIndex((ep) => ep.guid === guid);
+  
+  if (episodeIndex === -1) {
+    console.warn('⚠️  Episode not found, skipping update');
+    return;
+  }
+  
+  // Update the flag to true (episode has been posted)
+  data[episodeIndex].newEpisodeIntroPostedToX = true;
+  
+  // Write back to file
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+  
+  console.log('✅ newEpisodeIntroPostedToX flag updated to true');
+}
+
+/**
  * Main function
  */
 async function main() {
@@ -261,7 +283,7 @@ async function main() {
   console.log(`\n🔍 Finding episode: ${guid}\n`);
 
   // Get episode data
-  const episode = getEpisodeByGuid(guid);
+  const { episode, filePath } = getEpisodeByGuid(guid);
   console.log(`📝 Episode: ${episode.title}\n`);
 
   // Format main tweet (without URLs)
@@ -305,6 +327,9 @@ async function main() {
     accessToken,
     accessTokenSecret
   );
+
+  // Update newEpisodeIntroPostedToX flag
+  updateNewEpisodeIntroPostedToX(filePath, guid);
 }
 
 main()

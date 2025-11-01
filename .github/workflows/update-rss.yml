@@ -102,10 +102,20 @@ jobs:
           echo "Finding all platform URLs for new episodes..."
           npx tsx scripts/update-new-episode-urls.ts "$EPISODESFILE"
 
+      - name: Auto post episode to X
+        env:
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+        run: |
+          echo "Looking for episodes to post to X..."
+          npx tsx scripts/auto-post-episode-to-x.ts "@togashi_ryo, @onepercentdsgn" || echo "No episodes to post or posting failed"
+
       - name: Commit and push changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add public/rss/
-          git diff --staged --quiet || git commit -m "chore: Update RSS feed - ${{ steps.timestamp.outputs.datetime }}"
+          git diff --staged --quiet || git commit -m "chore: Update RSS feed and post episode intro - ${{ steps.timestamp.outputs.datetime }}"
           git push

@@ -22,6 +22,7 @@ interface EpisodeWithMetadata extends PodcastEpisode {
   youtubeUrl: string;
   applePodcastUrl: string;
   amazonMusicUrl: string;
+  newEpisodeIntroPostedToX: boolean;
 }
 
 /**
@@ -189,15 +190,17 @@ function generateEpisodes(
         youtubeUrl: existing.youtubeUrl,
         applePodcastUrl: existing.applePodcastUrl,
         amazonMusicUrl: existing.amazonMusicUrl,
+        newEpisodeIntroPostedToX: existing.newEpisodeIntroPostedToX ?? false,
       };
     } else {
-      // New episode - empty URLs
+      // New episode - empty URLs and newEpisodeIntroPostedToX = false (not posted yet)
       const newEpisode: EpisodeWithMetadata = {
         ...episode,
         spotifyUrl: '',
         youtubeUrl: '',
         applePodcastUrl: '',
         amazonMusicUrl: '',
+        newEpisodeIntroPostedToX: false,
       };
       return newEpisode;
     }
