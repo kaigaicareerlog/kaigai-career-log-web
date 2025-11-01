@@ -24,7 +24,9 @@
     "update-episode-by-guid": "tsx scripts/update-episode-by-guid.ts",
     "find-latest-episodes": "tsx scripts/find-latest-episodes.ts",
     "find-episodes-without-transcripts": "tsx scripts/find-episodes-without-transcripts.ts",
-    "post-x-new-episode-intro": "tsx scripts/post-x-new-episode-intro.ts"
+    "post-x-new-episode-intro": "tsx scripts/post-x-new-episode-intro.ts",
+    "update-channel-info": "tsx scripts/update-channel-info.ts",
+    "generate-episodes": "tsx scripts/generate-episodes.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",

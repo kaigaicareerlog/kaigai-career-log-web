@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { parseJSONFeed } from '../../utils/jsonParser';
+import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
 import { formatDate, formatDuration } from '../../utils/formatters';
 import { getSpotifyEmbedUrl } from '../../utils/spotify';
 import { getHostInfo } from '../../utils/hosts';
@@ -16,9 +16,9 @@ import fs from 'fs';
 import path from 'path';
 
 export async function getStaticPaths() {
-  const data = await parseJSONFeed();
+  const { episodes } = await getLatestEpisodes();
 
-  return data.episodes.map((episode) => ({
+  return episodes.map((episode) => ({
     params: { guid: episode.guid },
     props: { episode },
   }));

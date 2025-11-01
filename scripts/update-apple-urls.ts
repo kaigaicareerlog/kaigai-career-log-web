@@ -50,14 +50,19 @@ async function updateAppleUrls(specificGuid?: string): Promise<void> {
     'public/rss/20251015-1451-episodes.json'
   );
   const episodesContent = await readFile(episodesPath, 'utf-8');
-  const episodesData: EpisodesData = JSON.parse(episodesContent);
+  const parsedData = JSON.parse(episodesContent);
+  
+  // Handle both old format (with channel) and new format (array only)
+  const episodes: Episode[] = Array.isArray(parsedData) 
+    ? parsedData 
+    : parsedData.episodes || [];
 
   // 3. Find episodes that need Apple Podcasts URLs
   let episodesToUpdate: Episode[];
 
   if (specificGuid) {
     console.log(`🔍 Looking for episode with GUID: ${specificGuid}\n`);
-    const episode = episodesData.episodes.find(
+    const episode = episodes.find(
       (ep) => ep.guid === specificGuid
     );
     if (!episode) {
@@ -65,7 +70,7 @@ async function updateAppleUrls(specificGuid?: string): Promise<void> {
     }
     episodesToUpdate = [episode];
   } else {
-    episodesToUpdate = episodesData.episodes.filter(
+    episodesToUpdate = episodes.filter(
       (ep) => !ep.applePodcastUrl || ep.applePodcastUrl === ''
     );
     console.log(
@@ -109,9 +114,10 @@ async function updateAppleUrls(specificGuid?: string): Promise<void> {
 
   // 6. Save updated episodes.json
   if (updatedCount > 0) {
+    // Save as array format (new format)
     await writeFile(
       episodesPath,
-      JSON.stringify(episodesData, null, 2) + '\n',
+      JSON.stringify(episodes, null, 2) + '\n',
       'utf-8'
     );
     console.log(

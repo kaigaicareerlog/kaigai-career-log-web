@@ -1,6 +1,7 @@
 /**
  * Script to generate episodes.json with additional metadata
- * Usage: node scripts/generate-episodes.ts <input-json-file> <output-episodes-file>
+ * Reads RSS XML file directly and outputs just the episodes array
+ * Usage: node scripts/generate-episodes.ts <input-xml-file> <output-episodes-file>
  */
 
 import fs from 'fs';
@@ -16,18 +17,6 @@ interface PodcastEpisode {
   audioUrl: string;
 }
 
-interface PodcastData {
-  channel: {
-    title: string;
-    description: string;
-    link: string;
-    language: string;
-    image: string;
-  };
-  episodes: PodcastEpisode[];
-  lastUpdated: string;
-}
-
 interface EpisodeWithMetadata extends PodcastEpisode {
   spotifyUrl: string;
   youtubeUrl: string;
@@ -35,16 +24,88 @@ interface EpisodeWithMetadata extends PodcastEpisode {
   amazonMusicUrl: string;
 }
 
-interface EpisodesData {
-  channel: {
-    title: string;
-    description: string;
-    link: string;
-    language: string;
-    image: string;
-  };
-  episodes: EpisodeWithMetadata[];
-  lastUpdated: string;
+/**
+ * Extract text content from CDATA or regular text
+ */
+function extractText(text: string | undefined): string {
+  if (!text) return '';
+
+  // Remove CDATA wrapper
+  const cdataMatch = text.match(/<!\[CDATA\[([\s\S]*?)\]\]>/);
+  if (cdataMatch) {
+    return cdataMatch[1].trim();
+  }
+
+  return text.trim();
+}
+
+/**
+ * Extract content using regex
+ */
+function extractWithRegex(text: string, regex: RegExp): string {
+  const match = text.match(regex);
+  if (!match) return '';
+
+  let content = match[1] || '';
+  content = extractText(content);
+
+  // Remove HTML tags
+  content = content.replace(/<[^>]+>/g, '');
+
+  // Decode HTML entities
+  content = content
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+
+  // Remove "ゲスト：" and everything after it
+  const guestIndex = content.indexOf('ゲスト：');
+  if (guestIndex !== -1) {
+    content = content.substring(0, guestIndex).trim();
+  }
+
+  return content;
+}
+
+/**
+ * Parse RSS XML to episodes
+ */
+function parseRSSToEpisodes(xmlText: string): PodcastEpisode[] {
+  // Extract items
+  const itemMatches = xmlText.split('<item>').slice(1);
+  const episodes: PodcastEpisode[] = itemMatches.map((itemText) => {
+    const itemContent = itemText.split('</item>')[0];
+
+    const title = extractWithRegex(itemContent, /<title>(.*?)<\/title>/s);
+    const description = extractWithRegex(
+      itemContent,
+      /<description>(.*?)<\/description>/s
+    );
+    const link = extractWithRegex(itemContent, /<link>(.*?)<\/link>/s);
+    const guid = extractWithRegex(itemContent, /<guid[^>]*>(.*?)<\/guid>/s);
+    const pubDate = extractWithRegex(itemContent, /<pubDate>(.*?)<\/pubDate>/s);
+    const duration = extractWithRegex(
+      itemContent,
+      /<itunes:duration>(.*?)<\/itunes:duration>/s
+    );
+
+    const enclosureMatch = itemContent.match(/<enclosure\s+url="([^"]+)"/);
+    const audioUrl = enclosureMatch ? enclosureMatch[1] : '';
+
+    return {
+      title,
+      description,
+      link,
+      guid,
+      date: pubDate,
+      duration,
+      audioUrl,
+    };
+  });
+
+  return episodes;
 }
 
 /**
@@ -82,10 +143,14 @@ function loadExistingEpisodes(
 
   if (latestFile && fs.existsSync(latestFile)) {
     try {
-      const existingData: EpisodesData = JSON.parse(
-        fs.readFileSync(latestFile, 'utf-8')
-      );
-      existingData.episodes.forEach((episode) => {
+      const existingData = JSON.parse(fs.readFileSync(latestFile, 'utf-8'));
+      
+      // Handle both old format (with channel) and new format (array only)
+      const episodes = Array.isArray(existingData) 
+        ? existingData 
+        : existingData.episodes || [];
+      
+      episodes.forEach((episode: EpisodeWithMetadata) => {
         episodeMap.set(episode.guid, episode);
       });
       console.log(
@@ -110,37 +175,35 @@ function loadExistingEpisodes(
  * Generate episodes with metadata
  */
 function generateEpisodes(
-  podcastData: PodcastData,
+  rssEpisodes: PodcastEpisode[],
   existingEpisodes: Map<string, EpisodeWithMetadata>
 ): EpisodeWithMetadata[] {
-  const episodes: EpisodeWithMetadata[] = podcastData.episodes.map(
-    (episode) => {
-      const existing = existingEpisodes.get(episode.guid);
+  const episodes: EpisodeWithMetadata[] = rssEpisodes.map((episode) => {
+    const existing = existingEpisodes.get(episode.guid);
 
-      if (existing) {
-        // Keep existing episode with all its metadata
-        return {
-          ...episode,
-          spotifyUrl: existing.spotifyUrl,
-          youtubeUrl: existing.youtubeUrl,
-          applePodcastUrl: existing.applePodcastUrl,
-          amazonMusicUrl: existing.amazonMusicUrl,
-        };
-      } else {
-        // New episode - empty URLs
-        const newEpisode: EpisodeWithMetadata = {
-          ...episode,
-          spotifyUrl: '',
-          youtubeUrl: '',
-          applePodcastUrl: '',
-          amazonMusicUrl: '',
-        };
-        return newEpisode;
-      }
+    if (existing) {
+      // Keep existing episode with all its metadata
+      return {
+        ...episode,
+        spotifyUrl: existing.spotifyUrl,
+        youtubeUrl: existing.youtubeUrl,
+        applePodcastUrl: existing.applePodcastUrl,
+        amazonMusicUrl: existing.amazonMusicUrl,
+      };
+    } else {
+      // New episode - empty URLs
+      const newEpisode: EpisodeWithMetadata = {
+        ...episode,
+        spotifyUrl: '',
+        youtubeUrl: '',
+        applePodcastUrl: '',
+        amazonMusicUrl: '',
+      };
+      return newEpisode;
     }
-  );
+  });
 
-  // Return episodes in the order from podcast data (latest first)
+  // Return episodes in the order from RSS data (latest first)
   return episodes;
 }
 
@@ -149,7 +212,7 @@ const args = process.argv.slice(2);
 
 if (args.length < 2) {
   console.error(
-    'Usage: node scripts/generate-episodes.ts <input-json-file> <output-episodes-file>'
+    'Usage: node scripts/generate-episodes.ts <input-xml-file> <output-episodes-file>'
   );
   process.exit(1);
 }
@@ -158,28 +221,23 @@ const inputFile = args[0];
 const outputFile = args[1];
 
 try {
-  console.log(`Reading podcast data from: ${inputFile}`);
-  const podcastData: PodcastData = JSON.parse(
-    fs.readFileSync(inputFile, 'utf-8')
-  );
+  console.log(`Reading RSS XML from: ${inputFile}`);
+  const xmlContent = fs.readFileSync(inputFile, 'utf-8');
 
-  console.log(`Found ${podcastData.episodes.length} episodes in podcast data`);
+  console.log('Parsing RSS XML to episodes...');
+  const rssEpisodes = parseRSSToEpisodes(xmlContent);
+
+  console.log(`Found ${rssEpisodes.length} episodes in RSS feed`);
 
   // Load existing episodes
   const existingEpisodes = loadExistingEpisodes(outputFile);
 
   // Generate episodes with metadata
-  const episodes = generateEpisodes(podcastData, existingEpisodes);
-
-  // Create output data
-  const outputData: EpisodesData = {
-    channel: podcastData.channel,
-    episodes,
-    lastUpdated: new Date().toISOString(),
-  };
+  const episodes = generateEpisodes(rssEpisodes, existingEpisodes);
 
   console.log(`Writing episodes to: ${outputFile}`);
-  fs.writeFileSync(outputFile, JSON.stringify(outputData, null, 2), 'utf-8');
+  // Output just the episodes array (no channel info)
+  fs.writeFileSync(outputFile, JSON.stringify(episodes, null, 2), 'utf-8');
 
   console.log(`✅ Successfully generated ${episodes.length} episodes`);
 

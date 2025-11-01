@@ -1,12 +1,12 @@
 ---
-import { parseJSONFeed } from '../../utils/jsonParser';
+import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
 import type { PodcastEpisode } from '../../utils/types';
 import PodcastEpisodeCard from './PodcastEpisodeCard.astro';
 
 // JSONフィードからポッドキャストデータを取得
 let rssData;
 try {
-  rssData = await parseJSONFeed();
+  rssData = await getLatestEpisodes();
 } catch (error) {
   console.error('Failed to parse JSON feed:', error);
   rssData = {

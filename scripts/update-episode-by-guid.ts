@@ -100,10 +100,15 @@ async function updateEpisodeByGuid(
 
   // 1. Load episodes.json
   const episodesContent = await readFile(episodesFile, 'utf-8');
-  const episodesData: EpisodesData = JSON.parse(episodesContent);
+  const parsedData = JSON.parse(episodesContent);
+  
+  // Handle both old format (with channel) and new format (array only)
+  const episodes: Episode[] = Array.isArray(parsedData) 
+    ? parsedData 
+    : parsedData.episodes || [];
 
   // 2. Find episode by GUID
-  const episode = episodesData.episodes.find((ep) => ep.guid === guid);
+  const episode = episodes.find((ep) => ep.guid === guid);
 
   if (!episode) {
     throw new Error(`Episode with GUID "${guid}" not found`);
@@ -153,10 +158,10 @@ async function updateEpisodeByGuid(
   }
 
   // 5. Save updated episodes.json
-  episodesData.lastUpdated = new Date().toISOString();
+  // Save as array format (new format)
   await writeFile(
     episodesFile,
-    JSON.stringify(episodesData, null, 2) + '\n',
+    JSON.stringify(episodes, null, 2) + '\n',
     'utf-8'
   );
 

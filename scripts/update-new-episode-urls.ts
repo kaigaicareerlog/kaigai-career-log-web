@@ -99,24 +99,29 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
 
   // 2. Load episodes.json
   const episodesContent = await readFile(episodesPath, 'utf-8');
-  const episodesData: EpisodesData = JSON.parse(episodesContent);
+  const parsedData = JSON.parse(episodesContent);
+  
+  // Handle both old format (with channel) and new format (array only)
+  const episodes: Episode[] = Array.isArray(parsedData) 
+    ? parsedData 
+    : parsedData.episodes || [];
 
   // 3. Find episodes that need URLs
-  const episodesNeedingSpotify = episodesData.episodes.filter(
+  const episodesNeedingSpotify = episodes.filter(
     (ep) => !ep.spotifyUrl || ep.spotifyUrl === ''
   );
-  const episodesNeedingYoutube = episodesData.episodes.filter(
+  const episodesNeedingYoutube = episodes.filter(
     (ep) => !ep.youtubeUrl || ep.youtubeUrl === ''
   );
-  const episodesNeedingApple = episodesData.episodes.filter(
+  const episodesNeedingApple = episodes.filter(
     (ep) => !ep.applePodcastUrl || ep.applePodcastUrl === ''
   );
-  const episodesNeedingAmazon = episodesData.episodes.filter(
+  const episodesNeedingAmazon = episodes.filter(
     (ep) => !ep.amazonMusicUrl || ep.amazonMusicUrl === ''
   );
 
   console.log(`\n📊 Episodes Status:`);
-  console.log(`   Total episodes: ${episodesData.episodes.length}`);
+  console.log(`   Total episodes: ${episodes.length}`);
   console.log(`   Missing Spotify URLs: ${episodesNeedingSpotify.length}`);
   console.log(`   Missing YouTube URLs: ${episodesNeedingYoutube.length}`);
   console.log(`   Missing Apple Podcasts URLs: ${episodesNeedingApple.length}`);
@@ -294,10 +299,10 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
 
   // 8. Save updated episodes.json if any changes were made
   if (totalUpdated > 0) {
-    episodesData.lastUpdated = new Date().toISOString();
+    // Save as array format (new format)
     await writeFile(
       episodesPath,
-      JSON.stringify(episodesData, null, 2) + '\n',
+      JSON.stringify(episodes, null, 2) + '\n',
       'utf-8'
     );
     console.log(`\n✅ Successfully updated episodes file: ${episodesPath}`);

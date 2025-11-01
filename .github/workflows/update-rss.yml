@@ -38,19 +38,59 @@ jobs:
           curl -o "$FILENAME" https://anchor.fm/s/105976b60/podcast/rss
           echo "New RSS file created: $FILENAME"
 
-      - name: Convert XML to JSON
+      - name: Update channel info
         run: |
           XMLFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-rss-file.xml"
-          JSONFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-podcast-data.json"
-          npx tsx scripts/xml-to-json.ts "$XMLFILE" "$JSONFILE"
-          echo "Converted XML to JSON: $JSONFILE"
+          npx tsx scripts/update-channel-info.ts "$XMLFILE" "public/rss/channel-info.json"
+          echo "Channel info updated"
 
-      - name: Generate episodes.json
+      - name: Generate episodes
         run: |
-          JSONFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-podcast-data.json"
+          XMLFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-rss-file.xml"
           EPISODESFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-episodes.json"
-          npx tsx scripts/generate-episodes.ts "$JSONFILE" "$EPISODESFILE"
-          echo "Generated episodes.json: $EPISODESFILE"
+          npx tsx scripts/generate-episodes.ts "$XMLFILE" "$EPISODESFILE"
+          echo "Generated episodes: $EPISODESFILE"
+
+      - name: Delete old files
+        run: |
+          cd public/rss
+          echo "Cleaning up old files..."
+
+          # For XML files: Keep only the newest, delete all others
+          NEWEST_XML=$(ls -t *-rss-file.xml 2>/dev/null | head -n 1)
+          if [ -n "$NEWEST_XML" ]; then
+            echo "Keeping newest RSS XML: $NEWEST_XML"
+            OLD_XML=$(ls -t *-rss-file.xml 2>/dev/null | tail -n +2)
+            if [ -n "$OLD_XML" ]; then
+              echo "Deleting old RSS XML files:"
+              echo "$OLD_XML"
+              ls -t *-rss-file.xml | tail -n +2 | xargs rm -f
+            else
+              echo "No old RSS XML files to delete"
+            fi
+          fi
+
+          # For episodes and podcast-data: Delete files older than 3 days
+          OLD_EPISODES=$(find . -name "*-episodes.json" -type f -mtime +3)
+          OLD_PODCAST=$(find . -name "*-podcast-data.json" -type f -mtime +3)
+
+          if [ -n "$OLD_EPISODES" ]; then
+            echo "Deleting episodes files older than 3 days:"
+            echo "$OLD_EPISODES"
+            find . -name "*-episodes.json" -type f -mtime +3 -delete
+          else
+            echo "No old episodes files to delete"
+          fi
+
+          if [ -n "$OLD_PODCAST" ]; then
+            echo "Deleting podcast-data files older than 3 days:"
+            echo "$OLD_PODCAST"
+            find . -name "*-podcast-data.json" -type f -mtime +3 -delete
+          else
+            echo "No old podcast-data files to delete"
+          fi
+
+          echo "Cleanup completed"
 
       - name: Update all platform URLs
         env:
@@ -61,14 +101,6 @@ jobs:
           EPISODESFILE="public/rss/${{ steps.timestamp.outputs.datetime }}-episodes.json"
           echo "Finding all platform URLs for new episodes..."
           npx tsx scripts/update-new-episode-urls.ts "$EPISODESFILE"
-
-      - name: Delete old files (older than 3 days)
-        run: |
-          cd public/rss
-          find . -name "*-rss-file.xml" -type f -mtime +3 -delete
-          find . -name "*-podcast-data.json" -type f -mtime +3 -delete
-          find . -name "*-episodes.json" -type f -mtime +3 -delete
-          echo "Deleted files older than 3 days"
 
       - name: Commit and push changes
         run: |
