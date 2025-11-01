@@ -1,4 +1,4 @@
-import type { PodcastEpisode, RSSChannel } from './types';
+import type { PodcastEpisode, RSSChannel } from '../types';
 
 /**
  * 正規表現を使用してRSS XMLをパースする

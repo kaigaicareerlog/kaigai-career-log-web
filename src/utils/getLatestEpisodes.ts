@@ -1,19 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-
-interface EpisodeData {
-  title: string;
-  description: string;
-  link: string;
-  guid: string;
-  date: string;
-  duration: string;
-  audioUrl: string;
-  spotifyUrl?: string;
-  youtubeUrl?: string;
-  applePodcastUrl?: string;
-  amazonMusicUrl?: string;
-}
+import type { PodcastEpisode } from '../types';
 
 /**
  * 最新のepisodes.jsonファイルを取得する
@@ -39,7 +26,7 @@ function getLatestEpisodesFile(): string {
  * JSONファイルからポッドキャストデータを読み込む
  */
 export async function getLatestEpisodes(): Promise<{
-  episodes: EpisodeData[];
+  episodes: PodcastEpisode[];
 }> {
   try {
     // 最新のepisodes.jsonを読み込む
@@ -47,7 +34,7 @@ export async function getLatestEpisodes(): Promise<{
     const jsonText = fs.readFileSync(jsonPath, 'utf-8');
 
     return {
-      episodes: JSON.parse(jsonText) as EpisodeData[],
+      episodes: JSON.parse(jsonText) as PodcastEpisode[],
     };
   } catch (error) {
     console.error('Error parsing JSON feed:', error);

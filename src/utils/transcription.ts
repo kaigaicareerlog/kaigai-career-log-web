@@ -1,29 +1,11 @@
 /**
  * Utility functions for audio transcription using AssemblyAI
  */
-
-interface TranscriptWord {
-  text: string;
-  start: number;
-  end: number;
-  confidence: number;
-  speaker?: string;
-}
-
-interface TranscriptUtterance {
-  speaker: string;
-  text: string;
-  start: number;
-  end: number;
-  words: TranscriptWord[];
-}
-
-interface TranscriptionResult {
-  text: string;
-  utterances: TranscriptUtterance[];
-  words: TranscriptWord[];
-  audio_duration: number;
-}
+import type {
+  TranscriptWord,
+  TranscriptUtterance,
+  TranscriptionResult,
+} from '../types';
 
 /**
  * Transcribe audio using AssemblyAI

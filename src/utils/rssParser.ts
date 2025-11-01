@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import type { RSSChannel } from './types';
+import type { RSSChannel } from '../types';
 import { parseRSSWithRegex } from './xmlParser';
 
 /**

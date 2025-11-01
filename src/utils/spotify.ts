@@ -1,6 +1,11 @@
 /**
  * Utility functions for Spotify integration
  */
+import type {
+  SpotifyAuthResponse,
+  SpotifyEpisode,
+  SpotifyShowEpisodesResponse,
+} from '../types';
 
 /**
  * Extracts Spotify episode ID from a Spotify URL and returns the embed URL
@@ -26,29 +31,6 @@ export function getSpotifyEmbedUrl(url: string | undefined): string | null {
 export function isValidSpotifyEpisodeUrl(url: string | undefined): boolean {
   if (!url) return false;
   return /^https:\/\/open\.spotify\.com\/episode\/[a-zA-Z0-9]+/.test(url);
-}
-
-/**
- * Spotify API types
- */
-interface SpotifyAuthResponse {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-}
-
-interface SpotifyEpisode {
-  id: string;
-  name: string;
-  external_urls: {
-    spotify: string;
-  };
-}
-
-interface SpotifyShowEpisodesResponse {
-  items: SpotifyEpisode[];
-  next: string | null;
-  total: number;
 }
 
 /**
