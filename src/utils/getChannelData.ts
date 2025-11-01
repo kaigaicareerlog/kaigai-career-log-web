@@ -31,9 +31,9 @@ function getLatestRSSFile(): string {
 }
 
 /**
- * RSS XMLをパースしてポッドキャストデータを抽出する
+ * RSS XMLからチャンネルデータを取得する
  */
-export async function parseRSSFeed(): Promise<RSSChannel> {
+export async function getChannelData(): Promise<RSSChannel> {
   try {
     // 最新のRSSファイルを読み込む
     const rssPath = getLatestRSSFile();

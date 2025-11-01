@@ -3,6 +3,40 @@
  */
 
 // ============================================================================
+// Host Types
+// ============================================================================
+
+/**
+ * Social media link information
+ */
+export interface SocialLink {
+  href: string;
+  icon: string;
+  title: string;
+}
+
+/**
+ * Actor/Host information with social links
+ */
+export interface Actor {
+  name: string;
+  bio: string;
+  avatar: string;
+  color: string;
+  socialLinks: SocialLink[];
+}
+
+/**
+ * Host information for transcripts (simplified)
+ */
+export interface HostInfo {
+  name: string;
+  image: string;
+  color: string;
+  bio?: string;
+}
+
+// ============================================================================
 // Episode Types
 // ============================================================================
 
