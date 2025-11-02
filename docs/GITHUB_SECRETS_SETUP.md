@@ -238,10 +238,9 @@ If you want to test locally before pushing:
 
 1. Check the workflow logs for detailed messages
 2. Manually verify episode titles on Spotify/YouTube
-3. If needed, manually add URLs using the individual scripts:
+3. If needed, manually re-run the update script:
    ```bash
-   npm run update-spotify-urls <guid>
-   npm run update-youtube-urls <guid>
+   npm run update-new-episode-urls public/rss/[episodes-file].json
    ```
 
 ---
@@ -296,7 +295,7 @@ If you encounter any issues:
 2. **Verify secrets**: Settings → Secrets → Ensure all 3 are present
 3. **Test APIs separately**:
    - Test Spotify: `npm run find-spotify-url <guid>`
-   - Test YouTube: `npm run update-youtube-urls <guid>`
+   - Test all platforms: `npm run update-new-episode-urls public/rss/[episodes-file].json`
 4. **Check documentation**:
    - [Spotify Web API Docs](https://developer.spotify.com/documentation/web-api)
    - [YouTube Data API Docs](https://developers.google.com/youtube/v3)

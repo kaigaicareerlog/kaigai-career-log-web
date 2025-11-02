@@ -62,10 +62,7 @@ The project has three methods for managing episode URLs:
 **Available scripts**:
 
 - `update-episode-by-guid` - Update specific episode with any URLs
-- `update-spotify-urls` - Update all missing Spotify URLs
-- `update-youtube-urls` - Update all missing YouTube URLs
-- `update-apple-urls` - Update all missing Apple Podcasts URLs (no API key needed!)
-- `update-new-episode-urls` - Update Spotify, YouTube & Apple Podcasts for new episodes
+- `update-new-episode-urls` - Update Spotify, YouTube, Apple Podcasts & Amazon Music for new episodes
 - `find-spotify-url` - Find Spotify URL for an episode (read-only)
 
 **Documentation**: [SPOTIFY_URL_FINDER.md](./SPOTIFY_URL_FINDER.md)
@@ -142,10 +139,8 @@ kaigai-career-log-web/
 │   ├── update-rss.yml                    # Automatic RSS + URL updates
 │   └── update-urls-manually.yml          # Manual URL update workflow
 ├── scripts/
-│   ├── update-new-episode-urls.ts        # Auto-find URLs for new episodes
+│   ├── update-new-episode-urls.ts        # Auto-find URLs for all platforms
 │   ├── update-episode-by-guid.ts         # Update specific episode by GUID
-│   ├── update-spotify-urls.ts            # Batch Spotify URL updates
-│   ├── update-youtube-urls.ts            # Batch YouTube URL updates
 │   ├── find-spotify-url.ts               # Find Spotify URL (read-only)
 │   └── find-latest-episodes.ts           # Helper: find latest episodes file
 ├── src/utils/
@@ -192,12 +187,11 @@ kaigai-career-log-web/
 **Method**: Scripts
 
 1. Set up `.env` with API credentials
-2. Run for each episode:
+2. Run the update script on the episodes file:
    ```bash
-   npm run update-spotify-urls <guid>
-   npm run update-youtube-urls <guid>
+   npm run update-new-episode-urls public/rss/[episodes-file].json
    ```
-3. Or create a bash loop to process all
+3. Or use update-episode-by-guid for specific episodes
 
 ### Task: Check if episode has Spotify URL
 

@@ -78,7 +78,7 @@ npm run preview
 - `npm run update-episode-urls` - Update episode URLs by GUID
 - `npm run transcribe <guid>` - Transcribe an episode using AssemblyAI
 - `npm run find-spotify-url <guid>` - Find Spotify URL for a specific episode
-- `npm run update-spotify-urls [guid]` - Update Spotify URLs in episodes.json (all or specific episode)
+- `npm run update-new-episode-urls <file>` - Update platform URLs (Spotify, YouTube, Apple Podcasts, Amazon Music) in episodes file
 
 ## 🤖 Automated Podcast Feed Updates
 
@@ -282,11 +282,8 @@ npm run update-speakers <guid> D Ayaka
 # 特定のエピソードを検索
 npm run find-spotify-url <episode-guid>
 
-# すべての未設定エピソードを更新
-npm run update-spotify-urls
-
-# 特定のエピソードのみ更新
-npm run update-spotify-urls <episode-guid>
+# すべてのプラットフォームの URL を更新
+npm run update-new-episode-urls public/rss/[episodes-file].json
 ```
 
 詳細は以下のドキュメントを参照:

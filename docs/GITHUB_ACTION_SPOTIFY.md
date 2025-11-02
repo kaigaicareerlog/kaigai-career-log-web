@@ -119,12 +119,12 @@ Coming soon:
 
 ### The Update Script
 
-The script (`scripts/update-spotify-urls.ts`):
+The script (`scripts/update-new-episode-urls.ts`):
 
 1. Loads your `episodes.json` file
-2. Finds episodes without `spotifyUrl`
-3. Authenticates with Spotify API
-4. Fetches all episodes from your Spotify show
+2. Finds episodes without platform URLs
+3. Authenticates with platform APIs (Spotify, YouTube, etc.)
+4. Fetches all episodes from each platform
 5. Matches episodes by title (tries exact, normalized, and partial matches)
 6. Updates the `episodes.json` file
 7. Reports a summary of updates
@@ -184,11 +184,8 @@ The workflow uses `GITHUB_TOKEN` which has limited permissions. If you see permi
 You can test the update script locally:
 
 ```bash
-# Update all episodes
-npm run update-spotify-urls
-
-# Update specific episode
-npm run update-spotify-urls cc15a703-73c7-406b-8abc-ad7d0a192d05
+# Update all platforms for a specific episodes file
+npm run update-new-episode-urls public/rss/[episodes-file].json
 ```
 
 Make sure you have a `.env` file with your credentials:
@@ -196,6 +193,7 @@ Make sure you have a `.env` file with your credentials:
 ```env
 SPOTIFY_CLIENT_ID=your_client_id_here
 SPOTIFY_CLIENT_SECRET=your_client_secret_here
+YOUTUBE_API_KEY=your_youtube_api_key_here
 ```
 
 ## 📚 Related Documentation
@@ -253,12 +251,14 @@ branch: automated/episode-urls-updates
 
 ### Add Support for More Platforms
 
-To add support for YouTube, Apple Podcasts, or Amazon Music, you'll need to:
+All major platforms are already supported in `update-new-episode-urls.ts`:
 
-1. Create a new script similar to `update-spotify-urls.ts` for that platform
-2. Add the API credentials to GitHub Secrets
-3. Update the workflow to call your new script when that platform is selected
-4. Update the workflow's `Update Episode URLs` step to handle the new platform
+- ✅ **Spotify** - Fully functional
+- ✅ **YouTube** - Fully functional  
+- ✅ **Apple Podcasts** - Fully functional (no API key required!)
+- ✅ **Amazon Music** - Fully functional (uses browser automation)
+
+The consolidated script automatically handles all platforms in one run.
 
 ---
 

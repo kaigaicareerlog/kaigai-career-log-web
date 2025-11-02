@@ -174,10 +174,9 @@ If the script can't find URLs for some episodes:
 
 1. Wait a few hours and let the workflow run again (it runs daily)
 2. Manually check the episode title on Spotify/YouTube
-3. Use the manual update scripts:
+3. Manually re-run the update script:
    ```bash
-   npm run update-spotify-urls <guid>
-   npm run update-youtube-urls <guid>
+   npm run update-new-episode-urls public/rss/[episodes-file].json
    ```
 
 ### API Authentication Failures
@@ -209,9 +208,7 @@ If you see authentication errors:
 
 ## Related Scripts
 
-- `scripts/update-new-episode-urls.ts` - Main script (runs in CI/CD)
-- `scripts/update-spotify-urls.ts` - Spotify-only updates
-- `scripts/update-youtube-urls.ts` - YouTube-only updates
+- `scripts/update-new-episode-urls.ts` - Main script (runs in CI/CD, handles all platforms)
 - `scripts/find-spotify-url.ts` - Find URL for a specific episode
 - `.github/workflows/update-rss.yml` - GitHub Actions workflow
 

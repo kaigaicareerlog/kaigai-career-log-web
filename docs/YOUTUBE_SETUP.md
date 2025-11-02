@@ -68,11 +68,8 @@ YOUTUBE_CHANNEL_ID=@kaigaicareerlog  # オプション（デフォルト値が�
 ### ローカルでの使用
 
 ```bash
-# 全エピソードの YouTube URL を更新
-npm run update-youtube-urls
-
-# 特定のエピソードの YouTube URL を更新
-npm run update-youtube-urls <guid>
+# すべてのプラットフォーム（YouTube含む）の URL を更新
+npm run update-new-episode-urls public/rss/[episodes-file].json
 ```
 
 ## 仕組み

@@ -115,38 +115,30 @@ git push
 
 ### 自動 URL 取得
 
-#### Spotify URL の自動取得
+すべてのプラットフォーム（Spotify、YouTube、Apple Podcasts、Amazon Music）の URL を一度に取得できます：
 
 ```bash
-# 全エピソードの Spotify URL を更新
-npm run update-spotify-urls
-
-# 特定のエピソードの Spotify URL を更新
-npm run update-spotify-urls <guid>
+# エピソードファイルを指定して実行
+npm run update-new-episode-urls public/rss/[episodes-file].json
 ```
 
 環境変数:
 
 ```bash
+# 必須（各プラットフォームを使用する場合）
 export SPOTIFY_CLIENT_ID="your_client_id"
 export SPOTIFY_CLIENT_SECRET="your_client_secret"
-```
-
-#### YouTube URL の自動取得
-
-```bash
-# 全エピソードの YouTube URL を更新
-npm run update-youtube-urls
-
-# 特定のエピソードの YouTube URL を更新
-npm run update-youtube-urls <guid>
-```
-
-環境変数:
-
-```bash
 export YOUTUBE_API_KEY="your_api_key"
+
+# オプション（デフォルト値があります）
+export SPOTIFY_SHOW_ID="0bj38cgbe71oCr5Q0emwvA"
+export YOUTUBE_CHANNEL_ID="@kaigaicareerlog"
+export APPLE_PODCAST_ID="1818019572"
+export AMAZON_MUSIC_SHOW_ID="118b5e6b-1f97-4c62-97a5-754714381b40"
+export AMAZON_MUSIC_REGION="co.jp"
 ```
+
+注意：Apple Podcasts は API キー不要で動作します！
 
 ### 手動 URL 更新
 
