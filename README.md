@@ -76,7 +76,6 @@ npm run preview
 - `npm run preview` - Preview production build locally
 - `npm run astro` - Run Astro CLI commands
 - `npm run update-episode-urls` - Update episode URLs by GUID
-- `npm run batch-update-urls` - Batch update multiple episode URLs
 - `npm run transcribe <guid>` - Transcribe an episode using AssemblyAI
 - `npm run find-spotify-url <guid>` - Find Spotify URL for a specific episode
 - `npm run update-spotify-urls [guid]` - Update Spotify URLs in episodes.json (all or specific episode)
@@ -94,17 +93,18 @@ npm run preview
 
 1. GitHub Actions が https://anchor.fm/s/105976b60/podcast/rss から最新の RSS フィードをダウンロード
 2. タイムスタンプ付きの XML ファイル (`YYYYMMDD-HHMM-rss-file.xml`) を保存
-3. XML を JSON に変換し、タイムスタンプ付きの JSON ファイル (`YYYYMMDD-HHMM-podcast-data.json`) を保存
-4. `episodes.json` を生成（既存データとマージし、各エピソードに ID と URL 情報を付与）
-5. 3 日より古いファイルは自動削除
-6. Web サイトは最新の JSON ファイルを自動的に読み込む
-7. 変更がプッシュされると、Cloudflare Pages が自動的に再デプロイ
+3. チャンネル情報を更新 (`channel-info.json`)
+4. `episodes.json` を生成（既存データとマージし、各エピソードに URL 情報を付与）
+5. プラットフォーム URL を自動更新（Spotify, YouTube, Apple Podcast, Amazon Music）
+6. 3 日より古いファイルは自動削除
+7. Web サイトは最新の JSON ファイルを自動的に読み込む
+8. 変更がプッシュされると、Cloudflare Pages が自動的に再デプロイ
 
 ### データフォーマット
 
-- **XML ファイル**: `public/rss/YYYYMMDD-HHMM-rss-file.xml` (3 日間保持、バックアップ用)
-- **JSON ファイル**: `public/rss/YYYYMMDD-HHMM-podcast-data.json` (3 日間保持、中間データ)
+- **XML ファイル**: `public/rss/YYYYMMDD-HHMM-rss-file.xml` (最新のみ保持、バックアップ用)
 - **エピソードデータ**: `public/rss/YYYYMMDD-HHMM-episodes.json` (3 日間保持、Web サイトが最新を自動選択)
+- **チャンネル情報**: `public/rss/channel-info.json` (常に最新に更新)
 
 ### 手動更新方法
 
@@ -113,12 +113,6 @@ GitHub リポジトリで:
 1. 「Actions」タブを開く
 2. 「Update RSS Feed」ワークフローを選択
 3. 「Run workflow」をクリック
-
-### ローカルで XML を JSON に変換
-
-```bash
-npx tsx scripts/xml-to-json.ts public/rss/latest.xml public/rss/podcast-data.json
-```
 
 ### エピソードメタデータの管理
 
@@ -150,11 +144,7 @@ npx tsx scripts/xml-to-json.ts public/rss/latest.xml public/rss/podcast-data.jso
 **方法 3: ローカルでスクリプト実行**
 
 ```bash
-# 個別更新
 npm run update-episode-urls <guid> [spotify_url] [youtube_url] [apple_podcast_url] [amazon_music_url]
-
-# バッチ更新
-npm run batch-update-urls episode-urls-update.json
 ```
 
 次回の自動更新時に、編集した URL 情報は新しいタイムスタンプのファイルに引き継がれます。

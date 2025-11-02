@@ -15,57 +15,12 @@
  */
 
 import 'dotenv/config';
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
-
+import { getLatestEpisodeToTweet } from '../src/utils/getLatestEpisodeToTweet';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-interface Episode {
-  title: string;
-  guid: string;
-  newEpisodeIntroPostedToX?: boolean;
-  [key: string]: any;
-}
-
-/**
- * Find the latest episodes file
- */
-function findLatestEpisodesFile(rssDir: string): string {
-  if (!fs.existsSync(rssDir)) {
-    throw new Error(`RSS directory not found: ${rssDir}`);
-  }
-
-  const files = fs.readdirSync(rssDir);
-  const episodesFiles = files
-    .filter((file) => file.match(/^\d{8}-\d{4}-episodes\.json$/))
-    .sort()
-    .reverse();
-
-  if (episodesFiles.length === 0) {
-    throw new Error('No episodes files found');
-  }
-
-  return path.join(rssDir, episodesFiles[0]);
-}
-
-/**
- * Find episode that needs to be posted to X
- */
-function findEpisodeToPost(): Episode | null {
-  const rssDir = path.join(__dirname, '..', 'public', 'rss');
-  const latestFile = findLatestEpisodesFile(rssDir);
-
-  console.log(`Reading episodes from: ${latestFile}`);
-  const data: Episode[] = JSON.parse(fs.readFileSync(latestFile, 'utf-8'));
-
-  // Find the first episode with newEpisodeIntroPostedToX: false (not posted yet)
-  const episode = data.find((ep) => ep.newEpisodeIntroPostedToX === false);
-
-  return episode || null;
-}
 
 /**
  * Main function
@@ -106,7 +61,7 @@ async function main() {
   console.log('\n🔍 Looking for episodes to post...\n');
 
   // Find episode to post
-  const episode = findEpisodeToPost();
+  const episode = getLatestEpisodeToTweet();
 
   if (!episode) {
     console.log('✅ No episodes need to be posted to X');

@@ -70,9 +70,8 @@ jobs:
             fi
           fi
 
-          # For episodes and podcast-data: Delete files older than 3 days
+          # For episodes: Delete files older than 3 days
           OLD_EPISODES=$(find . -name "*-episodes.json" -type f -mtime +3)
-          OLD_PODCAST=$(find . -name "*-podcast-data.json" -type f -mtime +3)
 
           if [ -n "$OLD_EPISODES" ]; then
             echo "Deleting episodes files older than 3 days:"
@@ -80,14 +79,6 @@ jobs:
             find . -name "*-episodes.json" -type f -mtime +3 -delete
           else
             echo "No old episodes files to delete"
-          fi
-
-          if [ -n "$OLD_PODCAST" ]; then
-            echo "Deleting podcast-data files older than 3 days:"
-            echo "$OLD_PODCAST"
-            find . -name "*-podcast-data.json" -type f -mtime +3 -delete
-          else
-            echo "No old podcast-data files to delete"
           fi
 
           echo "Cleanup completed"

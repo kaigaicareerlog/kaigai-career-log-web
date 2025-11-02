@@ -10,7 +10,6 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "update-episode-urls": "tsx scripts/update-episode-urls.ts",
-    "batch-update-urls": "tsx scripts/batch-update-urls.ts",
     "transcribe": "tsx scripts/transcribe-episode.ts",
     "cleanup-transcript": "tsx scripts/cleanup-transcript.ts",
     "update-speakers": "tsx scripts/update-transcript-speakers.ts",
@@ -23,7 +22,6 @@
     "update-new-episode-urls": "tsx scripts/update-new-episode-urls.ts",
     "update-episode-by-guid": "tsx scripts/update-episode-by-guid.ts",
     "find-latest-episodes": "tsx scripts/find-latest-episodes.ts",
-    "find-episodes-without-transcripts": "tsx scripts/find-episodes-without-transcripts.ts",
     "post-x-new-episode-intro": "tsx scripts/post-x-new-episode-intro.ts",
     "update-channel-info": "tsx scripts/update-channel-info.ts",
     "generate-episodes": "tsx scripts/generate-episodes.ts"

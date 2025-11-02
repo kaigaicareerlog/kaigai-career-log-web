@@ -19,159 +19,17 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import OAuth from 'oauth-1.0a';
 import crypto from 'crypto';
+import { formatNewEpisodeMainTweet } from '../src/utils/x/formatNewEpisodeMainTweet';
+import type { PodcastEpisode } from '../src/types';
+import { findLatestEpisodesFile } from '../src/utils/findLatestEpisodesFile';
+import { getEpisodeByGuid } from '../src/utils/getEpisodeByGuid';
+import { formatNewEpisodeUrlsTweet } from '../src/utils/x/formatNewEpisodeUrlsTweet';
+import { postTweet } from '../src/utils/x/postTweet';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-interface Episode {
-  title: string;
-  guid: string;
-  spotifyUrl: string;
-  youtubeUrl: string;
-  applePodcastUrl: string;
-  amazonMusicUrl: string;
-  newEpisodeIntroPostedToX?: boolean;
-  [key: string]: any;
-}
-
-type EpisodesData = Episode[];
-
-/**
- * Find the latest episodes file
- */
-function findLatestEpisodesFile(rssDir: string): string {
-  if (!fs.existsSync(rssDir)) {
-    throw new Error(`RSS directory not found: ${rssDir}`);
-  }
-
-  const files = fs.readdirSync(rssDir);
-  const episodesFiles = files
-    .filter((file) => file.match(/^\d{8}-\d{4}-episodes\.json$/))
-    .sort()
-    .reverse();
-
-  if (episodesFiles.length === 0) {
-    throw new Error('No episodes files found');
-  }
-
-  return path.join(rssDir, episodesFiles[0]);
-}
-
-/**
- * Get episode by GUID
- */
-function getEpisodeByGuid(guid: string): { episode: Episode; filePath: string } {
-  const rssDir = path.join(__dirname, '..', 'public', 'rss');
-  const latestFile = findLatestEpisodesFile(rssDir);
-
-  console.log(`Reading episodes from: ${latestFile}`);
-  const data: EpisodesData = JSON.parse(fs.readFileSync(latestFile, 'utf-8'));
-
-  const episode = data.find((ep) => ep.guid === guid);
-
-  if (!episode) {
-    throw new Error(`Episode with GUID ${guid} not found`);
-  }
-
-  return { episode, filePath: latestFile };
-}
-
-/**
- * Format main tweet text (without URLs)
- */
-function formatMainTweet(episode: Episode, hosts: string): string {
-  const lines: string[] = [];
-
-  lines.push('🎧Podcast新エピソード公開');
-  lines.push('');
-  lines.push(episode.title);
-  lines.push('');
-  lines.push('Host');
-  lines.push(hosts);
-  lines.push('');
-  lines.push('#海外 #海外就職 #キャリア');
-
-  return lines.join('\n').trim();
-}
-
-/**
- * Format reply tweet with URLs
- */
-function formatUrlsTweet(episode: Episode): string | null {
-  const lines: string[] = [];
-
-  // Add URLs if they exist
-  if (episode.applePodcastUrl) {
-    lines.push('Apple');
-    lines.push(episode.applePodcastUrl);
-    lines.push('');
-  }
-
-  if (episode.spotifyUrl) {
-    lines.push('Spotify');
-    lines.push(episode.spotifyUrl);
-    lines.push('');
-  }
-
-  if (episode.youtubeUrl) {
-    lines.push('Youtube');
-    lines.push(episode.youtubeUrl);
-    lines.push('');
-  }
-
-  if (episode.amazonMusicUrl) {
-    lines.push('Amazon Music');
-    lines.push(episode.amazonMusicUrl);
-  }
-
-  const result = lines.join('\n').trim();
-  return result ? result : null;
-}
-
-/**
- * Post a tweet to X (Twitter) using API v2 with OAuth 1.0a
- */
-async function postTweet(
-  text: string,
-  oauth: OAuth,
-  token: { key: string; secret: string },
-  replyToTweetId?: string
-): Promise<string> {
-  const body: any = { text };
-
-  // If replying to another tweet, add reply parameter
-  if (replyToTweetId) {
-    body.reply = {
-      in_reply_to_tweet_id: replyToTweetId,
-    };
-  }
-
-  const url = 'https://api.twitter.com/2/tweets';
-  const requestData = {
-    url,
-    method: 'POST',
-  };
-
-  // Generate OAuth 1.0a authorization header
-  const authHeader = oauth.toHeader(oauth.authorize(requestData, token));
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...authHeader,
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`X API error: ${response.status} - ${errorText}`);
-  }
-
-  const result = await response.json();
-  return result.data.id;
-}
+type EpisodesData = PodcastEpisode[];
 
 /**
  * Post to X (Twitter) with main tweet and reply thread
@@ -222,23 +80,25 @@ async function postToX(
  * Update episode's newEpisodeIntroPostedToX flag
  */
 function updateNewEpisodeIntroPostedToX(filePath: string, guid: string): void {
-  console.log(`\n📝 Updating newEpisodeIntroPostedToX flag for episode ${guid}...`);
-  
+  console.log(
+    `\n📝 Updating newEpisodeIntroPostedToX flag for episode ${guid}...`
+  );
+
   const data: EpisodesData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-  
+
   const episodeIndex = data.findIndex((ep) => ep.guid === guid);
-  
+
   if (episodeIndex === -1) {
     console.warn('⚠️  Episode not found, skipping update');
     return;
   }
-  
+
   // Update the flag to true (episode has been posted)
   data[episodeIndex].newEpisodeIntroPostedToX = true;
-  
+
   // Write back to file
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
-  
+
   console.log('✅ newEpisodeIntroPostedToX flag updated to true');
 }
 
@@ -283,14 +143,21 @@ async function main() {
   console.log(`\n🔍 Finding episode: ${guid}\n`);
 
   // Get episode data
-  const { episode, filePath } = getEpisodeByGuid(guid);
+  const rssDir = path.join(__dirname, '..', 'public', 'rss');
+  const filePath = findLatestEpisodesFile(rssDir);
+  const episode = getEpisodeByGuid({ guid });
+
+  if (!episode) {
+    throw new Error(`Episode with GUID ${guid} not found`);
+  }
+
   console.log(`📝 Episode: ${episode.title}\n`);
 
   // Format main tweet (without URLs)
-  const mainTweetText = formatMainTweet(episode, hosts);
+  const mainTweetText = formatNewEpisodeMainTweet(episode, hosts);
 
   // Format URLs tweet (as reply)
-  const urlsTweetText = formatUrlsTweet(episode);
+  const urlsTweetText = formatNewEpisodeUrlsTweet(episode);
 
   console.log('📄 Main tweet content:');
   console.log('─'.repeat(50));

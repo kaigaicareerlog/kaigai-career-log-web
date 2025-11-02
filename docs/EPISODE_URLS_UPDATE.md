@@ -166,12 +166,6 @@ npm run update-episode-urls 39cf6d7a-a8fc-4f4f-a0f7-3ad0e8e1bc7d \
   "https://music.amazon.ca/..."
 ```
 
-### バッチ更新
-
-```bash
-npm run batch-update-urls episode-urls-update.json
-```
-
 ## 注意事項
 
 - GUID は必須です。各エピソードの一意の識別子として使用されます
