@@ -9,13 +9,13 @@ Quick reference for updating speaker labels in transcripts.
 1. **Go to Actions** → `Update Transcript Speakers`
 2. **Fill in:**
    - Episode GUID: `cc15a703-73c7-406b-8abc-ad7d0a192d05`
-   - Old speaker: `A` or `B` or `C`
-   - Speaker type: `Host` or `Guest`
-   - **If Host:** Select `Ryo`, `Senna`, or `Ayaka`
-   - **If Guest:** Enter name (e.g., "John Smith")
-3. **Run** → Review PR → Merge
+   - Speaker A name: `Ryo` (or leave empty to skip)
+   - Speaker B name: `Senna` (or leave empty to skip)
+   - Speaker C name: `John Smith` (or leave empty to skip)
+   - Speaker D name: `Ayaka` (or leave empty to skip)
+3. **Run** → Changes committed automatically
 
-Done! The episode page will now show the speaker's avatar and name. ✨
+Done! All speakers are updated at once! ✨
 
 ---
 
@@ -57,15 +57,17 @@ Speaker A: こんにちは
 ## 💻 Local Command
 
 ```bash
-npm run update-speakers <guid> <old> <new>
+npm run update-speakers <guid> <A-name> [B-name] [C-name] [D-name]
 
-# Host examples
-npm run update-speakers cc15a703... A Ryo
-npm run update-speakers cc15a703... B Senna
+# Update all speakers at once
+npm run update-speakers cc15a703... Ryo Senna "John Smith" Ayaka
 
-# Guest examples (use quotes for multi-word names)
-npm run update-speakers cc15a703... C "John Smith"
-npm run update-speakers cc15a703... D Ayaka
+# Update only some speakers
+npm run update-speakers cc15a703... Ryo Senna  # Only A and B
+npm run update-speakers cc15a703... "" Senna  # Only B
+
+# Use quotes for multi-word names
+npm run update-speakers cc15a703... Ryo "Jane Doe"
 ```
 
 ---

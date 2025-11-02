@@ -7,27 +7,20 @@ on:
         description: 'Episode GUID'
         required: true
         type: string
-      old_speaker:
-        description: 'Old speaker label (e.g., A, B, C)'
-        required: true
-        type: string
-      speaker_type:
-        description: 'Speaker type'
-        required: true
-        type: choice
-        options:
-          - Host
-          - Guest
-      new_speaker_host:
-        description: 'Host name (if Host selected)'
+      speaker_a_name:
+        description: 'Speaker A name (leave empty to skip)'
         required: false
-        type: choice
-        options:
-          - Ryo
-          - Senna
-          - Ayaka
-      new_speaker_guest:
-        description: 'Guest name (if Guest selected)'
+        type: string
+      speaker_b_name:
+        description: 'Speaker B name (leave empty to skip)'
+        required: false
+        type: string
+      speaker_c_name:
+        description: 'Speaker C name (leave empty to skip)'
+        required: false
+        type: string
+      speaker_d_name:
+        description: 'Speaker D name (leave empty to skip)'
         required: false
         type: string
 
@@ -54,22 +47,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Determine new speaker name
-        id: speaker
-        run: |
-          if [ "${{ inputs.speaker_type }}" = "Host" ]; then
-            echo "name=${{ inputs.new_speaker_host }}" >> $GITHUB_OUTPUT
-          else
-            echo "name=${{ inputs.new_speaker_guest }}" >> $GITHUB_OUTPUT
-          fi
-
       - name: Update speaker labels
-        run: npx tsx scripts/update-transcript-speakers.ts ${{ inputs.episode_guid }} "${{ inputs.old_speaker }}" "${{ steps.speaker.outputs.name }}"
+        run: |
+          npx tsx scripts/update-transcript-speakers.ts \
+            "${{ inputs.episode_guid }}" \
+            "${{ inputs.speaker_a_name }}" \
+            "${{ inputs.speaker_b_name }}" \
+            "${{ inputs.speaker_c_name }}" \
+            "${{ inputs.speaker_d_name }}"
 
       - name: Commit and push changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add public/transcripts/${{ inputs.episode_guid }}.json
-          git diff --staged --quiet || git commit -m "Update transcript speakers for ${{ inputs.episode_guid }}: ${{ inputs.old_speaker }} → ${{ steps.speaker.outputs.name }}"
+          git diff --staged --quiet || git commit -m "Update transcript speakers for ${{ inputs.episode_guid }}"
           git push

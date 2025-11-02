@@ -48,50 +48,44 @@ Guest speakers can have any name. They will be displayed with a default gray ava
 3. Click **"Run workflow"**
 4. Fill in the form:
    - **Episode GUID**: The episode ID
-   - **Old speaker label**: Enter the current label (e.g., `A`, `B`, `C`)
-   - **Speaker type**: Select `Host` or `Guest`
-   - **If Host**: Select from dropdown (Ryo, Senna, or Ayaka)
-   - **If Guest**: Enter the guest's name (e.g., "John Smith")
+   - **Speaker A name**: Name for speaker A (e.g., `Ryo`)
+   - **Speaker B name**: Name for speaker B (e.g., `Senna`)
+   - **Speaker C name**: Name for speaker C (e.g., `John Smith`) - Optional
+   - **Speaker D name**: Name for speaker D (e.g., `Ayaka`) - Optional
 5. Click **"Run workflow"**
 
-### Step 3: Review and Merge
+### Step 3: Check Results
 
 1. Wait for the workflow to complete (~30 seconds)
-2. A pull request will be created automatically
-3. Review the changes
-4. Merge the PR
-5. The episode page will now show the correct speaker!
+2. Changes are committed directly to main branch
+3. The episode page will now show all correct speakers!
 
 ### Example Workflow
 
 ```
 Scenario: Episode has 4 speakers (A, B, C, D) - Ryo, Senna, a guest, and Ayaka
 
-Step 1: Update Speaker A → Ryo
-  - Old speaker: A
-  - Speaker type: Host
-  - New speaker: Ryo
-  - Run workflow → Merge PR
+Single workflow run - Update all speakers at once:
+  - Episode GUID: cc15a703-73c7-406b-8abc-ad7d0a192d05
+  - Speaker A name: Ryo
+  - Speaker B name: Senna
+  - Speaker C name: John Smith
+  - Speaker D name: Ayaka
+  - Run workflow
 
-Step 2: Update Speaker B → Senna
-  - Old speaker: B
-  - Speaker type: Host
-  - New speaker: Senna
-  - Run workflow → Merge PR
+Done! All speakers are now labeled correctly in one go! ✨
 
-Step 3: Update Speaker C → Guest
-  - Old speaker: C
-  - Speaker type: Guest
-  - New speaker: John Smith
-  - Run workflow → Merge PR
+---
 
-Step 4: Update Speaker D → Ayaka
-  - Old speaker: D
-  - Speaker type: Host
-  - New speaker: Ayaka
-  - Run workflow → Merge PR
+If you only want to update some speakers:
+  - Episode GUID: cc15a703-73c7-406b-8abc-ad7d0a192d05
+  - Speaker A name: Ryo
+  - Speaker B name: Senna
+  - Speaker C name: (leave empty)
+  - Speaker D name: (leave empty)
+  - Run workflow
 
-Done! All speakers are now labeled correctly, including the guest!
+Result: Only A and B are updated, C and D remain unchanged.
 ```
 
 ---
@@ -103,23 +97,21 @@ If you prefer to update speakers locally:
 ### Command
 
 ```bash
-npm run update-speakers <guid> <old-speaker> <new-speaker>
+npm run update-speakers <guid> <speaker-A-name> [speaker-B-name] [speaker-C-name] [speaker-D-name]
 ```
 
 ### Examples
 
 ```bash
-# Update speaker A to Ryo (Host)
-npm run update-speakers cc15a703-73c7-406b-8abc-ad7d0a192d05 A Ryo
+# Update all speakers at once (A=Ryo, B=Senna, C=John Smith, D=Ayaka)
+npm run update-speakers cc15a703-73c7-406b-8abc-ad7d0a192d05 Ryo Senna "John Smith" Ayaka
 
-# Update speaker B to Senna (Host)
-npm run update-speakers cc15a703-73c7-406b-8abc-ad7d0a192d05 B Senna
+# Update only A and B (use quotes for multi-word names)
+npm run update-speakers cc15a703-73c7-406b-8abc-ad7d0a192d05 Ryo Senna
 
-# Update speaker C to a guest (use quotes for multi-word names)
-npm run update-speakers cc15a703-73c7-406b-8abc-ad7d0a192d05 C "John Smith"
-
-# Update speaker D to Ayaka (Host)
-npm run update-speakers cc15a703-73c7-406b-8abc-ad7d0a192d05 D Ayaka
+# Update only specific speakers (use "" to skip)
+npm run update-speakers cc15a703-73c7-406b-8abc-ad7d0a192d05 "" Senna  # Only update B
+npm run update-speakers cc15a703-73c7-406b-8abc-ad7d0a192d05 Ryo "" "John Smith"  # Update A and C only
 ```
 
 ### Commit and Push
@@ -193,17 +185,14 @@ If validation fails, you'll see an error message.
 
 ### Batch Updates
 
-Update all speakers in one go:
+Update all speakers in one single command:
 
 ```bash
 # Update all speakers for an episode (hosts and guests)
-npm run update-speakers {guid} A Ryo
-npm run update-speakers {guid} B "Jane Doe"
-npm run update-speakers {guid} C Senna
-npm run update-speakers {guid} D "Dr. Smith"
+npm run update-speakers {guid} Ryo "Jane Doe" Senna "Dr. Smith"
 ```
 
-Or use GitHub Actions to update them one at a time (creates separate PRs).
+This is much faster than the old method which required 4 separate commands!
 
 ### Guest Names
 
@@ -228,8 +217,8 @@ cat public/transcripts/{guid}.json | grep -o '"speaker":"[^"]*"' | sort -u
 If you made a mistake, just run the script again with the correct mapping:
 
 ```bash
-# Oops, Speaker A was actually Senna, not Ryo
-npm run update-speakers {guid} Ryo Senna
+# Oops, Speakers were in wrong order - swap A and B
+npm run update-speakers {guid} Senna Ryo
 ```
 
 ---
@@ -302,13 +291,13 @@ After updating speakers:
 
 ## Quick Reference
 
-| Task                         | Command                                                 |
-| ---------------------------- | ------------------------------------------------------- |
-| Update via GitHub Actions    | Actions → Update Transcript Speakers → Fill form → Run  |
-| Update locally               | `npm run update-speakers <guid> <old> <new>`            |
-| Check current speakers       | `cat public/transcripts/{guid}.json \| grep speaker`    |
-| Host names (special display) | Ryo, Senna, Ayaka (get custom avatars/colors)           |
-| Guest names                  | Any name (e.g., "John Smith" - gets default appearance) |
+| Task                         | Command                                                       |
+| ---------------------------- | ------------------------------------------------------------- |
+| Update via GitHub Actions    | Actions → Update Transcript Speakers → Fill all names → Run   |
+| Update locally               | `npm run update-speakers <guid> <A-name> [B] [C] [D]`        |
+| Check current speakers       | `cat public/transcripts/{guid}.json \| grep speaker`          |
+| Host names (special display) | Ryo, Senna, Ayaka (get custom avatars/colors)                 |
+| Guest names                  | Any name (e.g., "John Smith" - gets default appearance)       |
 
 ---
 

@@ -236,22 +236,21 @@ npm run generate-highlights <episode-guid> --force
 1. Actions タブ → Update Transcript Speakers を選択
 2. 入力：
    - Episode GUID
-   - 変更前のラベル（例: A, B, C）
-   - スピーカータイプ（Host または Guest）
-   - **Host の場合:** Ryo, Senna, Ayaka から選択（カスタムアバター付き）
-   - **Guest の場合:** ゲスト名を入力（例: "John Smith"）
-3. 実行 → 変更が自動的に main ブランチにコミットされます
+   - Speaker A name（例: Ryo）
+   - Speaker B name（例: Senna）
+   - Speaker C name（例: John Smith）- オプション
+   - Speaker D name（例: Ayaka）- オプション
+3. 実行 → **すべてのスピーカーが一度に更新**され、変更が自動的に main ブランチにコミットされます
 
 **ローカル実行:**
 
 ```bash
-# ホストの場合
-npm run update-speakers <guid> A Ryo
-npm run update-speakers <guid> B Senna
+# すべてのスピーカーを一度に更新
+npm run update-speakers <guid> Ryo Senna "John Smith" Ayaka
 
-# ゲストの場合（複数単語の名前は引用符で囲む）
-npm run update-speakers <guid> C "John Smith"
-npm run update-speakers <guid> D Ayaka
+# 一部のスピーカーのみ更新（空文字列でスキップ）
+npm run update-speakers <guid> Ryo Senna  # A と B のみ更新
+npm run update-speakers <guid> "" Senna  # B のみ更新
 ```
 
 詳細は [スピーカー更新ガイド](docs/UPDATE_SPEAKERS.md) を参照してください。
