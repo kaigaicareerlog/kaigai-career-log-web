@@ -43,7 +43,7 @@ export interface HostInfo {
 /**
  * ポッドキャストエピソードの型定義
  */
-export interface PodcastEpisode {
+export interface PodcastEpisodeBase {
   title: string;
   description: string;
   duration: string;
@@ -51,12 +51,19 @@ export interface PodcastEpisode {
   link: string;
   audioUrl: string;
   guid: string;
+}
+
+export interface PodcastEpisodeAdditionalMetadata {
   spotifyUrl?: string;
   youtubeUrl?: string;
   applePodcastUrl?: string;
   amazonMusicUrl?: string;
   newEpisodeIntroPostedToX?: boolean;
 }
+
+export interface PodcastEpisode
+  extends PodcastEpisodeBase,
+    PodcastEpisodeAdditionalMetadata {}
 
 /**
  * RSSチャンネルの型定義
@@ -156,4 +163,3 @@ export interface SpotifyShowEpisodesResponse {
   next: string | null;
   total: number;
 }
-
