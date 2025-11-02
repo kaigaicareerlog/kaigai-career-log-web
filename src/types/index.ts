@@ -129,6 +129,9 @@ export interface TranscriptJSON {
     end: number;
     timestamp: string;
   }>;
+  highlight1?: string;
+  highlight2?: string;
+  highlight3?: string;
 }
 
 // ============================================================================
