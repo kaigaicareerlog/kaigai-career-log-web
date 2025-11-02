@@ -29,12 +29,6 @@ interface Episode {
   [key: string]: any;
 }
 
-interface EpisodesData {
-  channel: any;
-  episodes: Episode[];
-  lastUpdated?: string;
-}
-
 interface UpdateOptions {
   spotifyUrl?: string;
   youtubeUrl?: string;
@@ -101,10 +95,10 @@ async function updateEpisodeByGuid(
   // 1. Load episodes.json
   const episodesContent = await readFile(episodesFile, 'utf-8');
   const parsedData = JSON.parse(episodesContent);
-  
+
   // Handle both old format (with channel) and new format (array only)
-  const episodes: Episode[] = Array.isArray(parsedData) 
-    ? parsedData 
+  const episodes: Episode[] = Array.isArray(parsedData)
+    ? parsedData
     : parsedData.episodes || [];
 
   // 2. Find episode by GUID

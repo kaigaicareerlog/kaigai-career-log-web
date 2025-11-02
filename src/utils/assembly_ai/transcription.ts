@@ -1,11 +1,7 @@
 /**
  * Utility functions for audio transcription using AssemblyAI
  */
-import type {
-  TranscriptWord,
-  TranscriptUtterance,
-  TranscriptionResult,
-} from '../types';
+import type { TranscriptionResult } from '../../types';
 
 /**
  * Transcribe audio using AssemblyAI

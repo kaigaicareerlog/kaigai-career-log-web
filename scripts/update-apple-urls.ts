@@ -31,11 +31,6 @@ interface Episode {
   [key: string]: any;
 }
 
-interface EpisodesData {
-  channel: any;
-  episodes: Episode[];
-}
-
 // Your Apple Podcasts Show ID
 // Extract from: https://podcasts.apple.com/ca/podcast/id1818019572
 const DEFAULT_PODCAST_ID = '1818019572';
@@ -51,10 +46,10 @@ async function updateAppleUrls(specificGuid?: string): Promise<void> {
   );
   const episodesContent = await readFile(episodesPath, 'utf-8');
   const parsedData = JSON.parse(episodesContent);
-  
+
   // Handle both old format (with channel) and new format (array only)
-  const episodes: Episode[] = Array.isArray(parsedData) 
-    ? parsedData 
+  const episodes: Episode[] = Array.isArray(parsedData)
+    ? parsedData
     : parsedData.episodes || [];
 
   // 3. Find episodes that need Apple Podcasts URLs
@@ -62,9 +57,7 @@ async function updateAppleUrls(specificGuid?: string): Promise<void> {
 
   if (specificGuid) {
     console.log(`🔍 Looking for episode with GUID: ${specificGuid}\n`);
-    const episode = episodes.find(
-      (ep) => ep.guid === specificGuid
-    );
+    const episode = episodes.find((ep) => ep.guid === specificGuid);
     if (!episode) {
       throw new Error(`Episode with GUID "${specificGuid}" not found`);
     }

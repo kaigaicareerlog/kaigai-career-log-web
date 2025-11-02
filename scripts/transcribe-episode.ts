@@ -4,82 +4,21 @@
  */
 
 import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import {
   transcribeAudio,
   generateJSONTranscript,
-} from '../src/utils/transcription.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-interface Episode {
-  title: string;
-  guid: string;
-  audioUrl: string;
-  [key: string]: any;
-}
-
-interface EpisodesData {
-  episodes: Episode[];
-  [key: string]: any;
-}
-
-/**
- * Find the latest episodes file
- */
-function findLatestEpisodesFile(rssDir: string): string {
-  if (!fs.existsSync(rssDir)) {
-    throw new Error(`RSS directory not found: ${rssDir}`);
-  }
-
-  const files = fs.readdirSync(rssDir);
-  const episodesFiles = files
-    .filter((file) => file.match(/^\d{8}-\d{4}-episodes\.json$/))
-    .sort()
-    .reverse();
-
-  if (episodesFiles.length === 0) {
-    throw new Error('No episodes files found');
-  }
-
-  return path.join(rssDir, episodesFiles[0]);
-}
-
-/**
- * Get episode by GUID
- */
-function getEpisodeByGuid(guid: string): Episode {
-  const rssDir = path.join(__dirname, '..', 'public', 'rss');
-  const latestFile = findLatestEpisodesFile(rssDir);
-
-  console.log(`Reading episodes from: ${latestFile}`);
-  const data: EpisodesData = JSON.parse(fs.readFileSync(latestFile, 'utf-8'));
-
-  const episode = data.episodes.find((ep) => ep.guid === guid);
-
-  if (!episode) {
-    throw new Error(`Episode with GUID ${guid} not found`);
-  }
-
-  return episode;
-}
+} from '../src/utils/assembly_ai/transcription';
+import { getEpisodeByGuid } from '../src/utils/getEpisodeByGuid';
+import { getTranscriptJsonFilePath } from '../src/utils/getTranscriptJsonFilePath';
+import 'dotenv/config';
 
 /**
  * Save transcript JSON file
  */
 function saveTranscript(guid: string, json: object): void {
-  const transcriptsDir = path.join(__dirname, '..', 'public', 'transcripts');
-
-  // Create transcripts directory if it doesn't exist
-  if (!fs.existsSync(transcriptsDir)) {
-    fs.mkdirSync(transcriptsDir, { recursive: true });
-  }
-
-  // Save JSON
-  const jsonPath = path.join(transcriptsDir, `${guid}.json`);
+  const jsonPath = getTranscriptJsonFilePath(guid);
   fs.writeFileSync(jsonPath, JSON.stringify(json, null, 2), 'utf-8');
+
   console.log(`✅ Saved JSON transcript: ${jsonPath}`);
 }
 
@@ -96,13 +35,15 @@ async function transcribeEpisode(guid: string): Promise<void> {
   }
 
   // Get episode info
-  const episode = getEpisodeByGuid(guid);
+  const episode = getEpisodeByGuid({ guid });
+  if (!episode) {
+    throw new Error(`Episode not found: ${guid}`);
+  }
   console.log(`Episode: ${episode.title}`);
   console.log(`Audio URL: ${episode.audioUrl}\n`);
 
   // Check if transcript already exists
-  const transcriptsDir = path.join(__dirname, '..', 'public', 'transcripts');
-  const jsonPath = path.join(transcriptsDir, `${guid}.json`);
+  const jsonPath = getTranscriptJsonFilePath(guid);
 
   if (fs.existsSync(jsonPath)) {
     console.log('⚠️  Transcript already exists for this episode');

@@ -30,11 +30,6 @@ interface Episode {
   [key: string]: any;
 }
 
-interface EpisodesData {
-  channel: any;
-  episodes: Episode[];
-}
-
 // Your YouTube Channel ID or @handle
 // Extract from: https://www.youtube.com/@kaigaicareerlog
 const DEFAULT_CHANNEL_ID = '@kaigaicareerlog';

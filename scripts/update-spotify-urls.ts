@@ -32,11 +32,6 @@ interface Episode {
   [key: string]: any;
 }
 
-interface EpisodesData {
-  channel: any;
-  episodes: Episode[];
-}
-
 // Your Spotify Show ID - from https://open.spotify.com/show/0bj38cgbe71oCr5Q0emwvA
 const DEFAULT_SHOW_ID = '0bj38cgbe71oCr5Q0emwvA';
 
@@ -61,10 +56,10 @@ async function updateSpotifyUrls(specificGuid?: string): Promise<void> {
   );
   const episodesContent = await readFile(episodesPath, 'utf-8');
   const parsedData = JSON.parse(episodesContent);
-  
+
   // Handle both old format (with channel) and new format (array only)
-  const episodes: Episode[] = Array.isArray(parsedData) 
-    ? parsedData 
+  const episodes: Episode[] = Array.isArray(parsedData)
+    ? parsedData
     : parsedData.episodes || [];
 
   // 3. Find episodes that need Spotify URLs
@@ -72,9 +67,7 @@ async function updateSpotifyUrls(specificGuid?: string): Promise<void> {
 
   if (specificGuid) {
     console.log(`🔍 Looking for episode with GUID: ${specificGuid}\n`);
-    const episode = episodes.find(
-      (ep) => ep.guid === specificGuid
-    );
+    const episode = episodes.find((ep) => ep.guid === specificGuid);
     if (!episode) {
       throw new Error(`Episode with GUID "${specificGuid}" not found`);
     }
