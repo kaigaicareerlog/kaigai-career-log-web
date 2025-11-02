@@ -7,61 +7,21 @@
  *
  * Example:
  *   npm run find-spotify-url cc15a703-73c7-406b-8abc-ad7d0a192d05
- *
- * Environment Variables:
- *   SPOTIFY_CLIENT_ID - Your Spotify Client ID
- *   SPOTIFY_CLIENT_SECRET - Your Spotify Client Secret
- *   SPOTIFY_SHOW_ID - Your Spotify Show ID (optional, defaults to hardcoded value)
  */
 
 import 'dotenv/config';
-import { readFile } from 'fs/promises';
-import { resolve } from 'path';
 import {
   getSpotifyAccessToken,
   getSpotifyShowEpisodes,
   findSpotifyEpisodeByTitle,
 } from '../src/utils/spotify.ts';
-
-interface Episode {
-  guid: string;
-  title: string;
-  spotifyUrl?: string;
-}
-
-interface EpisodesData {
-  episodes: Episode[];
-}
-
-// Your Spotify Show ID - from https://open.spotify.com/show/0bj38cgbe71oCr5Q0emwvA
-const DEFAULT_SHOW_ID = '0bj38cgbe71oCr5Q0emwvA';
+import { getSpotifyConfidentials } from '../src/utils/spotify/getSpotifyConfidentials';
+import { getEpisodeByGuid } from '../src/utils/getEpisodeByGuid.ts';
 
 async function findSpotifyUrlByGuid(guid: string): Promise<void> {
-  // 1. Get environment variables
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  const showId = process.env.SPOTIFY_SHOW_ID || DEFAULT_SHOW_ID;
+  const { clientId, clientSecret, showId } = getSpotifyConfidentials();
 
-  if (!clientId) {
-    throw new Error('SPOTIFY_CLIENT_ID environment variable is required');
-  }
-
-  if (!clientSecret) {
-    throw new Error('SPOTIFY_CLIENT_SECRET environment variable is required');
-  }
-
-  console.log(`🔍 Searching for episode with GUID: ${guid}\n`);
-
-  // 2. Load episodes.json
-  const episodesPath = resolve(
-    process.cwd(),
-    'public/rss/20251015-1451-episodes.json'
-  );
-  const episodesContent = await readFile(episodesPath, 'utf-8');
-  const episodesData: EpisodesData = JSON.parse(episodesContent);
-
-  // 3. Find episode by GUID
-  const episode = episodesData.episodes.find((ep) => ep.guid === guid);
+  const episode = getEpisodeByGuid({ guid });
   if (!episode) {
     throw new Error(`Episode with GUID "${guid}" not found in episodes.json`);
   }
