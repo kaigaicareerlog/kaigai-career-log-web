@@ -1,9 +1,10 @@
-# Spotify URL Finder - Quick Start
+# Platform URL Finder - Quick Start
 
 ## What You Need
 
 1. **Spotify Client ID** (you already have this!)
 2. **Spotify Client Secret** (get this from the same place you got your Client ID)
+3. **YouTube API Key** (optional - for YouTube URLs)
 
 ## How to Get Client Secret
 
@@ -23,12 +24,13 @@ In your terminal:
 ```bash
 export SPOTIFY_CLIENT_ID="your_client_id_here"
 export SPOTIFY_CLIENT_SECRET="your_client_secret_here"
+export YOUTUBE_API_KEY="your_youtube_api_key_here"  # Optional
 ```
 
 ### Step 2: Run the Script
 
 ```bash
-npm run find-spotify-url <guid>
+npm run update-new-episode-urls <episodes-file-path>
 ```
 
 ### Example
@@ -37,45 +39,57 @@ npm run find-spotify-url <guid>
 # Set credentials (do this once per terminal session)
 export SPOTIFY_CLIENT_ID="abc123def456..."
 export SPOTIFY_CLIENT_SECRET="xyz789uvw012..."
+export YOUTUBE_API_KEY="AIza..."
 
-# Find Spotify URL for an episode
-npm run find-spotify-url cc15a703-73c7-406b-8abc-ad7d0a192d05
+# Find and update URLs for all platforms at once
+npm run update-new-episode-urls public/rss/20251101-1200-episodes.json
 ```
 
 ## What It Does
 
 The script will:
 
-1. ✅ Find the episode title from your `episodes.json` using the GUID
-2. ✅ Connect to Spotify API
-3. ✅ Get all episodes from your Spotify show
-4. ✅ Match the episode by title
-5. ✅ Return the Spotify URL
+1. ✅ Load the episodes file
+2. ✅ Find episodes missing platform URLs
+3. ✅ Connect to Spotify, YouTube, Apple Podcasts, and Amazon Music
+4. ✅ Match episodes by title across all platforms
+5. ✅ Update and save the URLs automatically
 
 ## Output
 
 ```
-🔍 Searching for episode with GUID: cc15a703-73c7-406b-8abc-ad7d0a192d05
+🔍 Loading episodes from: public/rss/20251101-1200-episodes.json
 
-📝 Found episode: "【特別回】なぜ海外就職では..."
+📊 Episodes Status:
+   Total episodes: 23
+   Missing Spotify URLs: 2
+   Missing YouTube URLs: 2
+   Missing Apple Podcasts URLs: 2
 
-🔐 Authenticating with Spotify...
+🎵 Updating Spotify URLs...
 ✅ Successfully authenticated with Spotify
-
-🎵 Fetching all episodes from Spotify show...
 ✅ Found 23 episodes in Spotify
 
-🔎 Searching for matching episode by title...
-✅ Found Spotify URL: https://open.spotify.com/episode/1pCYF2Hh9auRtTCELuPK8e
+🎥 Updating YouTube URLs...
+✅ Found 23 videos in YouTube
+
+🍎 Updating Apple Podcasts URLs...
+✅ Found 23 episodes in Apple Podcasts
+
+✅ Successfully updated episodes file
+   Total URLs added: 6
 ```
 
 ## Need More Help?
 
-See the full documentation: [docs/SPOTIFY_URL_FINDER.md](docs/SPOTIFY_URL_FINDER.md)
+See the full documentation: 
+- [docs/AUTO_URL_FINDER.md](docs/AUTO_URL_FINDER.md)
+- [docs/URL_MANAGEMENT_OVERVIEW.md](docs/URL_MANAGEMENT_OVERVIEW.md)
 
 ## What's Next?
 
-Once you get the URL, you can:
+The script automatically:
 
-- Manually add it to `episodes.json`
-- Or we can create a batch update script to update all missing URLs at once
+- ✅ Finds URLs for all platforms at once
+- ✅ Updates the episodes.json file
+- ✅ Works in GitHub Actions for automated updates

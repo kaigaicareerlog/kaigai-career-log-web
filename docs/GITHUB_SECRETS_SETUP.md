@@ -293,9 +293,7 @@ If you encounter any issues:
 
 1. **Check the logs**: Go to Actions tab → Click on failed workflow → Read error messages
 2. **Verify secrets**: Settings → Secrets → Ensure all 3 are present
-3. **Test APIs separately**:
-   - Test Spotify: `npm run find-spotify-url <guid>`
-   - Test all platforms: `npm run update-new-episode-urls public/rss/[episodes-file].json`
+3. **Test APIs**: `npm run update-new-episode-urls public/rss/[episodes-file].json`
 4. **Check documentation**:
    - [Spotify Web API Docs](https://developer.spotify.com/documentation/web-api)
    - [YouTube Data API Docs](https://developers.google.com/youtube/v3)

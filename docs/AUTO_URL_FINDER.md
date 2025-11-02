@@ -209,7 +209,7 @@ If you see authentication errors:
 ## Related Scripts
 
 - `scripts/update-new-episode-urls.ts` - Main script (runs in CI/CD, handles all platforms)
-- `scripts/find-spotify-url.ts` - Find URL for a specific episode
+- `scripts/update-episode-by-guid.ts` - Update specific episode with URLs manually
 - `.github/workflows/update-rss.yml` - GitHub Actions workflow
 
 ## Technical Details

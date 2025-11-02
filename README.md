@@ -77,7 +77,6 @@ npm run preview
 - `npm run astro` - Run Astro CLI commands
 - `npm run update-episode-urls` - Update episode URLs by GUID
 - `npm run transcribe <guid>` - Transcribe an episode using AssemblyAI
-- `npm run find-spotify-url <guid>` - Find Spotify URL for a specific episode
 - `npm run update-new-episode-urls <file>` - Update platform URLs (Spotify, YouTube, Apple Podcasts, Amazon Music) in episodes file
 
 ## 🤖 Automated Podcast Feed Updates
@@ -278,9 +277,6 @@ npm run update-speakers <guid> "" Senna  # B のみ更新
 **ローカル実行:**
 
 ```bash
-# 特定のエピソードを検索
-npm run find-spotify-url <episode-guid>
-
 # すべてのプラットフォームの URL を更新
 npm run update-new-episode-urls public/rss/[episodes-file].json
 ```

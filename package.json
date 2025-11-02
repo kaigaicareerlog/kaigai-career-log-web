@@ -14,10 +14,8 @@
     "cleanup-transcript": "tsx scripts/cleanup-transcript.ts",
     "update-speakers": "tsx scripts/update-transcript-speakers.ts",
     "generate-highlights": "tsx scripts/generate-highlights.ts",
-    "find-spotify-url": "tsx scripts/find-spotify-url.ts",
     "update-new-episode-urls": "tsx scripts/update-new-episode-urls.ts",
     "update-episode-by-guid": "tsx scripts/update-episode-by-guid.ts",
-    "find-latest-episodes": "tsx scripts/find-latest-episodes.ts",
     "post-x-new-episode-intro": "tsx scripts/post-x-new-episode-intro.ts",
     "update-channel-info": "tsx scripts/update-channel-info.ts",
     "generate-episodes": "tsx scripts/generate-episodes.ts"

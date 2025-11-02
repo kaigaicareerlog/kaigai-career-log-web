@@ -49,7 +49,7 @@ jobs:
       - name: Find latest episodes file
         id: find-file
         run: |
-          EPISODES_FILE=$(npm run find-latest-episodes --silent)
+          EPISODES_FILE=$(npx tsx -e "import {findLatestEpisodesFile} from './src/utils/findLatestEpisodesFile'; console.log(findLatestEpisodesFile())")
           echo "episodes_file=$EPISODES_FILE" >> $GITHUB_OUTPUT
           echo "📁 Found episodes file: $EPISODES_FILE"
 

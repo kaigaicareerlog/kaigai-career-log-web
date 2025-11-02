@@ -53,10 +53,10 @@ export SPOTIFY_SHOW_ID="0bj38cgbe71oCr5Q0emwvA"  # Optional, already set as defa
 
 ## Usage
 
-### Find Spotify URL by GUID
+### Find and Update Platform URLs
 
 ```bash
-npm run find-spotify-url <guid>
+npm run update-new-episode-urls <episodes-file-path>
 ```
 
 Example:
@@ -64,7 +64,7 @@ Example:
 ```bash
 export SPOTIFY_CLIENT_ID="abc123..."
 export SPOTIFY_CLIENT_SECRET="xyz789..."
-npm run find-spotify-url cc15a703-73c7-406b-8abc-ad7d0a192d05
+npm run update-new-episode-urls public/rss/20251101-1200-episodes.json
 ```
 
 ### Output Example

@@ -63,7 +63,6 @@ The project has three methods for managing episode URLs:
 
 - `update-episode-by-guid` - Update specific episode with any URLs
 - `update-new-episode-urls` - Update Spotify, YouTube, Apple Podcasts & Amazon Music for new episodes
-- `find-spotify-url` - Find Spotify URL for an episode (read-only)
 
 **Documentation**: [SPOTIFY_URL_FINDER.md](./SPOTIFY_URL_FINDER.md)
 
@@ -140,9 +139,7 @@ kaigai-career-log-web/
 │   └── update-urls-manually.yml          # Manual URL update workflow
 ├── scripts/
 │   ├── update-new-episode-urls.ts        # Auto-find URLs for all platforms
-│   ├── update-episode-by-guid.ts         # Update specific episode by GUID
-│   ├── find-spotify-url.ts               # Find Spotify URL (read-only)
-│   └── find-latest-episodes.ts           # Helper: find latest episodes file
+│   └── update-episode-by-guid.ts         # Update specific episode by GUID
 ├── src/utils/
 │   ├── spotify.ts                        # Spotify API utilities
 │   └── youtube.ts                        # YouTube API utilities
@@ -193,15 +190,15 @@ kaigai-career-log-web/
    ```
 3. Or use update-episode-by-guid for specific episodes
 
-### Task: Check if episode has Spotify URL
+### Task: Check and update episode URLs
 
-**Method**: Scripts (read-only)
+**Method**: Scripts
 
 ```bash
-npm run find-spotify-url <guid>
+npm run update-new-episode-urls public/rss/[episodes-file].json
 ```
 
-This won't update the file, just shows you the URL.
+This will find and update URLs for all platforms at once.
 
 ## Best Practices
 
