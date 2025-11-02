@@ -20,6 +20,7 @@ import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
 import { getLatestEpisodeToTweet } from '../src/utils/getLatestEpisodeToTweet';
 import { getXConfidentials } from '../src/utils/x/getXConfidentials';
+import { createLogger } from '../src/utils/logger';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,13 +29,15 @@ const __dirname = path.dirname(__filename);
  * Main function
  */
 async function main() {
+  const logger = createLogger({ verbose: process.env.VERBOSE === 'true' });
   const args = process.argv.slice(2);
 
   if (args.length < 1) {
-    console.error('Usage: tsx scripts/auto-post-episode-to-x.ts <hosts>');
-    console.error('\nExample:');
-    console.error(
-      '  tsx scripts/auto-post-episode-to-x.ts "@togashi_ryo, @onepercentdsgn"'
+    logger.error('Usage: tsx scripts/auto-post-episode-to-x.ts <hosts>');
+    logger.section('\nExample:');
+    logger.list(
+      ['tsx scripts/auto-post-episode-to-x.ts "@togashi_ryo, @onepercentdsgn"'],
+      1
     );
     process.exit(1);
   }
@@ -45,21 +48,24 @@ async function main() {
   const { accessToken, accessTokenSecret, apiKey, apiSecret } =
     getXConfidentials();
 
-  console.log('\n🔍 Looking for episodes to post...\n');
+  logger.section('');
+  logger.info('Looking for episodes to post...');
 
   // Find episode to post
   const episode = getLatestEpisodeToTweet();
 
   if (!episode) {
-    console.log('✅ No episodes need to be posted to X');
+    logger.section('');
+    logger.success('No episodes need to be posted to X');
     process.exit(0);
   }
 
-  console.log(`📝 Found episode to post: ${episode.title}`);
-  console.log(`   GUID: ${episode.guid}\n`);
+  logger.section('');
+  logger.info(`Found episode to post: ${episode.title}`);
+  logger.debug(`GUID: ${episode.guid}`, 1);
 
   // Call the post-x-new-episode-intro script
-  console.log('🐦 Posting to X...\n');
+  logger.section('\n🐦 Posting to X...');
   try {
     execSync(
       `npx tsx scripts/post-x-new-episode-intro.ts "${episode.guid}" "${hosts}"`,
@@ -75,19 +81,24 @@ async function main() {
         },
       }
     );
-    console.log('\n✅ Successfully posted to X and updated flag');
+    logger.section('');
+    logger.success('Successfully posted to X and updated flag');
   } catch (error) {
-    console.error('❌ Failed to post to X:', (error as Error).message);
+    logger.section('');
+    logger.error(`Failed to post to X: ${(error as Error).message}`);
     process.exit(1);
   }
 }
 
 main()
   .then(() => {
-    console.log('\n✨ Done!');
+    const logger = createLogger();
+    logger.section('\n✨ Done!');
     process.exit(0);
   })
   .catch((error) => {
-    console.error('\n❌ Error:', error.message);
+    const logger = createLogger();
+    logger.section('');
+    logger.error(`Error: ${error.message}`);
     process.exit(1);
   });

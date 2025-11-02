@@ -18,6 +18,7 @@
  */
 
 import { readFile, writeFile } from 'fs/promises';
+import { createLogger } from '../src/utils/logger';
 
 interface Episode {
   guid: string;
@@ -90,7 +91,10 @@ async function updateEpisodeByGuid(
   guid: string,
   options: UpdateOptions
 ): Promise<void> {
-  console.log(`\n🔍 Loading episodes from: ${episodesFile}`);
+  const logger = createLogger({ verbose: process.env.VERBOSE === 'true' });
+
+  logger.section('');
+  logger.info(`Loading episodes from: ${episodesFile}`);
 
   // 1. Load episodes.json
   const episodesContent = await readFile(episodesFile, 'utf-8');
@@ -108,7 +112,8 @@ async function updateEpisodeByGuid(
     throw new Error(`Episode with GUID "${guid}" not found`);
   }
 
-  console.log(`\n📝 Found episode: "${episode.title}"`);
+  logger.section('');
+  logger.info(`Found episode: "${episode.title}"`);
 
   // 3. Check if there are any URLs to update
   if (Object.keys(options).length === 0) {
@@ -119,27 +124,28 @@ async function updateEpisodeByGuid(
 
   // 4. Update URLs
   let updatedCount = 0;
-  console.log(`\n🔄 Updating URLs:`);
+  logger.section('\n🔄 Updating URLs:');
 
   if (options.spotifyUrl !== undefined) {
     const oldValue = episode.spotifyUrl || '(empty)';
     episode.spotifyUrl = options.spotifyUrl;
-    console.log(`   🎵 Spotify: ${oldValue} → ${options.spotifyUrl}`);
+    logger.info(`🎵 Spotify: ${oldValue} → ${options.spotifyUrl}`, 1);
     updatedCount++;
   }
 
   if (options.youtubeUrl !== undefined) {
     const oldValue = episode.youtubeUrl || '(empty)';
     episode.youtubeUrl = options.youtubeUrl;
-    console.log(`   🎥 YouTube: ${oldValue} → ${options.youtubeUrl}`);
+    logger.info(`🎥 YouTube: ${oldValue} → ${options.youtubeUrl}`, 1);
     updatedCount++;
   }
 
   if (options.applePodcastUrl !== undefined) {
     const oldValue = episode.applePodcastUrl || '(empty)';
     episode.applePodcastUrl = options.applePodcastUrl;
-    console.log(
-      `   🍎 Apple Podcast: ${oldValue} → ${options.applePodcastUrl}`
+    logger.info(
+      `🍎 Apple Podcast: ${oldValue} → ${options.applePodcastUrl}`,
+      1
     );
     updatedCount++;
   }
@@ -147,7 +153,7 @@ async function updateEpisodeByGuid(
   if (options.amazonMusicUrl !== undefined) {
     const oldValue = episode.amazonMusicUrl || '(empty)';
     episode.amazonMusicUrl = options.amazonMusicUrl;
-    console.log(`   📦 Amazon Music: ${oldValue} → ${options.amazonMusicUrl}`);
+    logger.info(`📦 Amazon Music: ${oldValue} → ${options.amazonMusicUrl}`, 1);
     updatedCount++;
   }
 
@@ -159,48 +165,63 @@ async function updateEpisodeByGuid(
     'utf-8'
   );
 
-  console.log(
-    `\n✅ Successfully updated ${updatedCount} URL(s) in ${episodesFile}`
-  );
-  console.log(`\n📊 Episode Summary:`);
-  console.log(`   GUID: ${episode.guid}`);
-  console.log(`   Title: ${episode.title}`);
-  console.log(`   Spotify: ${episode.spotifyUrl || '(not set)'}`);
-  console.log(`   YouTube: ${episode.youtubeUrl || '(not set)'}`);
-  console.log(`   Apple Podcast: ${episode.applePodcastUrl || '(not set)'}`);
-  console.log(`   Amazon Music: ${episode.amazonMusicUrl || '(not set)'}`);
+  logger.section('');
+  logger.success(`Successfully updated ${updatedCount} URL(s) in ${episodesFile}`);
+  
+  logger.summary({
+    'GUID': episode.guid,
+    'Title': episode.title,
+    'Spotify': episode.spotifyUrl || '(not set)',
+    'YouTube': episode.youtubeUrl || '(not set)',
+    'Apple Podcast': episode.applePodcastUrl || '(not set)',
+    'Amazon Music': episode.amazonMusicUrl || '(not set)',
+  });
 }
 
 // Main execution
 const args = process.argv.slice(2);
 
 if (args.length < 2) {
-  console.error('❌ Error: Episodes file and GUID are required');
-  console.log('\nUsage:');
-  console.log(
-    '  npm run update-episode-by-guid <episodes-file> <guid> [options]'
+  const logger = createLogger();
+  logger.error('Error: Episodes file and GUID are required');
+  logger.section('\nUsage:');
+  logger.list(
+    ['npm run update-episode-by-guid <episodes-file> <guid> [options]'],
+    1
   );
-  console.log('\nOptions:');
-  console.log('  --spotify <url>    Spotify URL');
-  console.log('  --youtube <url>    YouTube URL');
-  console.log('  --apple <url>      Apple Podcast URL');
-  console.log('  --amazon <url>     Amazon Music URL');
-  console.log('\nExample:');
-  console.log(
-    '  npm run update-episode-by-guid public/rss/20251015-1451-episodes.json cc15a703-73c7-406b-8abc-ad7d0a192d05 \\'
+  logger.section('\nOptions:');
+  logger.list(
+    [
+      '--spotify <url>    Spotify URL',
+      '--youtube <url>    YouTube URL',
+      '--apple <url>      Apple Podcast URL',
+      '--amazon <url>     Amazon Music URL',
+    ],
+    1
   );
-  console.log('    --spotify "https://open.spotify.com/episode/xxx" \\');
-  console.log('    --youtube "https://youtu.be/xxx"');
+  logger.section('\nExample:');
+  logger.list(
+    [
+      'npm run update-episode-by-guid public/rss/20251015-1451-episodes.json cc15a703-73c7-406b-8abc-ad7d0a192d05 \\',
+      '  --spotify "https://open.spotify.com/episode/xxx" \\',
+      '  --youtube "https://youtu.be/xxx"',
+    ],
+    1
+  );
   process.exit(1);
 }
 
 try {
   const { episodesFile, guid, options } = parseArgs(args);
   updateEpisodeByGuid(episodesFile, guid, options).catch((error) => {
-    console.error(`\n❌ Error: ${error.message}`);
+    const logger = createLogger();
+    logger.section('');
+    logger.error(`Error: ${error.message}`);
     process.exit(1);
   });
 } catch (error) {
-  console.error(`\n❌ Error: ${(error as Error).message}`);
+  const logger = createLogger();
+  logger.section('');
+  logger.error(`Error: ${(error as Error).message}`);
   process.exit(1);
 }

@@ -44,11 +44,14 @@ import {
   findAmazonMusicEpisodeByTitle,
 } from '../src/utils/amazon_music';
 import type { PodcastEpisode } from '../src/types';
+import { createLogger } from '../src/utils/logger';
 
 /**
  * Main function to update URLs for new episodes
  */
 async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
+  const logger = createLogger({ verbose: process.env.VERBOSE === 'true' });
+
   // 1. Get environment variables
   const {
     clientId: spotifyClientId,
@@ -61,7 +64,8 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
   const { showId: amazonMusicShowId, region: amazonMusicRegion } =
     getAmazonMusicConfidentials();
 
-  console.log(`\n🔍 Loading episodes from: ${episodesPath}`);
+  logger.section('');
+  logger.info(`Loading episodes from: ${episodesPath}`);
 
   // 2. Load episodes.json
   const episodesContent = await readFile(episodesPath, 'utf-8');
@@ -81,12 +85,13 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
     (ep) => !ep.amazonMusicUrl || ep.amazonMusicUrl === ''
   );
 
-  console.log(`\n📊 Episodes Status:`);
-  console.log(`   Total episodes: ${episodes.length}`);
-  console.log(`   Missing Spotify URLs: ${episodesNeedingSpotify.length}`);
-  console.log(`   Missing YouTube URLs: ${episodesNeedingYoutube.length}`);
-  console.log(`   Missing Apple Podcasts URLs: ${episodesNeedingApple.length}`);
-  console.log(`   Missing Amazon Music URLs: ${episodesNeedingAmazon.length}`);
+  logger.summary({
+    'Total episodes': episodes.length,
+    'Missing Spotify URLs': episodesNeedingSpotify.length,
+    'Missing YouTube URLs': episodesNeedingYoutube.length,
+    'Missing Apple Podcasts URLs': episodesNeedingApple.length,
+    'Missing Amazon Music URLs': episodesNeedingAmazon.length,
+  });
 
   if (
     episodesNeedingSpotify.length === 0 &&
@@ -94,7 +99,8 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
     episodesNeedingApple.length === 0 &&
     episodesNeedingAmazon.length === 0
   ) {
-    console.log('\n✅ All episodes already have URLs!');
+    logger.section('');
+    logger.success('All episodes already have URLs!');
     return;
   }
 
@@ -106,25 +112,25 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
     spotifyClientId &&
     spotifyClientSecret
   ) {
-    console.log(`\n🎵 Updating Spotify URLs...`);
-    console.log(`🔐 Authenticating with Spotify...`);
+    logger.section('\n🎵 Updating Spotify URLs...');
+    logger.auth('Authenticating with Spotify...');
 
     const spotifyAccessToken = await getSpotifyAccessToken(
       spotifyClientId,
       spotifyClientSecret
     );
-    console.log(`✅ Successfully authenticated with Spotify`);
+    logger.success('Successfully authenticated with Spotify');
 
-    console.log(`🎵 Fetching all episodes from Spotify show...`);
+    logger.info(`Fetching all episodes from Spotify show...`);
     const spotifyEpisodes = await getSpotifyShowEpisodes(
       spotifyShowId,
       spotifyAccessToken
     );
-    console.log(`✅ Found ${spotifyEpisodes.length} episodes in Spotify`);
+    logger.success(`Found ${spotifyEpisodes.length} episodes in Spotify`);
 
     let spotifyUpdated = 0;
     for (const episode of episodesNeedingSpotify) {
-      console.log(`\n   🔎 Processing: "${episode.title}"`);
+      logger.processing(episode.title);
       const spotifyUrl = findSpotifyEpisodeByTitle(
         spotifyEpisodes,
         episode.title
@@ -133,66 +139,62 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
       if (spotifyUrl) {
         episode.spotifyUrl = spotifyUrl;
         spotifyUpdated++;
-        console.log(`      ✅ Found Spotify URL: ${spotifyUrl}`);
+        logger.found(episode.title, spotifyUrl);
       } else {
-        console.log(`      ❌ Spotify URL not found`);
+        logger.notFound(episode.title);
       }
     }
 
-    console.log(
-      `\n   📊 Spotify: Updated ${spotifyUpdated}/${episodesNeedingSpotify.length} episodes`
-    );
+    logger.progress(spotifyUpdated, episodesNeedingSpotify.length, 'Spotify');
     totalUpdated += spotifyUpdated;
   } else if (episodesNeedingSpotify.length > 0) {
-    console.log(`\n⏭️  Skipping Spotify URLs (credentials not provided)`);
+    logger.skip('Skipping Spotify URLs (credentials not provided)');
   }
 
   // 5. Update YouTube URLs if needed
   if (episodesNeedingYoutube.length > 0 && youtubeApiKey) {
-    console.log(`\n🎥 Updating YouTube URLs...`);
-    console.log(`🎥 Fetching all videos from YouTube channel...`);
+    logger.section('\n🎥 Updating YouTube URLs...');
+    logger.info(`Fetching all videos from YouTube channel...`);
 
     const youtubeVideos = await getYouTubeChannelVideos(
       youtubeChannelId,
       youtubeApiKey
     );
-    console.log(`✅ Found ${youtubeVideos.length} videos in YouTube`);
+    logger.success(`Found ${youtubeVideos.length} videos in YouTube`);
 
     let youtubeUpdated = 0;
     for (const episode of episodesNeedingYoutube) {
-      console.log(`\n   🔎 Processing: "${episode.title}"`);
+      logger.processing(episode.title);
       const youtubeUrl = findYouTubeVideoByTitle(youtubeVideos, episode.title);
 
       if (youtubeUrl) {
         episode.youtubeUrl = youtubeUrl;
         youtubeUpdated++;
-        console.log(`      ✅ Found YouTube URL: ${youtubeUrl}`);
+        logger.found(episode.title, youtubeUrl);
       } else {
-        console.log(`      ❌ YouTube URL not found`);
+        logger.notFound(episode.title);
       }
     }
 
-    console.log(
-      `\n   📊 YouTube: Updated ${youtubeUpdated}/${episodesNeedingYoutube.length} episodes`
-    );
+    logger.progress(youtubeUpdated, episodesNeedingYoutube.length, 'YouTube');
     totalUpdated += youtubeUpdated;
   } else if (episodesNeedingYoutube.length > 0) {
-    console.log(`\n⏭️  Skipping YouTube URLs (API key not provided)`);
+    logger.skip('Skipping YouTube URLs (API key not provided)');
   }
 
   // 6. Update Apple Podcasts URLs if needed (no auth required!)
   if (episodesNeedingApple.length > 0) {
-    console.log(`\n🍎 Updating Apple Podcasts URLs...`);
-    console.log(`🍎 Fetching all episodes from Apple Podcasts...`);
+    logger.section('\n🍎 Updating Apple Podcasts URLs...');
+    logger.info(`Fetching all episodes from Apple Podcasts...`);
 
     const applePodcastEpisodes = await getApplePodcastEpisodes(applePodcastId);
-    console.log(
-      `✅ Found ${applePodcastEpisodes.length} episodes in Apple Podcasts`
+    logger.success(
+      `Found ${applePodcastEpisodes.length} episodes in Apple Podcasts`
     );
 
     let appleUpdated = 0;
     for (const episode of episodesNeedingApple) {
-      console.log(`\n   🔎 Processing: "${episode.title}"`);
+      logger.processing(episode.title);
       const appleUrl = findApplePodcastEpisodeByTitle(
         applePodcastEpisodes,
         episode.title
@@ -201,33 +203,35 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
       if (appleUrl) {
         episode.applePodcastUrl = appleUrl;
         appleUpdated++;
-        console.log(`      ✅ Found Apple Podcasts URL: ${appleUrl}`);
+        logger.found(episode.title, appleUrl);
       } else {
-        console.log(`      ❌ Apple Podcasts URL not found`);
+        logger.notFound(episode.title);
       }
     }
 
-    console.log(
-      `\n   📊 Apple Podcasts: Updated ${appleUpdated}/${episodesNeedingApple.length} episodes`
+    logger.progress(
+      appleUpdated,
+      episodesNeedingApple.length,
+      'Apple Podcasts'
     );
     totalUpdated += appleUpdated;
   }
 
   // 7. Update Amazon Music URLs if needed (requires Puppeteer)
   if (episodesNeedingAmazon.length > 0) {
-    console.log(`\n📦 Updating Amazon Music URLs...`);
-    console.log(`   Using browser automation (this may take a minute)...`);
+    logger.section('\n📦 Updating Amazon Music URLs...');
+    logger.info('Using browser automation (this may take a minute)...');
 
     try {
       const amazonEpisodes = await getAmazonMusicEpisodes(
         amazonMusicShowId,
         amazonMusicRegion
       );
-      console.log(`✅ Found ${amazonEpisodes.length} episodes on Amazon Music`);
+      logger.success(`Found ${amazonEpisodes.length} episodes on Amazon Music`);
 
       let amazonUpdated = 0;
       for (const episode of episodesNeedingAmazon) {
-        console.log(`\n   🔎 Processing: "${episode.title}"`);
+        logger.processing(episode.title);
         const amazonUrl = findAmazonMusicEpisodeByTitle(
           amazonEpisodes,
           episode.title
@@ -236,25 +240,28 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
         if (amazonUrl) {
           episode.amazonMusicUrl = amazonUrl;
           amazonUpdated++;
-          console.log(`      ✅ Found Amazon Music URL: ${amazonUrl}`);
+          logger.found(episode.title, amazonUrl);
         } else {
-          console.log(`      ❌ Amazon Music URL not found`);
+          logger.notFound(episode.title);
         }
       }
 
-      console.log(
-        `\n   📊 Amazon Music: Updated ${amazonUpdated}/${episodesNeedingAmazon.length} episodes`
+      logger.progress(
+        amazonUpdated,
+        episodesNeedingAmazon.length,
+        'Amazon Music'
       );
       totalUpdated += amazonUpdated;
     } catch (error) {
-      console.log(`\n⚠️  Error fetching Amazon Music episodes:`);
+      logger.section('');
+      logger.warning('Error fetching Amazon Music episodes:');
       if (error instanceof Error) {
-        console.log(`   ${error.message}`);
+        logger.list([error.message], 1);
         if (error.message.includes('Puppeteer')) {
-          console.log(`   Install with: npm install -D puppeteer`);
+          logger.list(['Install with: npm install -D puppeteer'], 1);
         }
       }
-      console.log(`   Continuing without Amazon Music URLs...`);
+      logger.info('Continuing without Amazon Music URLs...');
     }
   }
 
@@ -266,61 +273,75 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
       JSON.stringify(episodes, null, 2) + '\n',
       'utf-8'
     );
-    console.log(`\n✅ Successfully updated episodes file: ${episodesPath}`);
-    console.log(`   Total URLs added: ${totalUpdated}`);
+    logger.section('');
+    logger.success(`Successfully updated episodes file: ${episodesPath}`);
+    logger.info(`Total URLs added: ${totalUpdated}`, 1);
   } else {
-    console.log(`\n⚠️  No URLs were found for any episodes`);
-    console.log(`   This might mean:`);
-    console.log(`   - Episodes are not yet published on the platforms`);
-    console.log(`   - Episode titles don't match exactly`);
-    console.log(`   - There's an API issue`);
+    logger.section('');
+    logger.warning('No URLs were found for any episodes');
+    logger.list(
+      [
+        'This might mean:',
+        '- Episodes are not yet published on the platforms',
+        "- Episode titles don't match exactly",
+        "- There's an API issue",
+      ],
+      1
+    );
   }
 
-  console.log(`\n✨ Done!`);
+  logger.section('\n✨ Done!');
 }
 
 // Main execution
 const episodesPath = process.argv[2];
 
 if (!episodesPath) {
-  console.error('❌ Error: Episodes file path is required');
-  console.log('\nUsage:');
-  console.log('  npm run update-new-episode-urls <episodes-file-path>');
-  console.log('\nExample:');
-  console.log(
-    '  npm run update-new-episode-urls public/rss/20251015-1451-episodes.json'
+  const logger = createLogger();
+  logger.error('Error: Episodes file path is required');
+  logger.section('\nUsage:');
+  logger.list(['npm run update-new-episode-urls <episodes-file-path>'], 1);
+  logger.section('\nExample:');
+  logger.list(
+    ['npm run update-new-episode-urls public/rss/20251015-1451-episodes.json'],
+    1
   );
-  console.log('\nEnvironment Variables (for Spotify & YouTube):');
-  console.log(
-    '  SPOTIFY_CLIENT_ID=your_client_id (optional, for Spotify URLs)'
+  logger.section('\nEnvironment Variables (for Spotify & YouTube):');
+  logger.list(
+    [
+      'SPOTIFY_CLIENT_ID=your_client_id (optional, for Spotify URLs)',
+      'SPOTIFY_CLIENT_SECRET=your_client_secret (optional, for Spotify URLs)',
+      'YOUTUBE_API_KEY=your_api_key (optional, for YouTube URLs)',
+    ],
+    1
   );
-  console.log(
-    '  SPOTIFY_CLIENT_SECRET=your_client_secret (optional, for Spotify URLs)'
+  logger.section('\nOptional Environment Variables:');
+  logger.list(
+    [
+      'SPOTIFY_SHOW_ID=your_show_id (defaults to hardcoded value)',
+      'YOUTUBE_CHANNEL_ID=your_channel_id (defaults to @kaigaicareerlog)',
+      'APPLE_PODCAST_ID=your_podcast_id (defaults to 1818019572)',
+      'AMAZON_MUSIC_SHOW_ID=your_show_id (defaults to 118b5e6b-1f97-4c62-97a5-754714381b40)',
+      "AMAZON_MUSIC_REGION=region (defaults to 'co.jp')",
+      'VERBOSE=true (enable verbose logging with URLs)',
+    ],
+    1
   );
-  console.log('  YOUTUBE_API_KEY=your_api_key (optional, for YouTube URLs)');
-  console.log('\nOptional Environment Variables:');
-  console.log('  SPOTIFY_SHOW_ID=your_show_id (defaults to hardcoded value)');
-  console.log(
-    '  YOUTUBE_CHANNEL_ID=your_channel_id (defaults to @kaigaicareerlog)'
-  );
-  console.log('  APPLE_PODCAST_ID=your_podcast_id (defaults to 1818019572)');
-  console.log(
-    '  AMAZON_MUSIC_SHOW_ID=your_show_id (defaults to 118b5e6b-1f97-4c62-97a5-754714381b40)'
-  );
-  console.log("  AMAZON_MUSIC_REGION=region (defaults to 'co.jp')");
-  console.log(
-    '\nNote: Apple Podcasts uses iTunes API (free, no auth required!)'
-  );
-  console.log(
-    '      Amazon Music uses browser automation (requires Puppeteer).'
-  );
-  console.log(
-    '      At least Apple Podcasts URLs will be found even without any credentials.'
+  logger.section('\nNote:');
+  logger.list(
+    [
+      'Apple Podcasts uses iTunes API (free, no auth required!)',
+      'Amazon Music uses browser automation (requires Puppeteer).',
+      'At least Apple Podcasts URLs will be found even without any credentials.',
+    ],
+    1
   );
   process.exit(1);
 }
 
 updateNewEpisodeUrls(episodesPath).catch((error) => {
-  console.error(`\n❌ Error: ${error.message}`);
+  const logger = createLogger();
+  logger.section('');
+  logger.error(`Error: ${error.message}`);
   process.exit(1);
 });

@@ -11,6 +11,8 @@
 import fs from 'fs';
 import { getTranscriptByGuid } from '../src/utils/getTranscriptByGuid';
 import { getTranscriptJsonFilePath } from '../src/utils/getTranscriptJsonFilePath';
+import { createLogger } from '../src/utils/logger';
+
 interface SpeakerMapping {
   oldLabel: string;
   newName: string;
@@ -20,7 +22,10 @@ interface SpeakerMapping {
  * Update multiple speaker labels in transcript at once
  */
 function updateSpeakers(guid: string, speakerMappings: SpeakerMapping[]): void {
-  console.log(`\n🎙️  Updating speakers in transcript: ${guid}\n`);
+  const logger = createLogger({ verbose: process.env.VERBOSE === 'true' });
+
+  logger.section('');
+  logger.info(`Updating speakers in transcript: ${guid}`);
 
   // Filter out empty mappings
   const validMappings = speakerMappings.filter(
@@ -51,7 +56,8 @@ function updateSpeakers(guid: string, speakerMappings: SpeakerMapping[]): void {
 
   // Check if any updates were made
   if (Object.keys(updateCounts).length === 0) {
-    console.log('⚠️  No matching speakers found in transcript');
+    logger.section('');
+    logger.warning('No matching speakers found in transcript');
     return;
   }
 
@@ -62,44 +68,48 @@ function updateSpeakers(guid: string, speakerMappings: SpeakerMapping[]): void {
     'utf-8'
   );
 
-  console.log('✅ Successfully updated speakers:\n');
+  logger.section('');
+  logger.success('Successfully updated speakers:');
   validMappings.forEach((mapping) => {
     const count = updateCounts[mapping.oldLabel] || 0;
     if (count > 0) {
-      console.log(
-        `   "${mapping.oldLabel}" → "${mapping.newName}" (${count} utterances)`
+      logger.info(
+        `"${mapping.oldLabel}" → "${mapping.newName}" (${count} utterances)`,
+        1
       );
     } else {
-      console.log(
-        `   "${mapping.oldLabel}" → "${mapping.newName}" (not found)`
-      );
+      logger.warning(`"${mapping.oldLabel}" → "${mapping.newName}" (not found)`, 1);
     }
   });
-  console.log('');
 }
 
 // Main execution
 const args = process.argv.slice(2);
 
 if (args.length < 2) {
-  console.error(
+  const logger = createLogger();
+  logger.error(
     'Usage: tsx scripts/update-transcript-speakers.ts <guid> <speaker-A-name> [speaker-B-name] [speaker-C-name] [speaker-D-name]'
   );
-  console.error('\nExamples:');
-  console.error('  tsx scripts/update-transcript-speakers.ts <guid> Ryo Senna');
-  console.error(
-    '  tsx scripts/update-transcript-speakers.ts <guid> Ryo "John Smith"'
+  logger.section('\nExamples:');
+  logger.list(
+    [
+      'tsx scripts/update-transcript-speakers.ts <guid> Ryo Senna',
+      'tsx scripts/update-transcript-speakers.ts <guid> Ryo "John Smith"',
+      'tsx scripts/update-transcript-speakers.ts <guid> Ryo Senna Ayaka',
+      'tsx scripts/update-transcript-speakers.ts <guid> "" Senna  # Update only B',
+    ],
+    1
   );
-  console.error(
-    '  tsx scripts/update-transcript-speakers.ts <guid> Ryo Senna Ayaka'
+  logger.section('\nNotes:');
+  logger.list(
+    [
+      '- Use quotes for multi-word names',
+      '- Use "" (empty string) to skip a speaker',
+      '- Speakers are mapped in order: A, B, C, D, ...',
+    ],
+    1
   );
-  console.error(
-    '  tsx scripts/update-transcript-speakers.ts <guid> "" Senna  # Update only B'
-  );
-  console.error('\nNotes:');
-  console.error('  - Use quotes for multi-word names');
-  console.error('  - Use "" (empty string) to skip a speaker');
-  console.error('  - Speakers are mapped in order: A, B, C, D, ...');
   process.exit(1);
 }
 
@@ -116,6 +126,8 @@ try {
   updateSpeakers(guid, speakerMappings);
   process.exit(0);
 } catch (error) {
-  console.error('\n❌ Error:', (error as Error).message);
+  const logger = createLogger();
+  logger.section('');
+  logger.error(`Error: ${(error as Error).message}`);
   process.exit(1);
 }
