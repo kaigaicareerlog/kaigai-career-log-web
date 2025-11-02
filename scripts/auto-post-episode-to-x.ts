@@ -19,6 +19,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
 import { getLatestEpisodeToTweet } from '../src/utils/getLatestEpisodeToTweet';
+import { getXConfidentials } from '../src/utils/x/getXConfidentials';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -40,23 +42,8 @@ async function main() {
   const hosts = args[0];
 
   // Get API credentials from environment
-  const accessToken = process.env.X_ACCESS_TOKEN;
-  const accessTokenSecret = process.env.X_ACCESS_TOKEN_SECRET;
-  const apiKey = process.env.X_API_KEY;
-  const apiSecret = process.env.X_API_SECRET;
-
-  if (!accessToken) {
-    throw new Error('X_ACCESS_TOKEN environment variable is required');
-  }
-  if (!accessTokenSecret) {
-    throw new Error('X_ACCESS_TOKEN_SECRET environment variable is required');
-  }
-  if (!apiKey) {
-    throw new Error('X_API_KEY environment variable is required');
-  }
-  if (!apiSecret) {
-    throw new Error('X_API_SECRET environment variable is required');
-  }
+  const { accessToken, accessTokenSecret, apiKey, apiSecret } =
+    getXConfidentials();
 
   console.log('\n🔍 Looking for episodes to post...\n');
 
