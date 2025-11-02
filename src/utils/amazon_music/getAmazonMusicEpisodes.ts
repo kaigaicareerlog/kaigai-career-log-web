@@ -1,25 +1,4 @@
-/**
- * Amazon Music utilities for fetching podcast episode URLs
- *
- * Amazon Music doesn't have a public API, so we use browser automation
- * with Puppeteer to scrape episode information.
- */
-
-export interface AmazonMusicEpisode {
-  id: string;
-  name: string;
-  url: string;
-}
-
-/**
- * Extract show ID from Amazon Music URL
- * Example: https://music.amazon.co.jp/podcasts/118b5e6b-1f97-4c62-97a5-754714381b40
- * Returns: "118b5e6b-1f97-4c62-97a5-754714381b40"
- */
-export function extractShowIdFromUrl(url: string): string | null {
-  const match = url.match(/podcasts\/([a-zA-Z0-9-]+)/);
-  return match ? match[1] : null;
-}
+import type { AmazonMusicEpisode } from './types';
 
 /**
  * Get all episodes from an Amazon Music podcast show using Puppeteer
@@ -83,7 +62,7 @@ export async function getAmazonMusicEpisodes(
       const episodeLinks: Array<{ id: string; name: string; url: string }> = [];
       const links = document.querySelectorAll('a[href*="/episodes/"]');
 
-      links.forEach((link) => {
+      Array.from(links).forEach((link) => {
         const href = link.getAttribute('href');
         if (href && href.includes(`/podcasts/${podcastShowId}/episodes/`)) {
           // Extract episode ID from href
@@ -108,7 +87,7 @@ export async function getAmazonMusicEpisodes(
                   const textElements = current.querySelectorAll(
                     'div, span, p, h1, h2, h3, h4'
                   );
-                  for (const el of textElements) {
+                  for (const el of Array.from(textElements)) {
                     const text = el.textContent?.trim();
                     // Look for text that looks like a title
                     if (
@@ -188,39 +167,3 @@ export async function getAmazonMusicEpisodes(
   }
 }
 
-/**
- * Find Amazon Music episode URL by matching title
- * Uses the same fuzzy matching logic as other platforms
- */
-export function findAmazonMusicEpisodeByTitle(
-  episodes: AmazonMusicEpisode[],
-  title: string
-): string | null {
-  // Filter out any null/undefined episodes
-  const validEpisodes = episodes.filter((episode) => episode && episode.name);
-
-  // Try exact match first
-  const exactMatch = validEpisodes.find((episode) => episode.name === title);
-  if (exactMatch) {
-    return exactMatch.url;
-  }
-
-  // Try normalized match (remove extra spaces, normalize characters)
-  const normalizedTitle = title.trim().replace(/\s+/g, ' ');
-  const normalizedMatch = validEpisodes.find(
-    (episode) => episode.name.trim().replace(/\s+/g, ' ') === normalizedTitle
-  );
-  if (normalizedMatch) {
-    return normalizedMatch.url;
-  }
-
-  // Try partial match (title contains the search term or vice versa)
-  const partialMatch = validEpisodes.find(
-    (episode) => episode.name.includes(title) || title.includes(episode.name)
-  );
-  if (partialMatch) {
-    return partialMatch.url;
-  }
-
-  return null;
-}

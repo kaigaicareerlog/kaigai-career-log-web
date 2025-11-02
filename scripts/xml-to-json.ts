@@ -4,26 +4,11 @@
  */
 
 import fs from 'fs';
-
-interface PodcastEpisode {
-  title: string;
-  description: string;
-  link: string;
-  guid: string;
-  date: string;
-  duration: string;
-  audioUrl: string;
-}
+import type { Channel, PodcastEpisodeBase } from '../src/types';
 
 interface PodcastData {
-  channel: {
-    title: string;
-    description: string;
-    link: string;
-    language: string;
-    image: string;
-  };
-  episodes: PodcastEpisode[];
+  channel: Channel;
+  episodes: PodcastEpisodeBase[];
   lastUpdated: string;
 }
 
@@ -89,7 +74,7 @@ function parseRSSToJSON(xmlText: string): PodcastData {
 
   // Extract items
   const itemMatches = xmlText.split('<item>').slice(1);
-  const episodes: PodcastEpisode[] = itemMatches.map((itemText) => {
+  const episodes: PodcastEpisodeBase[] = itemMatches.map((itemText) => {
     const itemContent = itemText.split('</item>')[0];
 
     const title = extractWithRegex(itemContent, /<title>(.*?)<\/title>/s);

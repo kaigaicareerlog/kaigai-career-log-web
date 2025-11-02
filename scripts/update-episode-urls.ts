@@ -6,56 +6,8 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-interface Episode {
-  title: string;
-  description: string;
-  link: string;
-  guid: string;
-  date: string;
-  duration: string;
-  audioUrl: string;
-  spotifyUrl: string;
-  youtubeUrl: string;
-  applePodcastUrl: string;
-  amazonMusicUrl: string;
-}
-
-interface EpisodesData {
-  channel: {
-    title: string;
-    description: string;
-    link: string;
-    language: string;
-    image: string;
-  };
-  episodes: Episode[];
-  lastUpdated: string;
-}
-
-/**
- * Find the latest episodes file
- */
-function findLatestEpisodesFile(rssDir: string): string {
-  if (!fs.existsSync(rssDir)) {
-    throw new Error(`RSS directory not found: ${rssDir}`);
-  }
-
-  const files = fs.readdirSync(rssDir);
-  const episodesFiles = files
-    .filter((file) => file.match(/^\d{8}-\d{4}-episodes\.json$/))
-    .sort()
-    .reverse();
-
-  if (episodesFiles.length === 0) {
-    throw new Error('No episodes files found');
-  }
-
-  return path.join(rssDir, episodesFiles[0]);
-}
+import type { RSSChannel } from '../src/types';
+import { findLatestEpisodesFile } from '../src/utils/findLatestEpisodesFile';
 
 /**
  * Update episode URLs
@@ -67,11 +19,10 @@ function updateEpisodeUrls(
   applePodcastUrl: string,
   amazonMusicUrl: string
 ): void {
-  const rssDir = path.join(__dirname, '..', 'public', 'rss');
-  const latestFile = findLatestEpisodesFile(rssDir);
+  const latestFile = findLatestEpisodesFile();
 
   console.log(`Reading episodes from: ${latestFile}`);
-  const data: EpisodesData = JSON.parse(fs.readFileSync(latestFile, 'utf-8'));
+  const data: RSSChannel = JSON.parse(fs.readFileSync(latestFile, 'utf-8'));
 
   // Find episode by GUID
   const episode = data.episodes.find((ep) => ep.guid === guid);

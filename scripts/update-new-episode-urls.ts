@@ -24,87 +24,48 @@ import 'dotenv/config';
 import { readFile, writeFile } from 'fs/promises';
 import {
   getSpotifyAccessToken,
+  getSpotifyConfidentials,
   getSpotifyShowEpisodes,
   findSpotifyEpisodeByTitle,
-} from '../src/utils/spotify.ts';
+} from '../src/utils/spotify';
 import {
+  getYoutubeConfidentials,
   getYouTubeChannelVideos,
   findYouTubeVideoByTitle,
-} from '../src/utils/youtube.ts';
+} from '../src/utils/youtube';
 import {
+  getApplePodcastConfidentials,
   getApplePodcastEpisodes,
   findApplePodcastEpisodeByTitle,
-} from '../src/utils/apple.ts';
+} from '../src/utils/apple_podcast';
 import {
+  getAmazonMusicConfidentials,
   getAmazonMusicEpisodes,
   findAmazonMusicEpisodeByTitle,
-} from '../src/utils/amazon.ts';
-
-interface Episode {
-  guid: string;
-  title: string;
-  spotifyUrl?: string;
-  youtubeUrl?: string;
-  applePodcastUrl?: string;
-  amazonMusicUrl?: string;
-  [key: string]: any;
-}
-
-interface EpisodesData {
-  channel: any;
-  episodes: Episode[];
-  lastUpdated?: string;
-}
-
-// Default values
-const DEFAULT_SPOTIFY_SHOW_ID = '0bj38cgbe71oCr5Q0emwvA';
-const DEFAULT_YOUTUBE_CHANNEL_ID = '@kaigaicareerlog';
-const DEFAULT_APPLE_PODCAST_ID = '1818019572'; // From https://podcasts.apple.com/ca/podcast/id1818019572
-const DEFAULT_AMAZON_MUSIC_SHOW_ID = '118b5e6b-1f97-4c62-97a5-754714381b40';
-const DEFAULT_AMAZON_MUSIC_REGION = 'co.jp';
+} from '../src/utils/amazon_music';
+import type { PodcastEpisode } from '../src/types';
 
 /**
  * Main function to update URLs for new episodes
  */
 async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
   // 1. Get environment variables
-  const spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
-  const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  const youtubeApiKey = process.env.YOUTUBE_API_KEY;
-  const spotifyShowId = process.env.SPOTIFY_SHOW_ID || DEFAULT_SPOTIFY_SHOW_ID;
-  const youtubeChannelId =
-    process.env.YOUTUBE_CHANNEL_ID || DEFAULT_YOUTUBE_CHANNEL_ID;
-  const applePodcastId =
-    process.env.APPLE_PODCAST_ID || DEFAULT_APPLE_PODCAST_ID;
-  const amazonMusicShowId =
-    process.env.AMAZON_MUSIC_SHOW_ID || DEFAULT_AMAZON_MUSIC_SHOW_ID;
-  const amazonMusicRegion =
-    process.env.AMAZON_MUSIC_REGION || DEFAULT_AMAZON_MUSIC_REGION;
-
-  // Warn about missing credentials (but continue - Apple Podcasts doesn't need auth!)
-  const warnings: string[] = [];
-  if (!spotifyClientId || !spotifyClientSecret) {
-    warnings.push('Spotify credentials missing - will skip Spotify URLs');
-  }
-  if (!youtubeApiKey) {
-    warnings.push('YouTube API key missing - will skip YouTube URLs');
-  }
-
-  if (warnings.length > 0) {
-    console.log('\n⚠️  Warnings:');
-    warnings.forEach((w) => console.log(`   ${w}`));
-  }
+  const {
+    clientId: spotifyClientId,
+    clientSecret: spotifyClientSecret,
+    showId: spotifyShowId,
+  } = getSpotifyConfidentials();
+  const { apiKey: youtubeApiKey, channelId: youtubeChannelId } =
+    getYoutubeConfidentials();
+  const { podcastId: applePodcastId } = getApplePodcastConfidentials();
+  const { showId: amazonMusicShowId, region: amazonMusicRegion } =
+    getAmazonMusicConfidentials();
 
   console.log(`\n🔍 Loading episodes from: ${episodesPath}`);
 
   // 2. Load episodes.json
   const episodesContent = await readFile(episodesPath, 'utf-8');
-  const parsedData = JSON.parse(episodesContent);
-  
-  // Handle both old format (with channel) and new format (array only)
-  const episodes: Episode[] = Array.isArray(parsedData) 
-    ? parsedData 
-    : parsedData.episodes || [];
+  const episodes: PodcastEpisode[] = JSON.parse(episodesContent);
 
   // 3. Find episodes that need URLs
   const episodesNeedingSpotify = episodes.filter(

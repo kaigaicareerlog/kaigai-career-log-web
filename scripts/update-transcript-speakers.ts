@@ -9,12 +9,8 @@
  */
 
 import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+import { getTranscriptByGuid } from '../src/utils/getTranscriptByGuid';
+import { getTranscriptJsonFilePath } from '../src/utils/getTranscriptJsonFilePath';
 interface SpeakerMapping {
   oldLabel: string;
   newName: string;
@@ -36,14 +32,8 @@ function updateSpeakers(guid: string, speakerMappings: SpeakerMapping[]): void {
   }
 
   // Load transcript
-  const transcriptsDir = path.join(__dirname, '..', 'public', 'transcripts');
-  const jsonPath = path.join(transcriptsDir, `${guid}.json`);
-
-  if (!fs.existsSync(jsonPath)) {
-    throw new Error(`Transcript not found: ${jsonPath}`);
-  }
-
-  const transcript = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+  const transcriptPath = getTranscriptJsonFilePath(guid);
+  const transcript = getTranscriptByGuid(guid);
 
   // Count occurrences for each speaker
   const updateCounts: Record<string, number> = {};
@@ -66,7 +56,11 @@ function updateSpeakers(guid: string, speakerMappings: SpeakerMapping[]): void {
   }
 
   // Save updated transcript
-  fs.writeFileSync(jsonPath, JSON.stringify(transcript, null, 2), 'utf-8');
+  fs.writeFileSync(
+    transcriptPath,
+    JSON.stringify(transcript, null, 2),
+    'utf-8'
+  );
 
   console.log('✅ Successfully updated speakers:\n');
   validMappings.forEach((mapping) => {

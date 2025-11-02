@@ -68,13 +68,16 @@ export interface PodcastEpisode
 /**
  * RSSチャンネルの型定義
  */
-export interface RSSChannel {
+export interface Channel {
   title: string;
   description: string;
   link: string;
   language: string;
   image: string;
+}
+export interface RSSChannel extends Channel {
   episodes: PodcastEpisode[];
+  lastUpdated: string;
 }
 
 // ============================================================================
