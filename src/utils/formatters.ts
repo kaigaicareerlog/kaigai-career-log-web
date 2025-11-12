@@ -15,6 +15,28 @@ export function formatDate(dateString: string): string {
 }
 
 /**
+ * Parses timestamp from filename in format YYYYMMDD-HHMM
+ * @param filename - The filename containing the timestamp
+ * @returns Date object or null if parsing fails
+ */
+export function parseTimestampFromFilename(filename: string): Date | null {
+  // Extract timestamp pattern like 20251112-0815
+  const match = filename.match(/(\d{8})-(\d{4})/);
+  if (!match) return null;
+
+  const dateStr = match[1]; // YYYYMMDD
+  const timeStr = match[2]; // HHMM
+
+  const year = parseInt(dateStr.substring(0, 4));
+  const month = parseInt(dateStr.substring(4, 6)) - 1; // Month is 0-indexed
+  const day = parseInt(dateStr.substring(6, 8));
+  const hour = parseInt(timeStr.substring(0, 2));
+  const minute = parseInt(timeStr.substring(2, 4));
+
+  return new Date(year, month, day, hour, minute);
+}
+
+/**
  * 時間をフォーマットする
  */
 export function formatDuration(duration: string): string {

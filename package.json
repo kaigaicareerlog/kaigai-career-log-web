@@ -18,7 +18,8 @@
     "update-episode-by-guid": "tsx scripts/update-episode-by-guid.ts",
     "post-x-new-episode-intro": "tsx scripts/post-x-new-episode-intro.ts",
     "update-channel-info": "tsx scripts/update-channel-info.ts",
-    "generate-episodes": "tsx scripts/generate-episodes.ts"
+    "generate-episodes": "tsx scripts/generate-episodes.ts",
+    "cleanup-rss-files": "tsx scripts/cleanup-old-rss-files.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",
