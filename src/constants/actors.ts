@@ -2,7 +2,7 @@ import type { Actor, HostInfo } from '../types';
 
 export const RYO: Actor = {
   name: 'Ryo',
-  bio: 'VancouverのAsanaでソフトウェアエンジニアをしています。バレー/テニス/サッカー/ストレッチ好き',
+  bio: 'Vancouver在住、Asanaのソフトウェアエンジニア。日本からカナダへ渡り、現在は英語環境でプロダクト開発に携わっています。技術はもちろん、英語力やワークスタイルの改善にも継続的に挑戦中。バレー・テニス・サッカー、そして毎日のストレッチがライフワーク。',
   avatar: '/ryo.JPG',
   color: '#3b82f6', // blue
   socialLinks: [
@@ -30,6 +30,11 @@ export const SENNA: Actor = {
       icon: 'https://abs.twimg.com/favicons/twitter.3.ico',
       title: 'X (Twitter)',
     },
+    {
+      href: 'https://www.linkedin.com/in/senna-goto/',
+      icon: 'https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca',
+      title: 'LinkedIn',
+    },
   ],
 };
 
@@ -52,7 +57,26 @@ export const AYAKA: Actor = {
   ],
 };
 
-export const HOSTS: Actor[] = [RYO, SENNA, AYAKA];
+export const HIROSHI: Actor = {
+  name: 'Hiroshi',
+  bio: '銀行員・WEBマーケティングを経てバンクーバーへ渡航、現地でWeb/モバイルエンジニアを2年経験。2024年に日本に帰国。現在は楽天で物流系プロダクトマネージャーとして勤務。健康への投資を惜しまない人。',
+  avatar: '/hiroshi.jpg',
+  color: '#22c55e', // green
+  socialLinks: [
+    {
+      href: 'https://x.com/Isobe_Hiroshi',
+      icon: 'https://abs.twimg.com/favicons/twitter.3.ico',
+      title: 'X (Twitter)',
+    },
+    {
+      href: 'https://www.linkedin.com/in/hiroshi-isobe/',
+      icon: 'https://static.licdn.com/sc/h/al2o9zrvru7aqj8e1x2rzsrca',
+      title: 'LinkedIn',
+    },
+  ],
+};
+
+export const HOSTS: Actor[] = [RYO, SENNA, AYAKA, HIROSHI];
 
 /**
  * Get host information by name (for transcripts)
