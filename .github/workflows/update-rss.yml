@@ -72,7 +72,7 @@ jobs:
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
         run: |
           echo "Looking for episodes to post to X..."
-          npx tsx scripts/auto-post-episode-to-x.ts "@togashi_ryo, @onepercentdsgn" || echo "No episodes to post or posting failed"
+          npx tsx scripts/auto-post-episode-to-x.ts "@togashi_ryo, @onepercentdsgn, @ayacappuccino, @Isobe_Hiroshi" || echo "No episodes to post or posting failed"
 
       - name: Commit and push changes
         run: |
