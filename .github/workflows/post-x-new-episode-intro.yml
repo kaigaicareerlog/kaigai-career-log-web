@@ -22,6 +22,11 @@ on:
         required: false
         type: boolean
         default: false
+      host_hiroshi:
+        description: 'Include @Isobe_Hiroshi'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   post-to-x:
@@ -60,6 +65,13 @@ jobs:
               HOSTS="$HOSTS, @ayacappuccino"
             else
               HOSTS="@ayacappuccino"
+            fi
+          fi
+          if [ "${{ inputs.host_hiroshi }}" = "true" ]; then
+            if [ -n "$HOSTS" ]; then
+              HOSTS="$HOSTS, @Isobe_Hiroshi"
+            else
+              HOSTS="@Isobe_Hiroshi"
             fi
           fi
 
