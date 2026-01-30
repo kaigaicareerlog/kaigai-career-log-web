@@ -1,0 +1,42 @@
+name: Post Episode Highlight to X
+
+on:
+  workflow_dispatch:
+    inputs:
+      guid:
+        description: 'Episode GUID'
+        required: true
+        type: string
+      highlight_number:
+        description: 'Highlight number (1, 2, or 3)'
+        required: true
+        type: choice
+        options:
+          - '1'
+          - '2'
+          - '3'
+
+jobs:
+  post-highlight-to-x:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Post highlight to X
+        env:
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+        run: |
+          npx tsx scripts/post-x-episode-highlight.ts "${{ inputs.guid }}" "${{ inputs.highlight_number }}"
