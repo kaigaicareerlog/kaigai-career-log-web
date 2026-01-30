@@ -1,0 +1,61 @@
+name: Post Google Form Reminder to X
+
+on:
+  # Run every Tuesday at 4:30 PM PST (00:30 UTC on Wednesday)
+  schedule:
+    - cron: '30 0 * * 3'
+  # Allow manual trigger (always posts immediately)
+  workflow_dispatch:
+
+jobs:
+  post-google-form-reminder:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if this is a biweekly run
+        id: check-week
+        run: |
+          # Get the ISO week number
+          WEEK_NUM=$(date +%V)
+          echo "Current week number: $WEEK_NUM"
+          echo "Event name: ${{ github.event_name }}"
+
+          # Manual trigger always posts (skip biweekly check)
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manual trigger - posting immediately"
+            echo "should_post=true" >> $GITHUB_OUTPUT
+          # Scheduled run: check if it's an even week (biweekly posting)
+          elif [ $((WEEK_NUM % 2)) -eq 0 ]; then
+            echo "Even week - posting reminder"
+            echo "should_post=true" >> $GITHUB_OUTPUT
+          else
+            echo "Odd week - skipping"
+            echo "should_post=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Checkout repository
+        if: steps.check-week.outputs.should_post == 'true'
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: steps.check-week.outputs.should_post == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        if: steps.check-week.outputs.should_post == 'true'
+        run: npm install
+
+      - name: Post to X
+        if: steps.check-week.outputs.should_post == 'true'
+        env:
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+        run: npx tsx scripts/post-x-google-form-reminder.ts
+
+      - name: Skip notification
+        if: steps.check-week.outputs.should_post == 'false'
+        run: echo "ℹ️ Skipped - not a biweekly posting week"
