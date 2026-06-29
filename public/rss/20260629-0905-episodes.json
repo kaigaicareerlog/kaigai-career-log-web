@@ -1,5 +1,19 @@
 [
   {
+    "title": "あえて役職を降りて現場へ！キャリアは「結果の轍」と語るCiscoテックリードの選択肢を広げるAI時代の生存戦略（後半）#51",
+    "description": "海外でキャリアを築いているIT業界のスペシャリストにインタビュー！今回のゲストは、アメリカのCisco（シスコ）で機械学習（ML）エンジニアのテックリードとして働くTakさん！前回の買収劇の裏側に続き、後半では大企業に移籍した後のリアルな働き方の変化や、過去にあえてマネジメント側の役職を降りて現場の1エンジニアに戻ったという驚きの決断について伺います。Takさんにとってキャリアとは、あらかじめ綿密に設計するものではなく「結果の轍（わだち）」。その時々で自分が面白いと感じる現場にこだわり、手を動かし続けてきたTakさんですが、家族ができたことで「選択肢を広げるための永住権（グリーンカード）」という新たな視点も生まれています。買収された後の大企業で、スタートアップのような機動性を保ちながら膨大な開発リソースやGPUを活用する秘訣とは？海外での就活で最も重要となる「リフェラル（紹介）」を掴むための、サシ飲みと日々の信頼関係の本質に迫ります。さらに、AI時代に特定の職種名に依存せず生き残るために必要な「ビジネス視点を持った設計力」や「GPUコストと人件費の最適配置」など、これからの時代を生き抜くヒントが詰まっています。海外就職を目指す日本人IT専門職や、北米キャリアに興味がある人必見のエピソードです！",
+    "link": "https://podcasters.spotify.com/pod/show/kaigaicareerlog/episodes/CiscoAI51-e3l09o7",
+    "guid": "da6416aa-b639-44a5-bdc9-94ded842c6b3",
+    "date": "Sun, 28 Jun 2026 21:30:00 GMT",
+    "duration": "00:58:57",
+    "audioUrl": "https://anchor.fm/s/105976b60/podcast/play/121693383/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2026-5-20%2Fdec4785d-3702-81d3-f8b8-4140e1bef4f3.mp3",
+    "spotifyUrl": "https://open.spotify.com/episode/2QlXMuVh7QL71gchXFpmQF",
+    "youtubeUrl": "https://www.youtube.com/watch?v=z9HxspDxVoQ",
+    "applePodcastUrl": "https://podcasts.apple.com/us/podcast/%E3%81%82%E3%81%88%E3%81%A6%E5%BD%B9%E8%81%B7%E3%82%92%E9%99%8D%E3%82%8A%E3%81%A6%E7%8F%BE%E5%A0%B4%E3%81%B8-%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%81%AF-%E7%B5%90%E6%9E%9C%E3%81%AE%E8%BD%8D-%E3%81%A8%E8%AA%9E%E3%82%8Bcisco%E3%83%86%E3%83%83%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%89%E3%81%AE%E9%81%B8%E6%8A%9E%E8%82%A2%E3%82%92%E5%BA%83%E3%81%92%E3%82%8Bai%E6%99%82%E4%BB%A3%E3%81%AE%E7%94%9F%E5%AD%98%E6%88%A6%E7%95%A5/id1818019572?i=1000774612651&uo=4",
+    "amazonMusicUrl": "https://music.amazon.co.jp/podcasts/118b5e6b-1f97-4c62-97a5-754714381b40/episodes/0c220bb3-a271-43fb-838d-58bb1b797667/%E6%B5%B7%E5%A4%96%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%AD%E3%82%B0-%E3%81%82%E3%81%88%E3%81%A6%E5%BD%B9%E8%81%B7%E3%82%92%E9%99%8D%E3%82%8A%E3%81%A6%E7%8F%BE%E5%A0%B4%E3%81%B8%EF%BC%81%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%81%AF%E3%80%8C%E7%B5%90%E6%9E%9C%E3%81%AE%E8%BD%8D%E3%80%8D%E3%81%A8%E8%AA%9E%E3%82%8Bcisco%E3%83%86%E3%83%83%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%89%E3%81%AE%E9%81%B8%E6%8A%9E%E8%82%A2%E3%82%92%E5%BA%83%E3%81%92%E3%82%8Bai%E6%99%82%E4%BB%A3%E3%81%AE%E7%94%9F%E5%AD%98%E6%88%A6%E7%95%A5%EF%BC%88%E5%BE%8C%E5%8D%8A%EF%BC%89-51",
+    "newEpisodeIntroPostedToX": true
+  },
+  {
     "title": "立ち上げ期のUber JapanからSFのテックリードへ！逆境を成長に変えるTakさんの“興味ドリブン”な北米キャリア戦略（前半）#50",
     "description": "海外でキャリアを築いているIT業界のスペシャリストにインタビュー！今回のゲストは、アメリカのCisco（シスコ）で機械学習（ML）エンジニアのテックリードとして働くTakさん！日本の保険会社からイギリスの大学院へ進学するも、ブレグジットの影響で帰国。その後、Uber Japanを経てAIスタートアップの日本1号社員となり、同社がCiscoに買収されたことをきっかけに米国本社への社内転籍（インターナルトランスファー）を果たした異色の経歴の持ち主です。Takさんのキャリアの核にあるのは、予期せぬ「激変」や「逆境」をも自らの成長機会へと変えていく圧倒的な柔軟性と、純粋な興味に従う“興味ドリブン”な姿勢です。働きながらアメリカのオンライン大学院でコンピュータサイエンスを修めるなど、理想のキャリアとのギャップを戦略的に埋めていく圧倒的な行動力を持っています。なぜイギリスでの就活断念から、世界最高峰のテックエリアであるサンフランシスコでテックリードになることになったのか？スタートアップの「買収」というチャンスを活かした米国本社への転籍プロセスの裏側や、統計学から機械学習エンジニアへのキャリアチェンジ、さらにはビザの壁を突破するための具体的なアクションについて深く迫ります。不確実性の高い時代を生き抜くためのリアルなキャリア戦略が学べるエピソードです。海外就職を目指す日本人IT専門職や、北米キャリアに興味がある人必見のエピソードです！",
     "link": "https://podcasters.spotify.com/pod/show/kaigaicareerlog/episodes/Uber-JapanSFTak50-e3kq16d",
@@ -8,7 +22,7 @@
     "duration": "00:44:58",
     "audioUrl": "https://anchor.fm/s/105976b60/podcast/play/121488013/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2026-5-15%2F398ecbc4-ac0d-b2b4-0a4d-524364d07619.mp3",
     "spotifyUrl": "https://open.spotify.com/episode/2VR5xxx6XEve7CKreDYkrC",
-    "youtubeUrl": "",
+    "youtubeUrl": "https://www.youtube.com/watch?v=qSKGJ5zXu9Q",
     "applePodcastUrl": "https://podcasts.apple.com/us/podcast/%E7%AB%8B%E3%81%A1%E4%B8%8A%E3%81%92%E6%9C%9F%E3%81%AEuber-japan%E3%81%8B%E3%82%89sf%E3%81%AE%E3%83%86%E3%83%83%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%89%E3%81%B8-%E9%80%86%E5%A2%83%E3%82%92%E6%88%90%E9%95%B7%E3%81%AB%E5%A4%89%E3%81%88%E3%82%8Btak%E3%81%95%E3%82%93%E3%81%AE-%E8%88%88%E5%91%B3%E3%83%89%E3%83%AA%E3%83%96%E3%83%B3/id1818019572?i=1000773642882&uo=4",
     "amazonMusicUrl": "https://music.amazon.co.jp/podcasts/118b5e6b-1f97-4c62-97a5-754714381b40/episodes/83c5709a-589e-460a-9a9a-1817607eb67a/%E6%B5%B7%E5%A4%96%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%AD%E3%82%B0-%E7%AB%8B%E3%81%A1%E4%B8%8A%E3%81%92%E6%9C%9F%E3%81%AEuber-japan%E3%81%8B%E3%82%89sf%E3%81%AE%E3%83%86%E3%83%83%E3%82%AF%E3%83%AA%E3%83%BC%E3%83%89%E3%81%B8%EF%BC%81%E9%80%86%E5%A2%83%E3%82%92%E6%88%90%E9%95%B7%E3%81%AB%E5%A4%89%E3%81%88%E3%82%8Btak%E3%81%95%E3%82%93%E3%81%AE%E2%80%9C%E8%88%88%E5%91%B3%E3%83%89%E3%83%AA%E3%83%96%E3%83%B3%E2%80%9D%E3%81%AA%E5%8C%97%E7%B1%B3%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E6%88%A6%E7%95%A5%EF%BC%88%E5%89%8D%E5%8D%8A%EF%BC%89-50",
     "newEpisodeIntroPostedToX": true
