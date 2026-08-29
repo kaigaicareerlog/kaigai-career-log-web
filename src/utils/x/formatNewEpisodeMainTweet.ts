@@ -13,7 +13,7 @@ export function formatNewEpisodeMainTweet(
   lines.push('Host');
   lines.push(hosts);
   lines.push('');
-  lines.push('#海外 #海外就職 #キャリア');
+  lines.push('#海外 #海外就職 #キャリア #kaigaicareerlog #ポッドキャスト');
 
   return lines.join('\n').trim();
 }

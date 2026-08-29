@@ -23,7 +23,11 @@ import { HOSTS } from '../constants/actors';
       <section class="hosts-section">
         <h2>ホスト</h2>
         <div class="hosts-list">
-          {HOSTS.map((host) => <HostItem {...host} />)}
+          {
+            HOSTS.map((host) =>
+              host.name !== 'Ayaka' ? <HostItem {...host} /> : null
+            )
+          }
         </div>
       </section>
 
