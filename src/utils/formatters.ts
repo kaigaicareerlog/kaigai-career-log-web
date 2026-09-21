@@ -37,12 +37,12 @@ export function parseTimestampFromFilename(filename: string): Date | null {
 }
 
 /**
- * 時間をフォーマットする
+ * Parses an RSS duration ("HH:MM:SS", "MM:SS" or plain seconds) into seconds
+ * @returns Total seconds, or null if the format is not recognised
  */
-export function formatDuration(duration: string): string {
+export function parseDurationToSeconds(duration: string): number | null {
   let totalSeconds: number;
 
-  // HH:MM:SS形式の場合
   if (duration.includes(':')) {
     const parts = duration.split(':');
     if (parts.length === 3) {
@@ -55,14 +55,23 @@ export function formatDuration(duration: string): string {
       // MM:SS
       totalSeconds = parseInt(parts[0]) * 60 + parseInt(parts[1]);
     } else {
-      return duration;
+      return null;
     }
   } else {
     // 秒数の場合
     totalSeconds = parseInt(duration);
-    if (isNaN(totalSeconds)) {
-      return duration;
-    }
+  }
+
+  return isNaN(totalSeconds) ? null : totalSeconds;
+}
+
+/**
+ * 時間をフォーマットする
+ */
+export function formatDuration(duration: string): string {
+  const totalSeconds = parseDurationToSeconds(duration);
+  if (totalSeconds === null) {
+    return duration;
   }
 
   const hours = Math.floor(totalSeconds / 3600);

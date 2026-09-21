@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kaigaicareerlog.com/sitemap-index.xml

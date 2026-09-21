@@ -13,6 +13,18 @@ export {
   isKnownHost,
 } from './actors';
 
+// Site / SEO constants
+export {
+  SITE_URL,
+  SITE_NAME,
+  SITE_NAME_EN,
+  SITE_LANGUAGE,
+  SITE_DEFAULT_TITLE,
+  SITE_DEFAULT_DESCRIPTION,
+  SITE_DEFAULT_OG_IMAGE,
+  META_DESCRIPTION_MAX_LENGTH,
+} from './site';
+
 // Podcast URL constants
 export {
   SPOTIFY_CHANNEL_URL,
