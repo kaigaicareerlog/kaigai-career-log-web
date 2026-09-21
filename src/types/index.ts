@@ -81,6 +81,37 @@ export interface RSSChannel extends Channel {
 }
 
 // ============================================================================
+// Episode Metadata Types (guest info + tags, used for pills and search)
+// ============================================================================
+
+/**
+ * A guest of an episode. Every field is optional because not every episode
+ * states it (and special discussion episodes have no single guest).
+ */
+export interface EpisodeGuest {
+  name: string | null;
+  position: string | null;
+  company: string | null;
+}
+
+/**
+ * Guest facts and controlled tags for one episode.
+ * Tag arrays hold slugs from `src/constants/episodeVocabulary.ts`.
+ */
+export interface EpisodeMeta {
+  guests: EpisodeGuest[];
+  roles: string[];
+  countries: string[];
+  cities: string[];
+  topics: string[];
+  /** True once a human has checked the LLM-generated values */
+  reviewed: boolean;
+}
+
+/** Episode metadata keyed by episode GUID */
+export type EpisodeMetaMap = Record<string, EpisodeMeta>;
+
+// ============================================================================
 // Transcription Types
 // ============================================================================
 

@@ -1,0 +1,103 @@
+---
+import type { EpisodeMeta } from '../../types';
+import {
+  getEpisodePills,
+  type EpisodePillKind,
+  type EpisodePillVariant,
+} from '../../utils/episodeMeta/getEpisodePills';
+
+interface Props {
+  meta?: EpisodeMeta;
+  /** 'card' is compact; 'page' shows every pill plus topics */
+  variant?: EpisodePillVariant;
+}
+
+const { meta, variant = 'card' } = Astro.props;
+const pills = getEpisodePills(meta, variant);
+
+const ICONS: Record<EpisodePillKind, string> = {
+  position: '💼',
+  company: '🏢',
+  place: '📍',
+  topic: '#',
+};
+---
+
+{
+  pills.length > 0 && (
+    <ul class={`meta-pills meta-pills--${variant}`}>
+      {pills.map((pill) => (
+        <li class={`pill pill--${pill.kind}`}>
+          <span class="pill-icon" aria-hidden="true">
+            {ICONS[pill.kind]}
+          </span>
+          {pill.label}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .meta-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .meta-pills--card {
+    margin-bottom: 0.75rem;
+  }
+
+  .meta-pills--page {
+    margin-top: 1rem;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--color-text);
+  }
+
+  .pill-icon {
+    font-size: 0.75rem;
+    opacity: 0.85;
+  }
+
+  .pill--position {
+    background: rgba(14, 165, 233, 0.12);
+    border-color: rgba(14, 165, 233, 0.3);
+  }
+
+  .pill--company {
+    background: rgba(20, 184, 166, 0.12);
+    border-color: rgba(20, 184, 166, 0.3);
+  }
+
+  .pill--place {
+    background: rgba(100, 116, 139, 0.12);
+    border-color: rgba(100, 116, 139, 0.3);
+  }
+
+  .pill--topic {
+    background: transparent;
+    border-color: rgba(100, 116, 139, 0.3);
+    color: var(--color-muted);
+  }
+
+  @media (max-width: 768px) {
+    .pill {
+      font-size: 0.72rem;
+      padding: 0.15rem 0.55rem;
+    }
+  }
+</style>

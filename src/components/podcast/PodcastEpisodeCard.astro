@@ -1,6 +1,9 @@
 ---
 import { formatDate, formatDuration } from '../../utils/formatters';
 import type { PodcastEpisode } from '../../types';
+import { buildEpisodeSearchText } from '../../utils/episodeMeta/buildEpisodeSearchText';
+import { getEpisodeMeta } from '../../utils/episodeMeta/episodeMetaFile';
+import EpisodeMetaPills from './EpisodeMetaPills.astro';
 import PlatformButton from './PlatformButton.astro';
 import {
   SPOTIFY_CHANNEL_URL,
@@ -20,12 +23,17 @@ const spotifyUrl = podcast.spotifyUrl || SPOTIFY_CHANNEL_URL;
 const youtubeUrl = podcast.youtubeUrl || YOUTUBE_CHANNEL_URL;
 const applePodcastUrl = podcast.applePodcastUrl || APPLE_PODCAST_CHANNEL_URL;
 const amazonMusicUrl = podcast.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL;
+
+// Guest info/tags: shown as pills, and searched (including the guest's name)
+const meta = getEpisodeMeta(podcast.guid);
+const searchText = buildEpisodeSearchText(podcast, meta);
 ---
 
-<article class="podcast-card">
+<article class="podcast-card" data-search={searchText}>
   <a href={`/episodes/${podcast.guid}`} class="card-link">
     <div class="podcast-header">
       <h3 class="podcast-title">{podcast.title}</h3>
+      <EpisodeMetaPills meta={meta} variant="card" />
     </div>
 
     <div class="podcast-content">

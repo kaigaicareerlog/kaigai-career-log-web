@@ -1,6 +1,7 @@
 ---
 import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
 import type { PodcastEpisode } from '../../types';
+import EpisodeSearch from './EpisodeSearch.astro';
 import PodcastEpisodeCard from './PodcastEpisodeCard.astro';
 
 // JSONフィードからポッドキャストデータを取得
@@ -25,6 +26,7 @@ const podcasts: PodcastEpisode[] = rssData.episodes || [];
 <section class="podcast-section">
   <div class="container">
     <h2 class="section-title">エピソード一覧</h2>
+    <EpisodeSearch />
     {
       podcasts.length > 0 ? (
         <div class="podcast-list">
