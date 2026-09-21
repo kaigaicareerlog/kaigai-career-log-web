@@ -1,0 +1,142 @@
+---
+/**
+ * Search box for the episode list. Filters the cards on the page by their
+ * `data-search` text (title, description, position, company, city, country,
+ * guest name, tag aliases). The list is fully rendered in the HTML, so the
+ * page stays crawlable; this only hides non-matching cards in the browser.
+ */
+---
+
+<div class="episode-search" role="search">
+  <label class="visually-hidden" for="episode-search-input">
+    エピソードを検索
+  </label>
+  <div class="search-field">
+    <span class="search-icon" aria-hidden="true">🔍</span>
+    <input
+      id="episode-search-input"
+      type="search"
+      placeholder="職種・会社・都市・国・名前で検索（例: カナダ SRE）"
+      autocomplete="off"
+      enterkeyhint="search"
+    />
+  </div>
+  <p id="episode-search-status" class="search-status" aria-live="polite"></p>
+</div>
+
+<script>
+  import {
+    matchesTerms,
+    tokenizeQuery,
+  } from '../../utils/episodeMeta/searchText';
+
+  const input = document.getElementById(
+    'episode-search-input'
+  ) as HTMLInputElement | null;
+  const status = document.getElementById('episode-search-status');
+  const cards = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-search]')
+  );
+
+  if (input && status && cards.length > 0) {
+    const applyFilter = () => {
+      const terms = tokenizeQuery(input.value);
+      let shown = 0;
+
+      for (const card of cards) {
+        const isMatch = matchesTerms(card.dataset.search ?? '', terms);
+        card.hidden = !isMatch;
+        if (isMatch) shown++;
+      }
+
+      if (terms.length === 0) {
+        status.textContent = '';
+      } else if (shown === 0) {
+        status.textContent = '条件に合うエピソードが見つかりませんでした';
+      } else {
+        status.textContent = `${shown}件のエピソードが見つかりました`;
+      }
+    };
+
+    // Don't filter while a Japanese IME is still composing (half-typed kana)
+    input.addEventListener('input', (event) => {
+      if (!(event as InputEvent).isComposing) applyFilter();
+    });
+    input.addEventListener('compositionend', applyFilter);
+  }
+</script>
+
+<style>
+  .episode-search {
+    max-width: 640px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .search-field {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1rem;
+    background: var(--color-background);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 999px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .search-field:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.2);
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--color-text);
+    font: inherit;
+    font-size: 1rem;
+  }
+
+  input::placeholder {
+    color: var(--color-muted);
+  }
+
+  .search-status {
+    min-height: 1.4em;
+    margin-top: 0.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .search-field {
+      background: rgba(15, 23, 42, 0.8);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+  }
+</style>
+
+<style is:global>
+  /* Cards hidden by the search must stay hidden even if a card sets display */
+  [data-search][hidden] {
+    display: none;
+  }
+</style>

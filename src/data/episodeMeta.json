@@ -1,0 +1,1748 @@
+{
+  "033e04d5-afc4-4715-a2ed-49bd8d229c75": {
+    "guests": [
+      {
+        "name": "Ryo",
+        "position": null,
+        "company": "Asana"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada",
+      "usa"
+    ],
+    "cities": [],
+    "topics": [
+      "salary",
+      "visa",
+      "job-change",
+      "layoff",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "03c300a5-56ee-4931-9d5d-65ce322c872f": {
+    "guests": [
+      {
+        "name": "Yuto",
+        "position": "フルスタックエンジニア",
+        "company": "Upsider"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "return-to-japan",
+      "job-change",
+      "job-hunting",
+      "startup"
+    ],
+    "reviewed": false
+  },
+  "04d2d59c-1b5b-4652-b02f-d697132d4570": {
+    "guests": [
+      {
+        "name": "Kei",
+        "position": "シニアエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "no-experience",
+      "job-hunting"
+    ],
+    "reviewed": false
+  },
+  "0c0fac26-acda-4b90-ab0a-9fabc82523b7": {
+    "guests": [
+      {
+        "name": "Ryosuke",
+        "position": "ソフトウェアエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer",
+      "data-ai"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "job-hunting",
+      "ai",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "1395119c-fc6a-41d1-8b4a-4dca245c2555": {
+    "guests": [
+      {
+        "name": "Tomoharu",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "english",
+      "job-hunting",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "170e584c-f2b8-42a2-926c-0a93b3336781": {
+    "guests": [
+      {
+        "name": "Hiroshi",
+        "position": "プロダクトマネージャー",
+        "company": "楽天"
+      }
+    ],
+    "roles": [
+      "product-manager"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "job-change",
+      "salary",
+      "return-to-japan",
+      "visa"
+    ],
+    "reviewed": false
+  },
+  "1a7889de-76ea-4bf1-8eca-6aae3c089222": {
+    "guests": [
+      {
+        "name": "Yugo",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "salary",
+      "job-change",
+      "job-hunting",
+      "english"
+    ],
+    "reviewed": false
+  },
+  "1cde61ee-9900-4255-9ba9-b09e147a240d": {
+    "guests": [
+      {
+        "name": "あやか",
+        "position": "ソフトウェアエンジニア",
+        "company": "Workday"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "visa",
+      "no-experience",
+      "job-change",
+      "job-hunting"
+    ],
+    "reviewed": false
+  },
+  "1df0d34f-755d-4123-b6c2-64130853709c": {
+    "guests": [
+      {
+        "name": "Misuzu",
+        "position": "SRE",
+        "company": "Vancity"
+      }
+    ],
+    "roles": [
+      "sre-infra"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "no-experience",
+      "job-hunting"
+    ],
+    "reviewed": false
+  },
+  "1fd7f7ee-5ceb-4775-bad3-6278e4a0fc2f": {
+    "guests": [],
+    "roles": [
+      "sre-infra"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "toronto",
+      "vancouver"
+    ],
+    "topics": [
+      "visa",
+      "salary",
+      "job-change"
+    ],
+    "reviewed": false
+  },
+  "21836619-df2b-49a0-885f-71d90210462b": {
+    "guests": [
+      {
+        "name": "Misuzu",
+        "position": "SRE",
+        "company": null
+      }
+    ],
+    "roles": [
+      "sre-infra"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "no-experience",
+      "job-change",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "306ce5e4-844e-4788-938b-fb3e355db374": {
+    "guests": [
+      {
+        "name": "udon",
+        "position": "ファイナンス",
+        "company": null
+      }
+    ],
+    "roles": [
+      "business"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "visa",
+      "local-hire",
+      "job-hunting"
+    ],
+    "reviewed": false
+  },
+  "33115e65-8fd7-4b72-98bd-62adc4124b7a": {
+    "guests": [
+      {
+        "name": "こじけん",
+        "position": "PM兼デザイナー兼エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer",
+      "product-manager"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "startup",
+      "salary",
+      "work-style",
+      "job-change"
+    ],
+    "reviewed": false
+  },
+  "35eb5621-3f33-44aa-a9a2-4a138f67aafe": {
+    "guests": [
+      {
+        "name": "ヤンマー",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [],
+    "cities": [],
+    "topics": [
+      "job-hunting",
+      "salary",
+      "big-tech",
+      "startup",
+      "job-change"
+    ],
+    "reviewed": false
+  },
+  "38e9ffda-c375-481d-b7c3-cac177287431": {
+    "guests": [
+      {
+        "name": "Ishi",
+        "position": "ソフトウェアエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "no-experience",
+      "job-hunting",
+      "family",
+      "job-change"
+    ],
+    "reviewed": false
+  },
+  "39cf6d7a-a8fc-4f4f-a0f7-3ad0e8e1bc7d": {
+    "guests": [
+      {
+        "name": "さとみ",
+        "position": "ソフトウェアエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "work-style",
+      "startup",
+      "english",
+      "salary"
+    ],
+    "reviewed": false
+  },
+  "3fc3702f-3604-4ed5-8628-95786fa8b1ed": {
+    "guests": [
+      {
+        "name": "Mikiya",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "english",
+      "visa",
+      "job-hunting",
+      "networking"
+    ],
+    "reviewed": false
+  },
+  "4992ac87-fc45-4845-8a39-bd034c0acb1c": {
+    "guests": [
+      {
+        "name": "Naoya",
+        "position": "ソフトウェアエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "english",
+      "job-change",
+      "job-hunting",
+      "no-experience",
+      "study-abroad"
+    ],
+    "reviewed": false
+  },
+  "4dbf63eb-8b40-4ec5-a3ee-9e29b0d5507a": {
+    "guests": [
+      {
+        "name": "Aoi",
+        "position": "アートディレクター",
+        "company": null
+      }
+    ],
+    "roles": [
+      "designer"
+    ],
+    "countries": [
+      "canada",
+      "usa"
+    ],
+    "cities": [
+      "los-angeles"
+    ],
+    "topics": [
+      "english",
+      "visa",
+      "job-change",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "56929b5c-abb6-4d03-a449-7d49b9f34bea": {
+    "guests": [
+      {
+        "name": "Yusei",
+        "position": "SRE",
+        "company": "Shopify"
+      }
+    ],
+    "roles": [
+      "sre-infra"
+    ],
+    "countries": [
+      "uk",
+      "germany",
+      "canada"
+    ],
+    "cities": [
+      "vancouver",
+      "calgary"
+    ],
+    "topics": [
+      "visa",
+      "job-change",
+      "family",
+      "work-style",
+      "big-tech"
+    ],
+    "reviewed": false
+  },
+  "56a2c89b-e07b-47c4-bf41-57ce74fa47a0": {
+    "guests": [
+      {
+        "name": "Tomoe",
+        "position": null,
+        "company": null
+      }
+    ],
+    "roles": [
+      "business"
+    ],
+    "countries": [
+      "usa"
+    ],
+    "cities": [],
+    "topics": [
+      "visa",
+      "job-change",
+      "study-abroad"
+    ],
+    "reviewed": false
+  },
+  "58b5e64d-04fc-4100-93cd-0788662105dc": {
+    "guests": [
+      {
+        "name": "Mikiya",
+        "position": null,
+        "company": null
+      }
+    ],
+    "roles": [],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "layoff",
+      "startup",
+      "visa",
+      "salary",
+      "big-tech"
+    ],
+    "reviewed": false
+  },
+  "5c4aa922-b6e4-4c6d-9ad7-829f8d6f3456": {
+    "guests": [
+      {
+        "name": "Wataru",
+        "position": "スタッフエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer",
+      "engineering-manager"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "job-change",
+      "layoff",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "5fe6d62c-ac60-414a-99f4-6450d4983814": {
+    "guests": [
+      {
+        "name": "Naoya",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "local-hire",
+      "ai",
+      "visa",
+      "job-change"
+    ],
+    "reviewed": false
+  },
+  "632fa85d-e2f1-427a-80f5-90d2f221599e": {
+    "guests": [
+      {
+        "name": "Ryoppippi",
+        "position": "AIエンジニア",
+        "company": "Rork"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "uk"
+    ],
+    "cities": [
+      "london"
+    ],
+    "topics": [
+      "job-hunting",
+      "salary",
+      "ai"
+    ],
+    "reviewed": false
+  },
+  "6631759e-5f0b-4723-84f3-fc7a5fa9bf6b": {
+    "guests": [
+      {
+        "name": "Tomoharu",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "job-hunting",
+      "study-abroad",
+      "networking"
+    ],
+    "reviewed": false
+  },
+  "6b9e35ce-9e0e-4b0d-ab63-709a24891c8a": {
+    "guests": [
+      {
+        "name": "あやか",
+        "position": "エンジニア",
+        "company": "Workday"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "no-experience",
+      "work-style",
+      "ai"
+    ],
+    "reviewed": false
+  },
+  "6ebc12bb-da0d-48fc-9695-1a90b9403df2": {
+    "guests": [
+      {
+        "name": "Aoi",
+        "position": "グラフィックデザイナー",
+        "company": null
+      }
+    ],
+    "roles": [
+      "designer"
+    ],
+    "countries": [
+      "canada",
+      "usa"
+    ],
+    "cities": [
+      "vancouver",
+      "los-angeles"
+    ],
+    "topics": [
+      "visa",
+      "job-hunting",
+      "local-hire",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "749cfdab-ad8c-402a-a5e5-f41a931c0275": {
+    "guests": [
+      {
+        "name": "Tak",
+        "position": "テックリード",
+        "company": "Cisco"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "usa"
+    ],
+    "cities": [
+      "san-francisco"
+    ],
+    "topics": [
+      "visa",
+      "job-change",
+      "startup",
+      "ai",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "754b5d38-3433-4659-9e65-26869050f5eb": {
+    "guests": [
+      {
+        "name": "Kodai",
+        "position": "ソフトウェアエンジニア",
+        "company": "Affirm"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "visa",
+      "job-hunting",
+      "startup",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "75a56c1a-aae1-4805-9280-bd926cb8c353": {
+    "guests": [
+      {
+        "name": "Nori",
+        "position": "エンジニア",
+        "company": "ABB"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "salary",
+      "layoff",
+      "job-change",
+      "return-to-japan",
+      "startup"
+    ],
+    "reviewed": false
+  },
+  "760ff738-9ad6-44e8-901d-e087c043bd99": {
+    "guests": [
+      {
+        "name": "Kei",
+        "position": "Webアーキテクト",
+        "company": "UBC"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "salary",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "791bc8bd-01ce-408c-9583-2f1447ac9c6b": {
+    "guests": [
+      {
+        "name": "Yugo",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "visa",
+      "english",
+      "job-hunting",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "7e8c554e-4828-4a62-acc3-9feb5f8e2c69": {
+    "guests": [
+      {
+        "name": "ryoppippi",
+        "position": "AIエンジニア",
+        "company": "Rork"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "uk"
+    ],
+    "cities": [
+      "london"
+    ],
+    "topics": [
+      "salary",
+      "visa",
+      "startup",
+      "ai",
+      "job-change"
+    ],
+    "reviewed": false
+  },
+  "81454faf-7d9a-47b9-9e53-a4972da98129": {
+    "guests": [
+      {
+        "name": "Ken",
+        "position": "カスタマーサポートエンジニア",
+        "company": "AWS"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "toronto"
+    ],
+    "topics": [
+      "english",
+      "job-hunting",
+      "job-change"
+    ],
+    "reviewed": false
+  },
+  "854448ac-a293-438f-aea2-410c4b1ed820": {
+    "guests": [
+      {
+        "name": "Suguru",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "return-to-japan",
+      "work-style",
+      "job-change",
+      "startup"
+    ],
+    "reviewed": false
+  },
+  "8d5d9e4d-9679-4a2f-91b6-d20082fd11f4": {
+    "guests": [
+      {
+        "name": "Ken",
+        "position": "テクニカルアカウントマネージャー",
+        "company": "AWS"
+      }
+    ],
+    "roles": [
+      "business"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "toronto"
+    ],
+    "topics": [
+      "salary",
+      "visa",
+      "ai",
+      "return-to-japan",
+      "job-change"
+    ],
+    "reviewed": false
+  },
+  "8ea34305-ab5c-404f-993c-05d3164e9e35": {
+    "guests": [
+      {
+        "name": "Tomoe",
+        "position": "Director of Business Operations",
+        "company": null
+      }
+    ],
+    "roles": [
+      "business"
+    ],
+    "countries": [
+      "usa"
+    ],
+    "cities": [
+      "san-francisco"
+    ],
+    "topics": [
+      "visa",
+      "ai",
+      "job-change",
+      "work-style",
+      "local-hire"
+    ],
+    "reviewed": false
+  },
+  "92e35cc0-58dd-44b6-b93f-82991b470e77": {
+    "guests": [
+      {
+        "name": "ユウゴ",
+        "position": "iOSエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "job-hunting",
+      "work-style",
+      "startup"
+    ],
+    "reviewed": false
+  },
+  "93b82fdf-128a-42e4-b444-00d8d458ea29": {
+    "guests": [
+      {
+        "name": "Mizuki",
+        "position": "データエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "data-ai"
+    ],
+    "countries": [
+      "canada",
+      "usa"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "english",
+      "visa",
+      "layoff",
+      "startup",
+      "salary"
+    ],
+    "reviewed": false
+  },
+  "941ec3ee-c84a-40cc-9ae0-dc17d36d99b0": {
+    "guests": [
+      {
+        "name": "Nori",
+        "position": "Excelエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "job-hunting",
+      "salary",
+      "startup",
+      "no-experience",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "94b3f1cb-b4ac-4b3c-b81a-249460b83178": {
+    "guests": [
+      {
+        "name": "Shoko",
+        "position": "iOSエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "toronto"
+    ],
+    "topics": [
+      "job-hunting",
+      "layoff",
+      "job-change"
+    ],
+    "reviewed": false
+  },
+  "9801adae-b65f-478f-837c-c3081ab8e51c": {
+    "guests": [
+      {
+        "name": "ヤンマー",
+        "position": "バックエンドエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "layoff",
+      "job-change",
+      "salary",
+      "work-style",
+      "no-experience"
+    ],
+    "reviewed": false
+  },
+  "984bc657-d939-49cf-bc87-589d29f722ab": {
+    "guests": [],
+    "roles": [],
+    "countries": [],
+    "cities": [],
+    "topics": [
+      "work-style",
+      "ai",
+      "study-abroad",
+      "return-to-japan",
+      "job-change"
+    ],
+    "reviewed": false
+  },
+  "9c3f6816-2a68-4373-8c11-954083f080e8": {
+    "guests": [
+      {
+        "name": "Hiroshi",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "no-experience",
+      "job-hunting",
+      "salary"
+    ],
+    "reviewed": false
+  },
+  "9d284990-2771-400c-a490-8de834a81b66": {
+    "guests": [
+      {
+        "name": "Udon",
+        "position": "ファイナンス",
+        "company": "Match Group"
+      }
+    ],
+    "roles": [
+      "business"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "local-hire",
+      "job-hunting"
+    ],
+    "reviewed": false
+  },
+  "a108b0b3-eeca-4412-bb00-991785b4ce77": {
+    "guests": [
+      {
+        "name": "Shoko",
+        "position": "iOSエンジニア",
+        "company": "LightSpeed"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "toronto"
+    ],
+    "topics": [
+      "layoff",
+      "job-change",
+      "job-hunting",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "a89f22fe-617e-4206-a533-961b662719d8": {
+    "guests": [
+      {
+        "name": "Yuto",
+        "position": "ソフトウェアエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "english",
+      "job-hunting",
+      "job-change",
+      "layoff"
+    ],
+    "reviewed": false
+  },
+  "ba048b95-5a14-40eb-96ce-d496c172ab05": {
+    "guests": [],
+    "roles": [],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [],
+    "reviewed": false
+  },
+  "ba33d0f0-32b7-46d1-9364-fe04bd325b7b": {
+    "guests": [],
+    "roles": [],
+    "countries": [],
+    "cities": [],
+    "topics": [
+      "layoff"
+    ],
+    "reviewed": false
+  },
+  "bb8c0bce-32c2-4ee0-ae07-7714885fbd8d": {
+    "guests": [
+      {
+        "name": "Suguru",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada",
+      "usa"
+    ],
+    "cities": [],
+    "topics": [
+      "visa",
+      "no-experience",
+      "job-change",
+      "networking",
+      "english"
+    ],
+    "reviewed": false
+  },
+  "bc9c2dbc-0c14-415c-b11c-0fba6c4a670b": {
+    "guests": [
+      {
+        "name": "Mizuki",
+        "position": "データエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "usa"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "english",
+      "salary",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "bcc3d9aa-74a0-4549-b8d6-df622e0e2a2d": {
+    "guests": [
+      {
+        "name": "Ishi",
+        "position": "ソフトウェアエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "salary",
+      "family",
+      "work-style",
+      "ai",
+      "job-change"
+    ],
+    "reviewed": false
+  },
+  "bff2d6e2-5867-40ee-a1d4-9a7d6e9db2c8": {
+    "guests": [
+      {
+        "name": "翔太",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "salary",
+      "work-style",
+      "no-experience"
+    ],
+    "reviewed": false
+  },
+  "c83faa60-943d-4110-a084-ec0045b4ecc9": {
+    "guests": [
+      {
+        "name": "Yusei",
+        "position": "SRE",
+        "company": "Shopify"
+      }
+    ],
+    "roles": [
+      "sre-infra"
+    ],
+    "countries": [
+      "uk",
+      "germany",
+      "canada"
+    ],
+    "cities": [
+      "calgary"
+    ],
+    "topics": [
+      "job-change",
+      "big-tech",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "cbcbc94d-8c24-4ecd-9e57-4be6001993d4": {
+    "guests": [
+      {
+        "name": "Yugo",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "networking",
+      "job-hunting"
+    ],
+    "reviewed": false
+  },
+  "cc15a703-73c7-406b-8abc-ad7d0a192d05": {
+    "guests": [
+      {
+        "name": "Yugo",
+        "position": null,
+        "company": null
+      }
+    ],
+    "roles": [],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "job-hunting"
+    ],
+    "reviewed": false
+  },
+  "ccfb6b6f-fb3d-45f3-8173-6983a5ecd6aa": {
+    "guests": [
+      {
+        "name": "さとみ",
+        "position": "ソフトウェアエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "job-change",
+      "no-experience",
+      "job-hunting"
+    ],
+    "reviewed": false
+  },
+  "ce272287-4ed3-44ea-ab1c-b13feda40c83": {
+    "guests": [
+      {
+        "name": "ナオト",
+        "position": "ソフトウェアエンジニア",
+        "company": "Arista Networks"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [],
+    "reviewed": false
+  },
+  "d222bb9e-c294-4123-b6e1-ddeee39be574": {
+    "guests": [
+      {
+        "name": "Yugo",
+        "position": "iOSエンジニア",
+        "company": "TransCrypts"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver",
+      "toronto"
+    ],
+    "topics": [
+      "english",
+      "no-experience",
+      "local-hire",
+      "job-change",
+      "study-abroad"
+    ],
+    "reviewed": false
+  },
+  "d44556c1-c327-4716-bb57-4d0a4ed55e14": {
+    "guests": [
+      {
+        "name": "Shota",
+        "position": "プログラマー",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "visa",
+      "no-experience",
+      "job-change",
+      "salary"
+    ],
+    "reviewed": false
+  },
+  "da6416aa-b639-44a5-bdc9-94ded842c6b3": {
+    "guests": [
+      {
+        "name": "Tak",
+        "position": "テックリード",
+        "company": "Cisco"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "usa"
+    ],
+    "cities": [],
+    "topics": [
+      "visa",
+      "startup",
+      "job-hunting",
+      "networking",
+      "ai"
+    ],
+    "reviewed": false
+  },
+  "de7977b4-eea1-482f-9c67-08b9289b14c9": {
+    "guests": [
+      {
+        "name": "こじけん",
+        "position": "ソフトウェアエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "visa",
+      "job-change",
+      "salary",
+      "study-abroad"
+    ],
+    "reviewed": false
+  },
+  "e0e0d208-9d63-4d18-8c90-55b291731f56": {
+    "guests": [
+      {
+        "name": "ゆうと",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "e2e57a4d-8072-4f35-8b70-aa520a5700e2": {
+    "guests": [
+      {
+        "name": "Kodai",
+        "position": "シニアソフトウェアエンジニア",
+        "company": "Affirm"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "salary",
+      "startup",
+      "ai",
+      "return-to-japan",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "e67a792f-0e14-4408-8f3e-f0b455d0fe29": {
+    "guests": [],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "salary",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "e73febac-5e5e-4240-a0c0-4bc74e5ae424": {
+    "guests": [
+      {
+        "name": "Ryo",
+        "position": "SE",
+        "company": "Avanade"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "study-abroad",
+      "job-hunting"
+    ],
+    "reviewed": false
+  },
+  "e848c1df-6345-45f9-89dc-c9d6f14f94d2": {
+    "guests": [
+      {
+        "name": "ヤンマー",
+        "position": "バックエンドエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "layoff",
+      "salary",
+      "job-change",
+      "job-hunting"
+    ],
+    "reviewed": false
+  },
+  "efceda27-bd09-4302-af14-4463075baf2b": {
+    "guests": [
+      {
+        "name": "Aki",
+        "position": "プリンシパルエンジニア",
+        "company": "TresureData"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada",
+      "usa"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "visa",
+      "job-change"
+    ],
+    "reviewed": false
+  },
+  "f0fb621c-7e30-4209-b34c-b117dd6d8f7a": {
+    "guests": [
+      {
+        "name": "Yugo",
+        "position": "エンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "salary",
+      "job-hunting",
+      "job-change",
+      "english"
+    ],
+    "reviewed": false
+  },
+  "f2e25653-2229-4b80-a261-54ea62c2e83d": {
+    "guests": [
+      {
+        "name": "Yuto",
+        "position": null,
+        "company": null
+      }
+    ],
+    "roles": [],
+    "countries": [],
+    "cities": [],
+    "topics": [
+      "english"
+    ],
+    "reviewed": false
+  },
+  "f774bd47-7fd6-4585-aac0-cc265458a6fd": {
+    "guests": [
+      {
+        "name": "Aki",
+        "position": "プリンシパルエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "visa",
+      "job-change",
+      "work-style"
+    ],
+    "reviewed": false
+  },
+  "f7a7e001-5826-4aad-ba33-0fde633308be": {
+    "guests": [
+      {
+        "name": "ナオト",
+        "position": "ソフトウェアエンジニア",
+        "company": "Arista Networks"
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada",
+      "usa"
+    ],
+    "cities": [],
+    "topics": [
+      "no-experience",
+      "job-hunting",
+      "study-abroad"
+    ],
+    "reviewed": false
+  },
+  "fad07f2e-34d6-4e7d-abe7-d2ff7705635e": {
+    "guests": [
+      {
+        "name": "ゆうと",
+        "position": "ソフトウェアエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "english",
+      "job-change",
+      "job-hunting"
+    ],
+    "reviewed": false
+  },
+  "fc750af8-8f70-4c72-9297-46a246bacc70": {
+    "guests": [
+      {
+        "name": "Ryosuke",
+        "position": "AIソフトウェアエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer",
+      "data-ai"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "local-hire",
+      "study-abroad",
+      "job-hunting",
+      "english",
+      "layoff"
+    ],
+    "reviewed": false
+  },
+  "fff05294-4f54-4e0f-a290-490b01bb949a": {
+    "guests": [
+      {
+        "name": "ケイ",
+        "position": "シニアエンジニア",
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [],
+    "topics": [
+      "salary",
+      "work-style",
+      "networking"
+    ],
+    "reviewed": false
+  }
+}

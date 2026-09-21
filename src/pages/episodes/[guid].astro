@@ -13,6 +13,8 @@ import { META_DESCRIPTION_MAX_LENGTH, SITE_NAME } from '../../constants/site';
 import { getHostInfo } from '../../constants/actors';
 import PlatformButton from '../../components/podcast/PlatformButton.astro';
 import EpisodeUrlModal from '../../components/EpisodeUrlModal.astro';
+import EpisodeMetaPills from '../../components/podcast/EpisodeMetaPills.astro';
+import { getEpisodeMeta } from '../../utils/episodeMeta/episodeMetaFile';
 import {
   SPOTIFY_CHANNEL_URL,
   YOUTUBE_CHANNEL_URL,
@@ -59,6 +61,9 @@ const amazonMusicUrl = episode.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL;
 // Get Spotify embed URL for player
 const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
 
+// Guest info / tags shown as pills
+const meta = getEpisodeMeta(episode.guid);
+
 // SEO metadata
 const episodePath = `/episodes/${episode.guid}/`;
 const jsonLd = [
@@ -97,6 +102,7 @@ const jsonLd = [
           <span class="meta-item">📅 {formatDate(episode.date)}</span>
           <span class="meta-item">📻 {formatDuration(episode.duration)}</span>
         </div>
+        <EpisodeMetaPills meta={meta} variant="page" />
       </article>
 
       <!-- Grid Container -->

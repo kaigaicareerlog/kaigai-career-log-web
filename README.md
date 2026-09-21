@@ -77,6 +77,8 @@ npm run preview
 - `npm run astro` - Run Astro CLI commands
 - `npm run update-episode-urls` - Update episode URLs by GUID
 - `npm run transcribe <guid>` - Transcribe an episode using AssemblyAI
+- `npm run tag-episodes` - Tag episodes with guest info and topics (see [docs/EPISODE_TAGGING.md](docs/EPISODE_TAGGING.md))
+- `npm test` - Run unit tests
 - `npm run update-new-episode-urls <file>` - Update platform URLs (Spotify, YouTube, Apple Podcasts, Amazon Music) in episodes file
 
 ## 🤖 Automated Podcast Feed Updates
