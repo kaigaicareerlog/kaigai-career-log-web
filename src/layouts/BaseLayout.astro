@@ -1,26 +1,71 @@
 ---
 import Header from '../components/common/Header.astro';
+import {
+  SITE_DEFAULT_DESCRIPTION,
+  SITE_DEFAULT_OG_IMAGE,
+  SITE_DEFAULT_TITLE,
+  SITE_LANGUAGE,
+  SITE_NAME,
+} from '../constants/site';
+import type { JsonLd } from '../utils/seo';
+import { toAbsoluteUrl } from '../utils/seo';
 
 interface Props {
   title?: string;
   description?: string;
+  /** Path or absolute URL of the share image. Defaults to the site logo. */
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  /** schema.org structured data injected as JSON-LD */
+  jsonLd?: JsonLd | JsonLd[];
+  /** Ask search engines not to index this page (e.g. 404) */
+  noindex?: boolean;
 }
 
 const {
-  title = 'Kaigai Career Log',
-  description = '海外キャリアログ - Your international career journey',
+  title = SITE_DEFAULT_TITLE,
+  description = SITE_DEFAULT_DESCRIPTION,
+  ogImage = SITE_DEFAULT_OG_IMAGE,
+  ogType = 'website',
+  jsonLd,
+  noindex = false,
 } = Astro.props;
+
+const canonicalUrl = toAbsoluteUrl(Astro.url.pathname);
+const ogImageUrl = toAbsoluteUrl(ogImage);
+const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={SITE_LANGUAGE}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    {noindex && <meta name="robots" content="noindex" />}
     <title>{title}</title>
+    <link rel="canonical" href={canonicalUrl} />
+
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content="ja_JP" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    {
+      jsonLdItems.map((item) => (
+        <script type="application/ld+json" set:html={JSON.stringify(item)} />
+      ))
+    }
   </head>
   <body>
     <Header />

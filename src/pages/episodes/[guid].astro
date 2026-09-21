@@ -3,6 +3,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
 import { formatDate, formatDuration } from '../../utils/formatters';
 import { getSpotifyEmbedUrl } from '../../utils/spotify';
+import {
+  buildBreadcrumbJsonLd,
+  buildPodcastEpisodeJsonLd,
+  toAbsoluteUrl,
+  truncateText,
+} from '../../utils/seo';
+import { META_DESCRIPTION_MAX_LENGTH, SITE_NAME } from '../../constants/site';
 import { getHostInfo } from '../../constants/actors';
 import PlatformButton from '../../components/podcast/PlatformButton.astro';
 import EpisodeUrlModal from '../../components/EpisodeUrlModal.astro';
@@ -51,11 +58,23 @@ const amazonMusicUrl = episode.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL;
 
 // Get Spotify embed URL for player
 const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
+
+// SEO metadata
+const episodePath = `/episodes/${episode.guid}/`;
+const jsonLd = [
+  buildPodcastEpisodeJsonLd(episode, toAbsoluteUrl(episodePath)),
+  buildBreadcrumbJsonLd([
+    { name: SITE_NAME, url: '/' },
+    { name: episode.title, url: episodePath },
+  ]),
+];
 ---
 
 <BaseLayout
-  title={`${episode.title} - 海外キャリアログ`}
-  description={episode.description}
+  title={`${episode.title} - ${SITE_NAME}`}
+  description={truncateText(episode.description, META_DESCRIPTION_MAX_LENGTH)}
+  ogType="article"
+  jsonLd={jsonLd}
 >
   <main class="episode-page">
     <div class="container">
