@@ -61,7 +61,7 @@ Add the following secrets to your GitHub repository:
    - **Episode GUID**: Enter the episode's GUID (required)
    - **Include @togashi_ryo**: Check if Ryo is a host
    - **Include @onepercentdsgn**: Check if Senna is a host
-   - **Include @ayacappuccino**: Check if Ayaka is a host
+   - **Include @Isobe_Hiroshi**: Check if Hiroshi is a host
 5. Click **Run workflow**
 
 The workflow will automatically:

@@ -85,7 +85,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           echo "Looking for episodes to post to X..."
-          npx tsx scripts/notify-episode-to-post-x.ts "@togashi_ryo, @onepercentdsgn, @ayacappuccino, @Isobe_Hiroshi" ryonryon || echo "Notification failed; continuing"
+          npx tsx scripts/notify-episode-to-post-x.ts "@togashi_ryo, @onepercentdsgn, @Isobe_Hiroshi" ryonryon || echo "Notification failed; continuing"
 
       - name: Commit and push changes
         run: |
