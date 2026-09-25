@@ -14,22 +14,19 @@
  */
 
 import 'dotenv/config';
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import OAuth from 'oauth-1.0a';
 import crypto from 'crypto';
 import { formatNewEpisodeMainTweet } from '../src/utils/x/formatNewEpisodeMainTweet';
-import type { PodcastEpisode } from '../src/types';
 import { findLatestEpisodesFile } from '../src/utils/findLatestEpisodesFile';
 import { getEpisodeByGuid } from '../src/utils/getEpisodeByGuid';
 import { formatNewEpisodeUrlsTweet } from '../src/utils/x/formatNewEpisodeUrlsTweet';
+import { markNewEpisodeIntroPostedToX } from '../src/utils/x/markNewEpisodeIntroPostedToX';
 import { postTweet } from '../src/utils/x/postTweet';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-type EpisodesData = PodcastEpisode[];
 
 /**
  * Post to X (Twitter) with main tweet and reply thread
@@ -74,32 +71,6 @@ async function postToX(
   console.log(
     `\nℹ️  Note: URLs are automatically shortened by X (Twitter) to t.co links`
   );
-}
-
-/**
- * Update episode's newEpisodeIntroPostedToX flag
- */
-function updateNewEpisodeIntroPostedToX(filePath: string, guid: string): void {
-  console.log(
-    `\n📝 Updating newEpisodeIntroPostedToX flag for episode ${guid}...`
-  );
-
-  const data: EpisodesData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-
-  const episodeIndex = data.findIndex((ep) => ep.guid === guid);
-
-  if (episodeIndex === -1) {
-    console.warn('⚠️  Episode not found, skipping update');
-    return;
-  }
-
-  // Update the flag to true (episode has been posted)
-  data[episodeIndex].newEpisodeIntroPostedToX = true;
-
-  // Write back to file
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
-
-  console.log('✅ newEpisodeIntroPostedToX flag updated to true');
 }
 
 /**
@@ -196,7 +167,11 @@ async function main() {
   );
 
   // Update newEpisodeIntroPostedToX flag
-  updateNewEpisodeIntroPostedToX(filePath, guid);
+  console.log(
+    `\n📝 Updating newEpisodeIntroPostedToX flag for episode ${guid}...`
+  );
+  markNewEpisodeIntroPostedToX(filePath, guid);
+  console.log('✅ newEpisodeIntroPostedToX flag updated to true');
 }
 
 main()

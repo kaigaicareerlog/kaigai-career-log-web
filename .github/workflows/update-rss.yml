@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write
 
     steps:
       - name: Checkout repository
@@ -71,15 +72,20 @@ jobs:
           # Never let a tagging problem block the RSS update
           npx tsx scripts/tag-episodes.ts || echo "Episode tagging failed; continuing"
 
-      - name: Auto post episode to X
+      # X's API now requires paid pay-per-use credits (posting used to be free),
+      # so instead of posting automatically this opens a GitHub issue with the
+      # tweet text ready to copy/paste (or open X pre-filled) and assigns it,
+      # which notifies the assignee. See docs/EPISODE_TAGGING.md's neighbor,
+      # scripts/notify-episode-to-post-x.ts, for details.
+      # To resume automatic posting once X credits are funded again, swap
+      # this step back to `npx tsx scripts/auto-post-episode-to-x.ts` with the
+      # X_* secrets (see git history for the previous version of this step).
+      - name: Notify about episode to post to X
         env:
-          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
-          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
-          X_API_KEY: ${{ secrets.X_API_KEY }}
-          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           echo "Looking for episodes to post to X..."
-          npx tsx scripts/auto-post-episode-to-x.ts "@togashi_ryo, @onepercentdsgn, @ayacappuccino, @Isobe_Hiroshi" || echo "No episodes to post or posting failed"
+          npx tsx scripts/notify-episode-to-post-x.ts "@togashi_ryo, @onepercentdsgn, @ayacappuccino, @Isobe_Hiroshi" ryonryon || echo "Notification failed; continuing"
 
       - name: Commit and push changes
         run: |
