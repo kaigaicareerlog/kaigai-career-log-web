@@ -21,7 +21,8 @@
     "generate-episodes": "tsx scripts/generate-episodes.ts",
     "cleanup-rss-files": "tsx scripts/cleanup-old-rss-files.ts",
     "tag-episodes": "tsx scripts/tag-episodes.ts",
-    "test": "tsx --test \"src/**/*.test.ts\""
+    "test": "tsx --test \"src/**/*.test.ts\"",
+    "backfill-city-tags": "tsx scripts/backfill-city-tags.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.10",
