@@ -124,6 +124,32 @@
     ],
     "reviewed": false
   },
+  "15f55b32-de3b-4959-931c-eea802d1cade": {
+    "guests": [
+      {
+        "name": "ケムケム",
+        "position": null,
+        "company": null
+      }
+    ],
+    "roles": [
+      "engineer"
+    ],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "study-abroad",
+      "job-hunting",
+      "salary",
+      "english",
+      "startup"
+    ],
+    "reviewed": false
+  },
   "170e584c-f2b8-42a2-926c-0a93b3336781": {
     "guests": [
       {
