@@ -1,16 +1,19 @@
 ---
-import { formatDate, formatDuration } from '../../utils/formatters';
+import { Calendar, Clock } from '@lucide/astro';
+import {
+  AMAZON_MUSIC_CHANNEL_URL,
+  APPLE_PODCAST_CHANNEL_URL,
+  SPOTIFY_CHANNEL_URL,
+  YOUTUBE_CHANNEL_URL,
+} from '../../constants/podcastUrls';
 import type { PodcastEpisode } from '../../types';
 import { buildEpisodeSearchText } from '../../utils/episodeMeta/buildEpisodeSearchText';
 import { getEpisodeMeta } from '../../utils/episodeMeta/episodeMetaFile';
+import { getEpisodeTagSlugs } from '../../utils/episodeMeta/getEpisodeTagSlugs';
+import { formatDate, formatDuration } from '../../utils/formatters';
+import { getEpisodeExcerpt } from '../../utils/getEpisodeExcerpt';
+import Button from '../ui/Button.astro';
 import EpisodeMetaPills from './EpisodeMetaPills.astro';
-import PlatformButton from './PlatformButton.astro';
-import {
-  SPOTIFY_CHANNEL_URL,
-  YOUTUBE_CHANNEL_URL,
-  APPLE_PODCAST_CHANNEL_URL,
-  AMAZON_MUSIC_CHANNEL_URL,
-} from '../../constants/podcastUrls';
 
 interface Props {
   podcast: PodcastEpisode;
@@ -18,204 +21,59 @@ interface Props {
 
 const { podcast } = Astro.props;
 
-// Use episode-specific URLs if available, otherwise use channel URLs
-const spotifyUrl = podcast.spotifyUrl || SPOTIFY_CHANNEL_URL;
-const youtubeUrl = podcast.youtubeUrl || YOUTUBE_CHANNEL_URL;
-const applePodcastUrl = podcast.applePodcastUrl || APPLE_PODCAST_CHANNEL_URL;
-const amazonMusicUrl = podcast.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL;
+// Use episode-specific URLs if available, otherwise the show's channel page
+const platforms = [
+  { label: 'Spotify', href: podcast.spotifyUrl || SPOTIFY_CHANNEL_URL },
+  {
+    label: 'Apple Podcasts',
+    href: podcast.applePodcastUrl || APPLE_PODCAST_CHANNEL_URL,
+  },
+  { label: 'YouTube', href: podcast.youtubeUrl || YOUTUBE_CHANNEL_URL },
+  {
+    label: 'Amazon Music',
+    href: podcast.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL,
+  },
+];
 
 // Guest info/tags: shown as pills, and searched (including the guest's name)
 const meta = getEpisodeMeta(podcast.guid);
 const searchText = buildEpisodeSearchText(podcast, meta);
+const tags = getEpisodeTagSlugs(meta).join(' ');
 ---
 
-<article class="podcast-card" data-search={searchText}>
-  <a href={`/episodes/${podcast.guid}`} class="card-link">
-    <div class="podcast-header">
-      <h3 class="podcast-title">{podcast.title}</h3>
-      <EpisodeMetaPills meta={meta} variant="card" />
-    </div>
-
-    <div class="podcast-content">
-      <p class="podcast-description">{podcast.description}</p>
-    </div>
-
-    <div class="podcast-footer">
-      <div class="podcast-meta">
-        <span class="date">📅 {formatDate(podcast.date)}</span>
-        <span class="duration">📻 {formatDuration(podcast.duration)}</span>
-      </div>
-    </div>
-  </a>
-
-  <div class="podcast-actions">
-    <div class="platform-links">
-      <PlatformButton
-        platform="spotify"
-        href={spotifyUrl}
-        label="Spotify"
-        iconSrc="https://open.spotify.com/favicon.ico"
-      />
-      <PlatformButton
-        platform="apple"
-        href={applePodcastUrl}
-        label="Apple Podcasts"
-        iconSrc="https://www.apple.com/favicon.ico"
-      />
-      <PlatformButton
-        platform="youtube"
-        href={youtubeUrl}
-        label="YouTube"
-        iconSrc="https://www.youtube.com/favicon.ico"
-      />
+<article
+  class="relative rounded-xl border bg-card p-5 transition-colors hover:bg-accent/40"
+  data-search={searchText}
+  data-tags={tags}
+>
+  <h3 class="mb-2 line-clamp-2 text-base leading-snug font-semibold">
+    <a href={`/episodes/${podcast.guid}/`} class="after:absolute after:inset-0">
+      {podcast.title}
+    </a>
+  </h3>
+  <EpisodeMetaPills meta={meta} variant="card" class="mb-3" />
+  <p class="mb-4 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+    {getEpisodeExcerpt(podcast.description)}
+  </p>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <p class="flex items-center gap-3 text-xs text-muted-foreground">
+      <span class="inline-flex items-center gap-1">
+        <Calendar class="size-3.5" aria-hidden="true" />
+        {formatDate(podcast.date)}
+      </span>
+      <span class="inline-flex items-center gap-1">
+        <Clock class="size-3.5" aria-hidden="true" />
+        {formatDuration(podcast.duration)}
+      </span>
+    </p>
+    <div class="relative z-10 flex flex-wrap gap-1.5">
       {
-        amazonMusicUrl && (
-          <PlatformButton
-            platform="amazon"
-            href={amazonMusicUrl}
-            label="Amazon Music"
-            iconSrc="https://www.amazon.com/favicon.ico"
-          />
-        )
+        platforms.map((platform) => (
+          <Button href={platform.href} size="sm" external>
+            {platform.label}
+          </Button>
+        ))
       }
     </div>
   </div>
 </article>
-
-<style>
-  .podcast-card {
-    background: var(--color-background);
-    border-radius: 0.75rem;
-    padding: 1.25rem;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    border: 1px solid rgba(59, 130, 246, 0.1);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 1rem;
-  }
-
-  .podcast-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(
-      135deg,
-      var(--color-primary),
-      var(--color-secondary)
-    );
-  }
-
-  .podcast-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 40px rgba(59, 130, 246, 0.15);
-  }
-
-  .card-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    cursor: pointer;
-  }
-
-  .podcast-header {
-    margin-bottom: 1rem;
-  }
-
-  .podcast-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    line-height: 1.3;
-    margin-bottom: 0.75rem;
-    color: var(--color-text);
-    transition: color 0.3s ease;
-  }
-
-  .card-link:hover .podcast-title {
-    color: var(--color-primary);
-  }
-
-  .podcast-content {
-    margin-bottom: 1rem;
-  }
-
-  .podcast-description {
-    font-size: 0.95rem;
-    line-height: 1.4;
-    color: gray;
-    margin-bottom: 0.75rem;
-  }
-
-  .podcast-footer {
-    margin-bottom: 1rem;
-  }
-
-  .podcast-meta {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    font-size: 0.85rem;
-    color: var(--color-muted);
-  }
-
-  .podcast-actions {
-    display: flex;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(59, 130, 246, 0.1);
-  }
-
-  .platform-links {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  /* Mobile responsive */
-  @media (max-width: 768px) {
-    .podcast-card {
-      padding: 1rem;
-    }
-
-    .podcast-title {
-      font-size: 1rem;
-    }
-
-    .podcast-description {
-      display: none;
-    }
-
-    .podcast-content {
-      margin-bottom: 0.5rem;
-    }
-
-    .podcast-meta {
-      flex-direction: column;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-    }
-
-    .podcast-actions {
-      width: 100%;
-      margin-top: 0.75rem;
-      padding-top: 0.75rem;
-    }
-
-    .platform-links {
-      flex-direction: column;
-      gap: 0.4rem;
-      width: 100%;
-    }
-  }
-
-  /* Dark mode support */
-  @media (prefers-color-scheme: dark) {
-    .podcast-card {
-      background: rgba(15, 23, 42, 0.8);
-      border-color: rgba(59, 130, 246, 0.2);
-    }
-  }
-</style>

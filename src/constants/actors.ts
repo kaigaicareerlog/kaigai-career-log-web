@@ -119,3 +119,9 @@ export function getAllHosts(): HostInfo[] {
 export function isKnownHost(speaker: string): boolean {
   return HOSTS.some((host) => host.name === speaker);
 }
+
+/**
+ * Hosts currently on the show. HOSTS also keeps past hosts (e.g. Ayaka)
+ * because getHostInfo() needs them to label old transcripts.
+ */
+export const ACTIVE_HOSTS: Actor[] = [RYO, SENNA, HIROSHI];

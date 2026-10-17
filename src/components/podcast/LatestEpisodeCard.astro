@@ -1,0 +1,31 @@
+---
+import { ArrowRight } from '@lucide/astro';
+import type { PodcastEpisode } from '../../types';
+import { getEpisodeMeta } from '../../utils/episodeMeta/episodeMetaFile';
+import { formatDate, formatDuration } from '../../utils/formatters';
+import Button from '../ui/Button.astro';
+import EpisodeMetaPills from './EpisodeMetaPills.astro';
+
+interface Props {
+  episode: PodcastEpisode;
+}
+
+const { episode } = Astro.props;
+const meta = getEpisodeMeta(episode.guid);
+---
+
+<div class="rounded-xl border bg-card p-5 text-card-foreground">
+  <p class="mb-2 text-xs text-muted-foreground">
+    最新エピソード · {formatDate(episode.date)} · {
+      formatDuration(episode.duration)
+    }
+  </p>
+  <p class="mb-3 line-clamp-3 text-sm leading-snug font-semibold">
+    {episode.title}
+  </p>
+  <EpisodeMetaPills meta={meta} variant="card" class="mb-4" />
+  <Button href={`/episodes/${episode.guid}/`} variant="primary" class="w-full">
+    エピソードを見る
+    <ArrowRight class="size-4" aria-hidden="true" />
+  </Button>
+</div>
