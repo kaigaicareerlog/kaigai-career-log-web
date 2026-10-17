@@ -1,4 +1,4 @@
-import type { TagKind } from '../../constants/episodeVocabulary';
+import type { TagDefinition, TagKind } from '../../constants/episodeVocabulary';
 
 export interface TagPageSeo {
   /** On-page <h1> */
@@ -16,8 +16,19 @@ export interface TagPageSeo {
 export function getTagPageSeo(
   kind: TagKind,
   label: string,
-  count: number
+  count: number,
+  overrides: Pick<TagDefinition, 'pageHeading' | 'pageDescription'> = {}
 ): TagPageSeo {
+  if (overrides.pageHeading) {
+    return {
+      heading: overrides.pageHeading,
+      title: `${overrides.pageHeading}（${count}話）`,
+      description:
+        overrides.pageDescription?.(count) ??
+        getTagPageSeo(kind, label, count).description,
+    };
+  }
+
   switch (kind) {
     case 'country':
     case 'city': {

@@ -28,4 +28,26 @@ describe('getTagPageSeo', () => {
       assert.ok(seo.description.includes('7話'), kind);
     }
   });
+
+  it("uses a tag's own wording when it has one", () => {
+    const seo = getTagPageSeo('topic', '日本に帰国した人', 12, {
+      pageHeading: '海外キャリア経験後に日本へ帰国した人のインタビュー',
+      pageDescription: (count) => `帰国した人${count}話`,
+    });
+    assert.equal(
+      seo.heading,
+      '海外キャリア経験後に日本へ帰国した人のインタビュー'
+    );
+    assert.equal(
+      seo.title,
+      '海外キャリア経験後に日本へ帰国した人のインタビュー（12話）'
+    );
+    assert.equal(seo.description, '帰国した人12話');
+  });
+
+  it('falls back to the generic description when only a heading is given', () => {
+    const seo = getTagPageSeo('topic', 'X', 3, { pageHeading: '見出し' });
+    assert.equal(seo.heading, '見出し');
+    assert.ok(seo.description.includes('3話'));
+  });
 });

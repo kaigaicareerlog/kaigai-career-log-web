@@ -10,6 +10,7 @@ import {
   getTagPagePath,
   getTagPages,
 } from '../../utils/episodeMeta/getTagPages';
+import { findTagBySlug } from '../../utils/episodeMeta/resolveTag';
 import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
 import {
   buildBreadcrumbJsonLd,
@@ -28,7 +29,12 @@ export async function getStaticPaths() {
 }
 
 const { page, allPages } = Astro.props;
-const seo = getTagPageSeo(page.kind, page.label, page.episodes.length);
+const seo = getTagPageSeo(
+  page.kind,
+  page.label,
+  page.episodes.length,
+  findTagBySlug(page.kind, page.slug) ?? {}
+);
 const path = getTagPagePath(page.slug);
 const relatedTags = getCoOccurringTags(page, allPages);
 

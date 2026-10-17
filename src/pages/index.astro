@@ -8,9 +8,9 @@ import PodcastEpisodeCardList from '../components/podcast/PodcastEpisodeCardList
 import SponsorCard from '../components/podcast/SponsorCard.astro';
 import Badge from '../components/ui/Badge.astro';
 import Button from '../components/ui/Button.astro';
-import { ACTIVE_HOSTS } from '../constants/actors';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { countDistinctCities } from '../utils/episodeMeta/countDistinctCities';
+import { countInterviews } from '../utils/episodeMeta/countInterviews';
 import { readEpisodeMetaMap } from '../utils/episodeMeta/episodeMetaFile';
 import { getTagPages } from '../utils/episodeMeta/getTagPages';
 import { getLatestEpisodes } from '../utils/getLatestEpisodes';
@@ -20,10 +20,11 @@ const { episodes } = await getLatestEpisodes();
 const latest = episodes[0];
 const tagPages = getTagPages(episodes, readEpisodeMetaMap());
 
+const metaMap = readEpisodeMetaMap();
 const stats = [
   { value: `${episodes.length}`, label: 'エピソード' },
-  { value: `${countDistinctCities(readEpisodeMetaMap())}`, label: '都市' },
-  { value: `${ACTIVE_HOSTS.length}`, label: 'ホスト' },
+  { value: `${countInterviews(episodes, metaMap)}`, label: 'インタビュー' },
+  { value: `${countDistinctCities(metaMap)}`, label: '都市' },
 ];
 ---
 

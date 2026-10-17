@@ -6,6 +6,8 @@
  * - `aliases`: alternative spellings that also resolve to this tag
  * - `searchAliases`: extra words that make the tag searchable, but are too
  *   broad to resolve to it (e.g. 北米 matches both Canada and the USA)
+ * - `pageHeading` / `pageDescription`: wording for the tag's own page when the
+ *   generic "「<label>」に関するエピソード" would read badly
  */
 
 export type TagKind = 'role' | 'country' | 'city' | 'topic';
@@ -15,6 +17,8 @@ export interface TagDefinition {
   readonly label: string;
   readonly aliases: readonly string[];
   readonly searchAliases?: readonly string[];
+  readonly pageHeading?: string;
+  readonly pageDescription?: (count: number) => string;
 }
 
 export const ROLE_TAGS: readonly TagDefinition[] = [
@@ -179,9 +183,14 @@ export const TOPIC_TAGS: readonly TagDefinition[] = [
     aliases: ['big tech', 'gafam', 'faang', '大手', '外資'],
   },
   {
+    // The guest now lives or works in Japan after a career abroad. Applies to
+    // both parts of a two-part interview.
     slug: 'return-to-japan',
-    label: '帰国・日本転職',
-    aliases: ['帰国', '日本転職', '日本で働く'],
+    label: '日本に帰国した人',
+    aliases: ['帰国', '帰国者', '帰国した人', '日本転職', '日本で働く'],
+    pageHeading: '海外キャリア経験後に日本へ帰国した人のインタビュー',
+    pageDescription: (count) =>
+      `海外でキャリアを積んだあと日本へ帰国した人へのインタビュー${count}話。帰国を決めた理由、日本での転職活動、海外経験の活かし方を本人の言葉で聞けます。`,
   },
   {
     slug: 'study-abroad',
