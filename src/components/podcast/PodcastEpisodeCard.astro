@@ -9,7 +9,7 @@ import {
 import type { PodcastEpisode } from '../../types';
 import { buildEpisodeSearchText } from '../../utils/episodeMeta/buildEpisodeSearchText';
 import { getEpisodeMeta } from '../../utils/episodeMeta/episodeMetaFile';
-import { getEpisodeTagSlugs } from '../../utils/episodeMeta/getEpisodeTagSlugs';
+import { getEpisodeFilterTags } from '../../utils/episodeMeta/getEpisodeFilterTags';
 import { formatDate, formatDuration } from '../../utils/formatters';
 import { getEpisodeExcerpt } from '../../utils/getEpisodeExcerpt';
 import Button from '../ui/Button.astro';
@@ -38,7 +38,7 @@ const platforms = [
 // Guest info/tags: shown as pills, and searched (including the guest's name)
 const meta = getEpisodeMeta(podcast.guid);
 const searchText = buildEpisodeSearchText(podcast, meta);
-const tags = getEpisodeTagSlugs(meta).join(' ');
+const tags = getEpisodeFilterTags(podcast.title, meta).join(' ');
 ---
 
 <article

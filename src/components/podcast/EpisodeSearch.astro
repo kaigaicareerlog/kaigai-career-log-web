@@ -1,6 +1,9 @@
 ---
 import { Search } from '@lucide/astro';
-import { FEATURED_FILTER_TAGS } from '../../constants/episodeFilters';
+import {
+  FEATURED_FILTER_TAGS,
+  SPECIAL_EPISODE_FILTER,
+} from '../../constants/episodeFilters';
 import { findTagBySlug } from '../../utils/episodeMeta/resolveTag';
 
 /**
@@ -9,10 +12,12 @@ import { findTagBySlug } from '../../utils/episodeMeta/resolveTag';
  * rendered in the HTML, so the page stays crawlable; this only hides
  * non-matching cards in the browser.
  */
-const chips = FEATURED_FILTER_TAGS.flatMap(({ kind, slug }) => {
+const tagChips = FEATURED_FILTER_TAGS.flatMap(({ kind, slug }) => {
   const tag = findTagBySlug(kind, slug);
   return tag ? [{ slug, label: tag.label }] : [];
 });
+// 特別回 comes first: it separates episode types, the rest are topics
+const chips = [SPECIAL_EPISODE_FILTER, ...tagChips];
 ---
 
 <div role="search" class="mb-6 space-y-3">

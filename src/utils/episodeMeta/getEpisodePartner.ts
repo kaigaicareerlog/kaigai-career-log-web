@@ -1,4 +1,5 @@
 import type { EpisodeMetaMap, PodcastEpisode } from '../../types';
+import { isSpecialEpisode } from '../isSpecialEpisode';
 import { normalizeSearchText } from './searchText';
 
 export interface EpisodePartner {
@@ -12,7 +13,6 @@ const SECOND_HALF = /[（(]後半[）)]/;
 
 // Special episodes (【特別回】, 【対談】) are sometimes published between the
 // two parts of a regular episode, and the other way round
-const SPECIAL = /【(特別回|対談)】/;
 const MAX_SKIPPED = 3;
 
 const isPart = (title: string) =>
@@ -28,11 +28,14 @@ function findNeighbourPart(
   from: number,
   step: 1 | -1
 ): PodcastEpisode | undefined {
-  const special = SPECIAL.test(episodes[from].title);
+  const special = isSpecialEpisode(episodes[from].title);
   for (let n = 1; n <= MAX_SKIPPED + 1; n++) {
     const candidate = episodes[from + step * n];
     if (!candidate) return undefined;
-    if (isPart(candidate.title) && SPECIAL.test(candidate.title) === special) {
+    if (
+      isPart(candidate.title) &&
+      isSpecialEpisode(candidate.title) === special
+    ) {
       return candidate;
     }
   }

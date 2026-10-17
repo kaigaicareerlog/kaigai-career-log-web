@@ -20,3 +20,12 @@ export const FEATURED_FILTER_TAGS: readonly FilterTag[] = [
   { kind: 'topic', slug: 'job-change' },
   { kind: 'topic', slug: 'layoff' },
 ];
+
+/**
+ * The 特別回 chip. Special episodes are recognised from the title (see
+ * isSpecialEpisode), not from the tag vocabulary, so this isn't a FilterTag.
+ */
+export const SPECIAL_EPISODE_FILTER = {
+  slug: 'special',
+  label: '特別回',
+} as const;
