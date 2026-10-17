@@ -108,12 +108,7 @@ const maps = views.map((view) => {
                     d={PIN_PATH}
                     stroke-width="1"
                     stroke-linejoin="round"
-                    class:list={[
-                      'stroke-background group-focus-visible:stroke-ring group-data-[selected=true]:stroke-foreground',
-                      entry.kind === 'returnee'
-                        ? 'fill-orange-500'
-                        : 'fill-brand',
-                    ]}
+                    class="fill-brand stroke-background group-focus-visible:stroke-ring group-data-[selected=true]:stroke-foreground"
                   />
                   <circle cx="12" cy="9" r="2.6" class="fill-background" />
                 </g>
