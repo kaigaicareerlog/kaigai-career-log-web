@@ -1,83 +1,80 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import { Mic } from '@lucide/astro';
+import HostsSection from '../components/podcast/HostsSection.astro';
+import LatestEpisodeCard from '../components/podcast/LatestEpisodeCard.astro';
 import PodcastEpisodeCardList from '../components/podcast/PodcastEpisodeCardList.astro';
+import SponsorCard from '../components/podcast/SponsorCard.astro';
+import Badge from '../components/ui/Badge.astro';
+import Button from '../components/ui/Button.astro';
+import { ACTIVE_HOSTS } from '../constants/actors';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { countDistinctCities } from '../utils/episodeMeta/countDistinctCities';
+import { readEpisodeMetaMap } from '../utils/episodeMeta/episodeMetaFile';
+import { getLatestEpisodes } from '../utils/getLatestEpisodes';
 import { buildPodcastSeriesJsonLd } from '../utils/seo';
+
+const { episodes } = await getLatestEpisodes();
+const latest = episodes[0];
+
+const stats = [
+  { value: `${episodes.length}`, label: 'エピソード' },
+  { value: `${countDistinctCities(readEpisodeMetaMap())}`, label: '都市' },
+  { value: `${ACTIVE_HOSTS.length}`, label: 'ホスト' },
+];
 ---
 
 <BaseLayout jsonLd={buildPodcastSeriesJsonLd()}>
-  <main>
-    <div class="container">
-      <section class="hero-section">
-        <h1>海外キャリアログ</h1>
-        <p class="subtitle">
-          Kaigai Career Log｜海外就職・海外エンジニアのリアルを聞くポッドキャスト
-        </p>
-        <p class="description">
-          日本から海外に飛び出し、IT業界で活躍する専門家たちにインタビュー。なぜ海外を目指したのか？英語の壁、就活のリアル、ビザや生活事情まで、リアルな声を記録していきます。これから海外キャリアを目指すあなたへ、道しるべとなるログをお届けします。
-        </p>
-      </section>
-    </div>
+  <main class="flex-1">
+    <section class="border-b border-brand-border bg-brand-soft">
+      <div
+        class="mx-auto grid max-w-5xl items-center gap-8 px-4 py-12 md:grid-cols-[minmax(0,1fr)_320px] md:py-16"
+      >
+        <div>
+          <Badge variant="brand" class="mb-4">
+            <Mic class="size-3" aria-hidden="true" />
+            海外キャリアログ · 毎週日曜更新
+          </Badge>
+          <h1
+            class="mb-4 text-3xl leading-tight font-semibold tracking-tight sm:text-4xl"
+          >
+            <span class="inline-block">海外就職・</span><span
+              class="inline-block">海外エンジニアの</span
+            ><span class="inline-block">リアルを聞く</span>
+          </h1>
+          <p
+            class="mb-6 max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base"
+          >
+            日本から海外に飛び出し、IT業界で活躍する人たちにインタビュー。英語の壁、就活のリアル、ビザや生活事情まで、本音で聞いて記録しています。これから海外キャリアを目指すあなたの道しるべに。
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <Button href={`/episodes/${latest.guid}/`} variant="primary">
+              最新回を聴く
+            </Button>
+            <Button href="#episodes">エピソード一覧</Button>
+          </div>
+        </div>
+        <LatestEpisodeCard episode={latest} />
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-5xl px-4 pt-8">
+      <dl class="grid grid-cols-3 gap-3">
+        {
+          stats.map((stat) => (
+            <div class="rounded-xl border p-4">
+              <dd class="text-2xl font-semibold">{stat.value}</dd>
+              <dt class="text-sm text-muted-foreground">{stat.label}</dt>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <PodcastEpisodeCardList episodes={episodes} />
+
+    <section class="mx-auto mt-16 grid max-w-5xl gap-8 px-4 md:grid-cols-2">
+      <HostsSection />
+      <SponsorCard />
+    </section>
   </main>
-
-  <PodcastEpisodeCardList />
 </BaseLayout>
-
-<style>
-  main {
-    flex: 1;
-    width: 100%;
-  }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .hero-section {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding-top: 2rem;
-  }
-
-  h1 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 700;
-    background: linear-gradient(
-      135deg,
-      var(--color-primary),
-      var(--color-secondary)
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 0.5rem;
-  }
-
-  .subtitle {
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    color: var(--color-muted);
-    font-weight: 400;
-    margin-bottom: 1.5rem;
-  }
-
-  .description {
-    font-size: clamp(0.95rem, 2vw, 1.1rem);
-    line-height: 1.8;
-    color: var(--color-text);
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
-
-  @media (max-width: 768px) {
-    .hero-section {
-      margin-bottom: 1.5rem;
-      padding-top: 1rem;
-    }
-
-    .description {
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-  }
-</style>

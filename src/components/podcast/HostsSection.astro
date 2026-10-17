@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets';
+import ryo from '../../assets/hosts/ryo.jpg';
+import senna from '../../assets/hosts/senna.jpg';
+import hiroshi from '../../assets/hosts/hiroshi.jpg';
+import { ACTIVE_HOSTS } from '../../constants/actors';
+import Button from '../ui/Button.astro';
+
+const photos: Record<string, ImageMetadata> = {
+  Ryo: ryo,
+  Senna: senna,
+  Hiroshi: hiroshi,
+};
+---
+
+<div>
+  <h2 class="mb-4 text-2xl font-semibold tracking-tight">ホスト</h2>
+  <ul class="space-y-3">
+    {
+      ACTIVE_HOSTS.map((host) => (
+        <li class="flex gap-3 rounded-xl border p-4">
+          {photos[host.name] && (
+            <Image
+              src={photos[host.name]}
+              alt={host.name}
+              width={96}
+              height={96}
+              class="size-12 shrink-0 rounded-full object-cover"
+            />
+          )}
+          <div class="min-w-0">
+            <p class="font-semibold">{host.name}</p>
+            <p class="mb-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+              {host.bio}
+            </p>
+            <div class="flex gap-1.5">
+              {host.socialLinks.map((link) => (
+                <Button href={link.href} size="sm" external>
+                  {link.title.startsWith('X') ? 'X' : link.title}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</div>

@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { matchesTerms, normalizeSearchText, tokenizeQuery } from './searchText';
+import {
+  matchesTags,
+  matchesTerms,
+  normalizeSearchText,
+  tokenizeQuery,
+} from './searchText';
 
 describe('normalizeSearchText', () => {
   it('unifies full-width forms, case and whitespace', () => {
@@ -32,5 +37,19 @@ describe('matchesTerms', () => {
 
   it('matches everything when there are no terms', () => {
     assert.equal(matchesTerms(text, []), true);
+  });
+});
+
+describe('matchesTags', () => {
+  const tags = ['canada', 'vancouver', 'visa'];
+
+  it('requires every active tag to be present', () => {
+    assert.equal(matchesTags(tags, ['canada', 'visa']), true);
+    assert.equal(matchesTags(tags, ['canada', 'english']), false);
+  });
+
+  it('matches everything when no tag is active', () => {
+    assert.equal(matchesTags(tags, []), true);
+    assert.equal(matchesTags([], []), true);
   });
 });

@@ -30,3 +30,14 @@ export function matchesTerms(
 ): boolean {
   return terms.every((term) => normalizedSearchText.includes(term));
 }
+
+/**
+ * True if the episode has every active filter tag. No active tags matches
+ * everything.
+ */
+export function matchesTags(
+  episodeTags: readonly string[],
+  activeTags: readonly string[]
+): boolean {
+  return activeTags.every((tag) => episodeTags.includes(tag));
+}

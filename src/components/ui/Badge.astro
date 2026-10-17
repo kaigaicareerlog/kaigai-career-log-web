@@ -1,0 +1,25 @@
+---
+/** shadcn-style badge. `brand` is the tinted accent used for topics. */
+interface Props {
+  variant?: 'secondary' | 'outline' | 'brand';
+  href?: string;
+  class?: string;
+}
+
+const { variant = 'outline', href, class: className = '' } = Astro.props;
+
+const variants = {
+  secondary: 'border-transparent bg-secondary text-secondary-foreground',
+  outline: 'text-foreground',
+  brand: 'border-brand-border bg-brand-soft text-brand',
+};
+const classes = [
+  'inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-xs font-medium whitespace-nowrap',
+  href ? 'transition-colors hover:bg-accent' : '',
+  variants[variant],
+  className,
+].join(' ');
+const Tag = href ? 'a' : 'span';
+---
+
+<Tag class={classes} {...href ? { href } : {}}><slot /></Tag>

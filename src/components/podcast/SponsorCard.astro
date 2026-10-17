@@ -1,0 +1,31 @@
+---
+import { Image } from 'astro:assets';
+import frogLogo from '../../assets/frog-logo.png';
+import Button from '../ui/Button.astro';
+---
+
+<div>
+  <h2 class="mb-4 text-2xl font-semibold tracking-tight">スポンサー</h2>
+  <div class="rounded-xl border p-5">
+    <div class="mb-3 flex items-center gap-3">
+      <Image
+        src={frogLogo}
+        alt=""
+        width={80}
+        height={80}
+        class="size-10 rounded-full"
+      />
+      <p class="font-semibold">Frog</p>
+    </div>
+    <p class="mb-4 text-sm leading-relaxed text-muted-foreground">
+      エンジニア、デザイナー、IT専門職の世界進出をサポートしています。バンクーバーやカナダの情報も。留学や海外就職のご相談をお待ちしています。
+    </p>
+    <div class="flex flex-wrap gap-1.5">
+      <Button href="https://frogagent.com/" size="sm" external>Website</Button>
+      <Button href="https://x.com/frogagent" size="sm" external>X</Button>
+      <Button href="https://lin.ee/qki0Tgt" size="sm" external
+        >LINEで相談</Button
+      >
+    </div>
+  </div>
+</div>

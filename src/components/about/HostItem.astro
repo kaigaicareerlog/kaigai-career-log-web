@@ -49,13 +49,13 @@ const { name, bio, avatar, socialLinks } = Astro.props;
     gap: 1.5rem;
     align-items: center;
     padding: 1.5rem 2rem;
-    background: var(--color-background);
+    background: var(--legacy-background);
     border-radius: 1rem;
     border-left: 4px solid transparent;
     border-image: linear-gradient(
         135deg,
-        var(--color-primary),
-        var(--color-secondary)
+        var(--legacy-primary),
+        var(--legacy-secondary)
       )
       1;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
@@ -77,7 +77,7 @@ const { name, bio, avatar, socialLinks } = Astro.props;
   }
 
   .host-item:hover .host-avatar {
-    border-color: var(--color-primary);
+    border-color: var(--legacy-primary);
     transform: scale(1.05);
   }
 
@@ -90,8 +90,8 @@ const { name, bio, avatar, socialLinks } = Astro.props;
     font-weight: 700;
     background: linear-gradient(
       135deg,
-      var(--color-primary),
-      var(--color-secondary)
+      var(--legacy-primary),
+      var(--legacy-secondary)
     );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -100,7 +100,7 @@ const { name, bio, avatar, socialLinks } = Astro.props;
   }
 
   .bio {
-    color: var(--color-muted);
+    color: var(--legacy-muted);
     font-style: italic;
     font-size: 0.95rem;
   }
@@ -128,7 +128,7 @@ const { name, bio, avatar, socialLinks } = Astro.props;
 
   .social-link:hover {
     background: rgba(14, 165, 233, 0.15);
-    border-color: var(--color-primary);
+    border-color: var(--legacy-primary);
     transform: scale(1.1);
   }
 
