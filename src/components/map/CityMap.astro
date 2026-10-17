@@ -1,0 +1,245 @@
+---
+import { ArrowRight } from '@lucide/astro';
+import {
+  getLandPath,
+  MAP_HEIGHT,
+  MAP_WIDTH,
+  placePoints,
+  type MapView,
+} from '../../utils/map/cityMap';
+import type { MapEntry } from '../../utils/map/getMapEntries';
+
+interface Props {
+  /** Most episodes first; the first one starts selected */
+  entries: MapEntry[];
+}
+
+const { entries } = Astro.props;
+const initialId = entries[0]?.id;
+
+// The standard map-marker shape (a teardrop with a dot) in a 24-unit box whose
+// tip is at (12, 22). It is scaled up for the 680-unit-wide map, and drawn
+// with its tip at the pin's position.
+const PIN_PATH =
+  'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z';
+const PIN_SCALE = 1.9;
+const PIN_BODY_CENTER_Y = -13 * PIN_SCALE; // where the dot is, relative to the tip
+const PIN_HALF_WIDTH = 7 * PIN_SCALE;
+
+const views: Array<{ id: MapView; label: string }> = [
+  { id: 'world', label: '世界' },
+  { id: 'north-america', label: '北米を拡大' },
+];
+
+const points = entries.map(({ id, lat, lon }) => ({ id, lat, lon }));
+const maps = views.map((view) => {
+  const placed = new Map(placePoints(view.id, points).map((p) => [p.id, p]));
+  return {
+    ...view,
+    landPath: getLandPath(view.id, points),
+    // Northern pins first, so a pin further south is drawn on top of one
+    // behind it, like on any map
+    pins: entries
+      .flatMap((entry) => {
+        const position = placed.get(entry.id);
+        return position ? [{ entry, ...position }] : [];
+      })
+      .sort((a, b) => a.y - b.y),
+  };
+});
+---
+
+<div id="city-map" class="space-y-3">
+  <div
+    class="flex flex-wrap items-center gap-2"
+    role="group"
+    aria-label="地図の表示範囲"
+  >
+    {
+      maps.map((view) => (
+        <button
+          type="button"
+          data-view-button={view.id}
+          aria-pressed={String(view.id === 'world')}
+          class="h-9 shrink-0 cursor-pointer rounded-md border px-3 text-sm whitespace-nowrap transition-colors hover:bg-accent aria-pressed:border-brand-border aria-pressed:bg-brand-soft aria-pressed:text-brand"
+        >
+          {view.label}
+        </button>
+      ))
+    }
+    <span
+      class="w-full text-xs text-muted-foreground sm:ml-1 sm:w-auto sm:text-sm"
+      >ピンを選ぶと、その都市のエピソードが出ます</span
+    >
+  </div>
+
+  {
+    maps.map((view) => (
+      <svg
+        data-view={view.id}
+        hidden={view.id !== 'world'}
+        viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
+        class="w-full rounded-xl border bg-card"
+        role="group"
+        aria-label={`世界地図（${view.label}）`}
+      >
+        <path d={view.landPath} class="fill-muted" />
+        {view.pins.map(({ entry, x, y }) => {
+          // Labels go on the left near the west coast (so Vancouver's doesn't
+          // run into Calgary or Toronto) and where they would run off the
+          // right edge
+          const labelWidth = entry.label.length * 15 + PIN_HALF_WIDTH + 8;
+          const labelOnLeft =
+            x < MAP_WIDTH * 0.35 || x + labelWidth > MAP_WIDTH - 6;
+          return (
+            <g
+              transform={`translate(${x} ${y})`}
+              data-city={entry.id}
+              data-selected={String(entry.id === initialId)}
+              tabindex="0"
+              role="button"
+              aria-label={`${entry.label} ${entry.count}話`}
+              class="group cursor-pointer outline-none"
+            >
+              <title>{`${entry.label} ${entry.count}話`}</title>
+              <g class="transition-transform group-data-[selected=true]:scale-125">
+                <g transform={`scale(${PIN_SCALE}) translate(-12 -22)`}>
+                  <path
+                    d={PIN_PATH}
+                    stroke-width="1"
+                    stroke-linejoin="round"
+                    class:list={[
+                      'stroke-background group-focus-visible:stroke-ring group-data-[selected=true]:stroke-foreground',
+                      entry.kind === 'returnee'
+                        ? 'fill-orange-500'
+                        : 'fill-brand',
+                    ]}
+                  />
+                  <circle cx="12" cy="9" r="2.6" class="fill-background" />
+                </g>
+              </g>
+              <circle cy={PIN_BODY_CENTER_Y} r="28" class="fill-transparent" />
+              {(view.id === 'north-america' || entry.count >= 10) && (
+                <text
+                  x={labelOnLeft ? -(PIN_HALF_WIDTH + 4) : PIN_HALF_WIDTH + 4}
+                  y={PIN_BODY_CENTER_Y}
+                  dy=".35em"
+                  text-anchor={labelOnLeft ? 'end' : 'start'}
+                  class="pointer-events-none fill-foreground text-sm"
+                >
+                  {entry.label}
+                </text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+    ))
+  }
+
+  <div class="rounded-xl border bg-card p-5">
+    {
+      entries.map((entry) => (
+        <section data-panel={entry.id} hidden={entry.id !== initialId}>
+          <h2 class="mb-1 text-lg font-semibold">
+            {entry.kind === 'returnee' ? '日本に帰国した人' : entry.label}
+            <span class="ml-2 text-sm font-normal text-muted-foreground">
+              {entry.count}話
+            </span>
+          </h2>
+          {entry.kind === 'returnee' && (
+            <p class="mb-2 text-sm text-muted-foreground">
+              海外でキャリアを積んだあと、日本へ帰国した人たちです。
+            </p>
+          )}
+          <ul class="mb-3">
+            {entry.episodes.map((episode) => (
+              <li class="border-t first:border-t-0">
+                <a
+                  href={`/episodes/${episode.guid}/`}
+                  class="group/row flex items-center justify-between gap-3 py-3 text-sm leading-snug"
+                >
+                  <span class="transition-colors group-hover/row:text-brand">
+                    {episode.title}
+                  </span>
+                  <ArrowRight
+                    class="size-4 shrink-0 text-muted-foreground"
+                    aria-hidden="true"
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
+          {entry.pagePath && (
+            <a
+              href={entry.pagePath}
+              class="inline-flex items-center gap-1 text-sm font-medium text-brand hover:underline"
+            >
+              {entry.kind === 'returnee' ? 'この' : `「${entry.label}」の`}
+              エピソード{entry.count}話をすべて見る
+              <ArrowRight class="size-4" aria-hidden="true" />
+            </a>
+          )}
+        </section>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  const root = document.getElementById('city-map');
+
+  if (root) {
+    const pins = root.querySelectorAll<SVGGElement>('[data-city]');
+    const panels = root.querySelectorAll<HTMLElement>('[data-panel]');
+    const svgs = root.querySelectorAll<SVGSVGElement>('[data-view]');
+    const buttons =
+      root.querySelectorAll<HTMLButtonElement>('[data-view-button]');
+
+    const select = (id: string) => {
+      pins.forEach((pin) => {
+        pin.dataset.selected = String(pin.dataset.city === id);
+      });
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.panel !== id;
+      });
+    };
+
+    pins.forEach((pin) => {
+      const id = pin.dataset.city ?? '';
+      pin.addEventListener('click', () => select(id));
+      pin.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          select(id);
+        }
+      });
+    });
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const view = button.dataset.viewButton;
+        // `hidden` is a property of HTML elements only, so on an <svg> it has
+        // to be toggled as an attribute
+        svgs.forEach((svg) => {
+          svg.toggleAttribute('hidden', svg.dataset.view !== view);
+        });
+        buttons.forEach((other) =>
+          other.setAttribute('aria-pressed', String(other === button))
+        );
+
+        // The selected city may not be on this map (e.g. Tokyo when zoomed in)
+        const visible = Array.from(svgs)
+          .find((svg) => svg.dataset.view === view)
+          ?.querySelectorAll<SVGGElement>('[data-city]');
+        const ids = Array.from(visible ?? []).map((pin) => pin.dataset.city);
+        const current = root.querySelector<HTMLElement>(
+          '[data-panel]:not([hidden])'
+        )?.dataset.panel;
+        if (ids.length > 0 && !ids.includes(current)) {
+          select(ids[0] ?? '');
+        }
+      });
+    });
+  }
+</script>

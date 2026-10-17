@@ -38,9 +38,12 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
+    "d3-geo": "^3.1.1",
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "puppeteer": "^24.25.0",
-    "tsx": "^4.20.6"
+    "topojson-client": "^3.1.0",
+    "tsx": "^4.20.6",
+    "world-atlas": "^2.0.2"
   }
 }

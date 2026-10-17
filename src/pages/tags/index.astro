@@ -1,5 +1,7 @@
 ---
 import TagTile from '../../components/podcast/TagTile.astro';
+import Button from '../../components/ui/Button.astro';
+import { MapPin } from '@lucide/astro';
 import type { TagKind } from '../../constants/episodeVocabulary';
 import { SITE_NAME } from '../../constants/site';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -45,9 +47,13 @@ const description =
       <h1 class="mb-2 text-3xl font-semibold tracking-tight">
         トピックから探す
       </h1>
-      <p class="mb-10 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+      <p class="mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
         {description}
       </p>
+      <Button href="/cities/" class="mb-10">
+        <MapPin class="size-4" aria-hidden="true" />
+        世界地図で探す
+      </Button>
       <div class="space-y-10">
         {
           groups.map((group) => (

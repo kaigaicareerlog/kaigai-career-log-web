@@ -1,0 +1,53 @@
+---
+import CityMap from '../components/map/CityMap.astro';
+import TagTile from '../components/podcast/TagTile.astro';
+import { SITE_NAME } from '../constants/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { readEpisodeMetaMap } from '../utils/episodeMeta/episodeMetaFile';
+import { getLatestEpisodes } from '../utils/getLatestEpisodes';
+import { buildBreadcrumbJsonLd } from '../utils/seo';
+import { getMapEntries } from '../utils/map/getMapEntries';
+
+const { episodes } = await getLatestEpisodes();
+const entries = getMapEntries(episodes, readEpisodeMetaMap());
+
+const description =
+  'バンクーバー、トロント、サンフランシスコなど、海外で働く日本人へのインタビューを世界地図から探せます。ピンを選ぶと、その都市の最新エピソードが見られます。';
+---
+
+<BaseLayout
+  title={`都市から探す（世界地図） - ${SITE_NAME}`}
+  description={description}
+  jsonLd={buildBreadcrumbJsonLd([
+    { name: SITE_NAME, url: '/' },
+    { name: '都市から探す', url: '/cities/' },
+  ])}
+>
+  <main class="flex-1">
+    <div class="mx-auto max-w-5xl px-4 py-10">
+      <h1 class="mb-2 text-3xl font-semibold tracking-tight">都市から探す</h1>
+      <p class="mb-8 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        {description}
+      </p>
+
+      <CityMap entries={entries} />
+
+      <section class="mt-10">
+        <h2 class="mb-3 text-lg font-semibold">都市別のエピソード数</h2>
+        <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            entries.map((entry) => (
+              <TagTile
+                href={entry.pagePath ?? undefined}
+                label={
+                  entry.kind === 'returnee' ? '日本に帰国した人' : entry.label
+                }
+                count={entry.count}
+              />
+            ))
+          }
+        </div>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
