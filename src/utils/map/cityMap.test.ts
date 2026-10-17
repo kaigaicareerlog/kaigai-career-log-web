@@ -1,12 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import {
-  getLandPath,
-  MAP_HEIGHT,
-  MAP_WIDTH,
-  pinRadius,
-  placePoints,
-} from './cityMap';
+import { getLandPath, MAP_HEIGHT, MAP_WIDTH, placePoints } from './cityMap';
 
 const vancouver = { id: 'vancouver', lat: 49.28, lon: -123.12 };
 const toronto = { id: 'toronto', lat: 43.65, lon: -79.38 };
@@ -63,13 +57,5 @@ describe('getLandPath', () => {
       assert.ok(path.startsWith('M'), view);
       assert.ok(path.length > 1000, view);
     }
-  });
-});
-
-describe('pinRadius', () => {
-  it('grows with the number of episodes, but slowly', () => {
-    assert.ok(pinRadius(61) > pinRadius(6));
-    assert.ok(pinRadius(6) > pinRadius(1));
-    assert.ok(pinRadius(61) < 25);
   });
 });

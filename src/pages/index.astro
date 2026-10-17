@@ -9,11 +9,11 @@ import SponsorCard from '../components/podcast/SponsorCard.astro';
 import Badge from '../components/ui/Badge.astro';
 import Button from '../components/ui/Button.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { countDistinctCities } from '../utils/episodeMeta/countDistinctCities';
 import { countInterviews } from '../utils/episodeMeta/countInterviews';
 import { readEpisodeMetaMap } from '../utils/episodeMeta/episodeMetaFile';
 import { getTagPages } from '../utils/episodeMeta/getTagPages';
 import { getLatestEpisodes } from '../utils/getLatestEpisodes';
+import { getMapEntries } from '../utils/map/getMapEntries';
 import { buildPodcastSeriesJsonLd } from '../utils/seo';
 
 const { episodes } = await getLatestEpisodes();
@@ -25,7 +25,8 @@ const stats = [
   { value: `${episodes.length}`, label: 'エピソード' },
   { value: `${countInterviews(episodes, metaMap)}`, label: 'インタビュー' },
   {
-    value: `${countDistinctCities(metaMap)}`,
+    // Same as the number of pins on the map (overseas cities plus Tokyo)
+    value: `${getMapEntries(episodes, metaMap).length}`,
     label: '都市',
     href: '/cities/',
   },

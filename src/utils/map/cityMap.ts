@@ -87,8 +87,3 @@ export function getLandPath(view: MapView, points: MapPoint[]): string {
   ]);
   return geoPath(projection).digits(1)(land as any) ?? '';
 }
-
-/** Pin size grows with the number of episodes, so Vancouver doesn't dwarf the rest */
-export function pinRadius(episodeCount: number): number {
-  return Math.round((5 + 2.4 * Math.sqrt(episodeCount)) * 10) / 10;
-}

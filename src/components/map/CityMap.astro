@@ -4,7 +4,6 @@ import {
   getLandPath,
   MAP_HEIGHT,
   MAP_WIDTH,
-  pinRadius,
   placePoints,
   type MapView,
 } from '../../utils/map/cityMap';
@@ -18,6 +17,15 @@ interface Props {
 const { entries } = Astro.props;
 const initialId = entries[0]?.id;
 
+// The standard map-marker shape (a teardrop with a dot) in a 24-unit box whose
+// tip is at (12, 22). It is scaled up for the 680-unit-wide map, and drawn
+// with its tip at the pin's position.
+const PIN_PATH =
+  'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z';
+const PIN_SCALE = 1.9;
+const PIN_BODY_CENTER_Y = -13 * PIN_SCALE; // where the dot is, relative to the tip
+const PIN_HALF_WIDTH = 7 * PIN_SCALE;
+
 const views: Array<{ id: MapView; label: string }> = [
   { id: 'world', label: '世界' },
   { id: 'north-america', label: '北米を拡大' },
@@ -29,11 +37,14 @@ const maps = views.map((view) => {
   return {
     ...view,
     landPath: getLandPath(view.id, points),
-    // Biggest pins first, so small ones sit on top and stay clickable
-    pins: entries.flatMap((entry) => {
-      const position = placed.get(entry.id);
-      return position ? [{ entry, ...position }] : [];
-    }),
+    // Northern pins first, so a pin further south is drawn on top of one
+    // behind it, like on any map
+    pins: entries
+      .flatMap((entry) => {
+        const position = placed.get(entry.id);
+        return position ? [{ entry, ...position }] : [];
+      })
+      .sort((a, b) => a.y - b.y),
   };
 });
 ---
@@ -74,14 +85,12 @@ const maps = views.map((view) => {
       >
         <path d={view.landPath} class="fill-muted" />
         {view.pins.map(({ entry, x, y }) => {
-          const r = pinRadius(entry.count);
           // Labels go on the left near the west coast (so Vancouver's doesn't
-          // run into Toronto) and where they would run off the right edge
-          const labelWidth = entry.label.length * 15 + r + 8;
+          // run into Calgary or Toronto) and where they would run off the
+          // right edge
+          const labelWidth = entry.label.length * 15 + PIN_HALF_WIDTH + 8;
           const labelOnLeft =
-            view.id === 'world'
-              ? x < MAP_WIDTH * 0.35 || x > MAP_WIDTH * 0.65
-              : x + labelWidth > MAP_WIDTH - 6;
+            x < MAP_WIDTH * 0.35 || x + labelWidth > MAP_WIDTH - 6;
           return (
             <g
               transform={`translate(${x} ${y})`}
@@ -93,30 +102,27 @@ const maps = views.map((view) => {
               class="group cursor-pointer outline-none"
             >
               <title>{`${entry.label} ${entry.count}話`}</title>
-              <circle
-                r={r}
-                fill-opacity="0.9"
-                class={
-                  entry.kind === 'returnee' ? 'fill-orange-500' : 'fill-brand'
-                }
-              />
-              <circle
-                r={r + 3}
-                class="fill-none stroke-transparent stroke-3 group-focus-visible:stroke-ring group-data-[selected=true]:stroke-foreground"
-              />
-              <circle r={Math.max(r, 30)} class="fill-transparent" />
-              {r >= 8 && (
-                <text
-                  text-anchor="middle"
-                  dy=".35em"
-                  class="pointer-events-none fill-background text-[13px]"
-                >
-                  {entry.count}
-                </text>
-              )}
+              <g class="transition-transform group-data-[selected=true]:scale-125">
+                <g transform={`scale(${PIN_SCALE}) translate(-12 -22)`}>
+                  <path
+                    d={PIN_PATH}
+                    stroke-width="1"
+                    stroke-linejoin="round"
+                    class:list={[
+                      'stroke-background group-focus-visible:stroke-ring group-data-[selected=true]:stroke-foreground',
+                      entry.kind === 'returnee'
+                        ? 'fill-orange-500'
+                        : 'fill-brand',
+                    ]}
+                  />
+                  <circle cx="12" cy="9" r="2.6" class="fill-background" />
+                </g>
+              </g>
+              <circle cy={PIN_BODY_CENTER_Y} r="28" class="fill-transparent" />
               {(view.id === 'north-america' || entry.count >= 10) && (
                 <text
-                  x={labelOnLeft ? -(r + 5) : r + 5}
+                  x={labelOnLeft ? -(PIN_HALF_WIDTH + 4) : PIN_HALF_WIDTH + 4}
+                  y={PIN_BODY_CENTER_Y}
                   dy=".35em"
                   text-anchor={labelOnLeft ? 'end' : 'start'}
                   class="pointer-events-none fill-foreground text-sm"
