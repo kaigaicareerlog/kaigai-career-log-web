@@ -13,12 +13,12 @@ export const FEATURED_FILTER_TAGS: readonly FilterTag[] = [
   { kind: 'country', slug: 'canada' },
   { kind: 'country', slug: 'usa' },
   { kind: 'city', slug: 'vancouver' },
+  { kind: 'topic', slug: 'return-to-japan' },
   { kind: 'topic', slug: 'english' },
   { kind: 'topic', slug: 'salary' },
   { kind: 'topic', slug: 'visa' },
   { kind: 'topic', slug: 'no-experience' },
   { kind: 'topic', slug: 'job-change' },
-  { kind: 'topic', slug: 'layoff' },
 ];
 
 /**

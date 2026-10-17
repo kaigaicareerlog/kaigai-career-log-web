@@ -50,6 +50,7 @@ Rules:
 - guest.company: ONLY a proper company name (e.g. "Shopify", "Vancity"). If the text describes the company generically (e.g. "現地金融機関", "米国スタートアップ", "外資コンサル") use null.
 - "roles", "countries", "cities", "topics": return ONLY slugs from the allowed lists below (the text in parentheses is just the meaning). Pick only those clearly discussed: at most 2 roles, 3 countries, 3 cities, 5 topics.
 - "countries"/"cities": where the guest works or worked abroad. Do not add Japan, a partner's home country, or a company's headquarters unless the guest works there.
+- Use the topic "return-to-japan" only when the GUEST now lives or works in Japan after working abroad (not for a trip to Japan or a job they had in Japan before leaving). Both parts of a two-part interview have the same guest.
 - "otherPlaces": cities/countries where the guest works or worked that are missing from the lists. Usually empty.
 
 Allowed roles: ${options(ROLE_TAGS)}

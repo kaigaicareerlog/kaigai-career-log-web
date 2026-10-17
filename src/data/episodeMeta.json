@@ -71,7 +71,8 @@
     "topics": [
       "english",
       "no-experience",
-      "job-hunting"
+      "job-hunting",
+      "return-to-japan"
     ],
     "reviewed": false
   },
@@ -793,7 +794,8 @@
       "visa",
       "job-hunting",
       "startup",
-      "work-style"
+      "work-style",
+      "return-to-japan"
     ],
     "reviewed": false
   },
@@ -917,7 +919,8 @@
     "topics": [
       "english",
       "job-hunting",
-      "job-change"
+      "job-change",
+      "return-to-japan"
     ],
     "reviewed": false
   },
@@ -940,7 +943,6 @@
     ],
     "topics": [
       "english",
-      "return-to-japan",
       "work-style",
       "job-change",
       "startup"
@@ -1090,7 +1092,8 @@
       "salary",
       "startup",
       "no-experience",
-      "work-style"
+      "work-style",
+      "return-to-japan"
     ],
     "reviewed": false
   },
@@ -1153,7 +1156,6 @@
       "work-style",
       "ai",
       "study-abroad",
-      "return-to-japan",
       "job-change"
     ],
     "reviewed": false
@@ -1179,7 +1181,8 @@
       "english",
       "no-experience",
       "job-hunting",
-      "salary"
+      "salary",
+      "return-to-japan"
     ],
     "reviewed": false
   },
@@ -1252,7 +1255,8 @@
       "english",
       "job-hunting",
       "job-change",
-      "layoff"
+      "layoff",
+      "return-to-japan"
     ],
     "reviewed": false
   },
@@ -1894,7 +1898,8 @@
     "topics": [
       "salary",
       "work-style",
-      "networking"
+      "networking",
+      "return-to-japan"
     ],
     "reviewed": false
   }
