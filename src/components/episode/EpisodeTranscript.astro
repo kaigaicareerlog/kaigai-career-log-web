@@ -1,0 +1,39 @@
+---
+import { ChevronDown } from '@lucide/astro';
+import { getHostInfo } from '../../constants/actors';
+
+interface Props {
+  utterances: Array<{ speaker: string; text: string; timestamp: string }>;
+}
+
+const { utterances } = Astro.props;
+---
+
+{
+  utterances.length > 0 && (
+    <details class="group rounded-xl border bg-card">
+      <summary class="flex cursor-pointer list-none items-center justify-between px-5 py-4 [&::-webkit-details-marker]:hidden">
+        <h2 class="text-base font-semibold">文字起こし</h2>
+        <ChevronDown
+          class="size-5 text-muted-foreground transition-transform group-open:rotate-180"
+          aria-hidden="true"
+        />
+      </summary>
+      <div class="max-h-[600px] space-y-5 overflow-y-auto border-t px-5 py-4">
+        {utterances.map((utterance) => (
+          <div>
+            <p class="mb-1 text-xs text-muted-foreground">
+              <span class="font-medium text-foreground">
+                {getHostInfo(utterance.speaker).name}
+              </span>
+              · {utterance.timestamp}
+            </p>
+            <p class="text-sm leading-relaxed whitespace-pre-line">
+              {utterance.text}
+            </p>
+          </div>
+        ))}
+      </div>
+    </details>
+  )
+}

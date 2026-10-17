@@ -1,0 +1,41 @@
+---
+import Button from '../ui/Button.astro';
+
+interface Props {
+  description: string;
+}
+
+const { description } = Astro.props;
+// Short descriptions fit in the clamp, so they don't need the toggle
+const isLong = description.length > 160;
+---
+
+<section class="rounded-xl border bg-card p-5">
+  <h2 class="mb-3 text-base font-semibold">エピソード詳細</h2>
+  <p
+    id="episode-description"
+    class:list={[
+      'text-sm leading-relaxed whitespace-pre-line text-muted-foreground',
+      isLong && 'line-clamp-4',
+    ]}
+  >
+    {description}
+  </p>
+  {
+    isLong && (
+      <Button id="episode-description-toggle" size="sm" class="mt-3">
+        続きを読む
+      </Button>
+    )
+  }
+</section>
+
+<script>
+  const text = document.getElementById('episode-description');
+  const toggle = document.getElementById('episode-description-toggle');
+
+  toggle?.addEventListener('click', () => {
+    const isClamped = text?.classList.toggle('line-clamp-4');
+    toggle.textContent = isClamped ? '続きを読む' : '閉じる';
+  });
+</script>

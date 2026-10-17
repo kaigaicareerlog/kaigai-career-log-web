@@ -1,28 +1,33 @@
 ---
+import { Calendar, ChevronRight, Clock } from '@lucide/astro';
+import fs from 'fs';
+import path from 'path';
+import EpisodeUrlModal from '../../components/EpisodeUrlModal.astro';
+import EpisodeDescription from '../../components/episode/EpisodeDescription.astro';
+import EpisodeHighlights from '../../components/episode/EpisodeHighlights.astro';
+import EpisodeTranscript from '../../components/episode/EpisodeTranscript.astro';
+import ListenPanel from '../../components/episode/ListenPanel.astro';
+import RelatedEpisodes from '../../components/episode/RelatedEpisodes.astro';
+import EpisodeMetaPills from '../../components/podcast/EpisodeMetaPills.astro';
+import { META_DESCRIPTION_MAX_LENGTH, SITE_NAME } from '../../constants/site';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
+import type { TranscriptJSON } from '../../types';
+import {
+  getEpisodeMeta,
+  readEpisodeMetaMap,
+} from '../../utils/episodeMeta/episodeMetaFile';
+import { getEpisodePartner } from '../../utils/episodeMeta/getEpisodePartner';
+import { getRelatedEpisodes } from '../../utils/episodeMeta/getRelatedEpisodes';
 import { formatDate, formatDuration } from '../../utils/formatters';
-import { getSpotifyEmbedUrl } from '../../utils/spotify';
+import { getEpisodeNumber } from '../../utils/getEpisodeNumber';
+import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
 import {
   buildBreadcrumbJsonLd,
   buildPodcastEpisodeJsonLd,
   toAbsoluteUrl,
   truncateText,
 } from '../../utils/seo';
-import { META_DESCRIPTION_MAX_LENGTH, SITE_NAME } from '../../constants/site';
-import { getHostInfo } from '../../constants/actors';
-import PlatformButton from '../../components/podcast/PlatformButton.astro';
-import EpisodeUrlModal from '../../components/EpisodeUrlModal.astro';
-import EpisodeMetaPills from '../../components/podcast/EpisodeMetaPills.astro';
-import { getEpisodeMeta } from '../../utils/episodeMeta/episodeMetaFile';
-import {
-  SPOTIFY_CHANNEL_URL,
-  YOUTUBE_CHANNEL_URL,
-  APPLE_PODCAST_CHANNEL_URL,
-  AMAZON_MUSIC_CHANNEL_URL,
-} from '../../constants/podcastUrls';
-import fs from 'fs';
-import path from 'path';
+import { getSpotifyEmbedUrl } from '../../utils/spotify';
 
 export async function getStaticPaths() {
   const { episodes } = await getLatestEpisodes();
@@ -34,9 +39,10 @@ export async function getStaticPaths() {
 }
 
 const { episode } = Astro.props;
+const { episodes } = await getLatestEpisodes();
 
 // Load transcript if available
-let transcript = null;
+let transcript: TranscriptJSON | null = null;
 try {
   const transcriptPath = path.join(
     process.cwd(),
@@ -45,24 +51,32 @@ try {
     `${episode.guid}.json`
   );
   if (fs.existsSync(transcriptPath)) {
-    const transcriptContent = fs.readFileSync(transcriptPath, 'utf-8');
-    transcript = JSON.parse(transcriptContent);
+    transcript = JSON.parse(fs.readFileSync(transcriptPath, 'utf-8'));
   }
 } catch (error) {
   console.error(`Failed to load transcript for ${episode.guid}:`, error);
 }
 
-// Use episode-specific URLs if available, otherwise use channel URLs
-const spotifyUrl = episode.spotifyUrl || SPOTIFY_CHANNEL_URL;
-const youtubeUrl = episode.youtubeUrl || YOUTUBE_CHANNEL_URL;
-const applePodcastUrl = episode.applePodcastUrl || APPLE_PODCAST_CHANNEL_URL;
-const amazonMusicUrl = episode.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL;
+const highlights = [
+  transcript?.highlight1,
+  transcript?.highlight2,
+  transcript?.highlight3,
+].filter((highlight): highlight is string => Boolean(highlight));
 
-// Get Spotify embed URL for player
-const spotifyEmbedUrl = getSpotifyEmbedUrl(episode.spotifyUrl);
-
-// Guest info / tags shown as pills
+// Guest info / tags shown as badges
 const meta = getEpisodeMeta(episode.guid);
+
+// The other half of a two-part episode, and episodes on similar topics
+const metaMap = readEpisodeMetaMap();
+const partner = getEpisodePartner(episode, episodes, metaMap);
+const related = getRelatedEpisodes(
+  episode,
+  episodes,
+  metaMap,
+  partner ? [partner.episode.guid] : []
+);
+
+const episodeNumber = getEpisodeNumber(episode.title);
 
 // SEO metadata
 const episodePath = `/episodes/${episode.guid}/`;
@@ -81,174 +95,69 @@ const jsonLd = [
   ogType="article"
   jsonLd={jsonLd}
 >
-  <main class="episode-page">
-    <div class="container">
-      <!-- Navigation Bar -->
-      <div class="nav-bar">
-        <a href="/" class="back-link">← エピソード一覧に戻る</a>
-        <div class="action-buttons">
-          <button
-            id="open-urls-modal-btn"
-            class="action-btn hidden-btn"
-            aria-label="Secret URLs modal trigger (triple-click)"></button>
-        </div>
+  <main class="flex-1">
+    <div class="mx-auto max-w-5xl px-4 py-8">
+      <div class="mb-6 flex items-center justify-between gap-4">
+        <nav
+          aria-label="パンくず"
+          class="flex items-center gap-1 text-sm text-muted-foreground"
+        >
+          <a href="/#episodes" class="transition-colors hover:text-foreground">
+            エピソード
+          </a>
+          <ChevronRight class="size-3.5" aria-hidden="true" />
+          <span>{episodeNumber ? `#${episodeNumber}` : 'エピソード詳細'}</span>
+        </nav>
+        <!-- Hidden: triple-click opens the episode URL editor -->
+        <button
+          id="open-urls-modal-btn"
+          type="button"
+          class="h-8 w-14 cursor-default opacity-0"
+          aria-label="Secret URLs modal trigger (triple-click)"></button>
       </div>
 
-      <!-- Episode Header -->
-      <article class="episode-header">
-        <h1 class="episode-title">{episode.title}</h1>
+      <header class="mb-8">
+        <h1
+          class="mb-4 text-2xl leading-snug font-semibold tracking-tight sm:text-3xl"
+        >
+          {episode.title}
+        </h1>
+        <EpisodeMetaPills meta={meta} variant="page" class="mb-3" />
+        <p
+          class="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground"
+        >
+          <span class="inline-flex items-center gap-1.5">
+            <Calendar class="size-4" aria-hidden="true" />
+            {formatDate(episode.date)}
+          </span>
+          <span class="inline-flex items-center gap-1.5">
+            <Clock class="size-4" aria-hidden="true" />
+            {formatDuration(episode.duration)}
+          </span>
+        </p>
+        {
+          meta && meta.guests.length > 0 && (
+            <p class="mt-2 text-xs text-muted-foreground">
+              肩書・所属は収録時点の情報です。
+            </p>
+          )
+        }
+      </header>
 
-        <div class="episode-meta">
-          <span class="meta-item">📅 {formatDate(episode.date)}</span>
-          <span class="meta-item">📻 {formatDuration(episode.duration)}</span>
+      <div
+        class="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start"
+      >
+        <div class="order-2 space-y-4 lg:order-1">
+          <EpisodeHighlights highlights={highlights} />
+          <EpisodeDescription description={episode.description} />
+          <EpisodeTranscript utterances={transcript?.utterances ?? []} />
+          <RelatedEpisodes partner={partner} related={related} />
         </div>
-        <EpisodeMetaPills meta={meta} variant="page" />
-      </article>
-
-      <!-- Grid Container -->
-      <div class="content-grid">
-        <!-- Main Content -->
-        <div class="main-content">
-          <!-- Episode Description -->
-          <section class="episode-description">
-            <h2>エピソード詳細</h2>
-            <p>{episode.description}</p>
-
-            <!-- Highlights Section -->
-            {
-              transcript?.highlight1 ||
-              transcript?.highlight2 ||
-              transcript?.highlight3 ? (
-                <div class="highlights-section">
-                  <h3>エピソードの見どころ（聞きどころ）</h3>
-                  <ul class="highlights-list">
-                    {transcript.highlight1 && (
-                      <li class="highlight-item">
-                        <span class="highlight-icon">✨</span>
-                        <p>{transcript.highlight1}</p>
-                      </li>
-                    )}
-                    {transcript.highlight2 && (
-                      <li class="highlight-item">
-                        <span class="highlight-icon">✨</span>
-                        <p>{transcript.highlight2}</p>
-                      </li>
-                    )}
-                    {transcript.highlight3 && (
-                      <li class="highlight-item">
-                        <span class="highlight-icon">✨</span>
-                        <p>{transcript.highlight3}</p>
-                      </li>
-                    )}
-                  </ul>
-                </div>
-              ) : null
-            }
-          </section>
-
-          <!-- Transcript Section -->
-          {
-            transcript && (
-              <section class="transcript-section">
-                <button class="transcript-toggle" id="transcript-toggle">
-                  <h2>文字起こし</h2>
-                  <svg
-                    class="toggle-icon"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </button>
-                <div class="transcript-container" id="transcript-container">
-                  {transcript.utterances.map((utterance: any) => {
-                    const hostInfo = getHostInfo(utterance.speaker);
-                    return (
-                      <div class="transcript-utterance">
-                        <div class="speaker-info">
-                          <img
-                            src={hostInfo.image}
-                            alt={hostInfo.name}
-                            class="speaker-avatar"
-                            style={`border-color: ${hostInfo.color}`}
-                          />
-                          <div class="speaker-details">
-                            <span
-                              class="speaker-name"
-                              style={`color: ${hostInfo.color}`}
-                            >
-                              {hostInfo.name}
-                            </span>
-                            <span class="timestamp">{utterance.timestamp}</span>
-                          </div>
-                        </div>
-                        <p class="transcript-text">{utterance.text}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-              </section>
-            )
-          }
-        </div>
-
-        <!-- Sidebar -->
-        <aside class="sidebar">
-          <!-- Platform Links -->
-          <section class="platform-section">
-            <h2>このエピソードを聴く</h2>
-            <div class="platform-links">
-              <PlatformButton
-                platform="spotify"
-                href={spotifyUrl}
-                label="Spotify"
-                iconSrc="https://open.spotify.com/favicon.ico"
-              />
-              <PlatformButton
-                platform="apple"
-                href={applePodcastUrl}
-                label="Apple Podcasts"
-                iconSrc="https://www.apple.com/favicon.ico"
-              />
-              <PlatformButton
-                platform="youtube"
-                href={youtubeUrl}
-                label="YouTube"
-                iconSrc="https://www.youtube.com/favicon.ico"
-              />
-              {
-                amazonMusicUrl && (
-                  <PlatformButton
-                    platform="amazon"
-                    href={amazonMusicUrl}
-                    label="Amazon Music"
-                    iconSrc="https://www.amazon.com/favicon.ico"
-                  />
-                )
-              }
-            </div>
-          </section>
-          <!-- Spotify Player -->
-          {
-            spotifyEmbedUrl ? (
-              <section class="audio-section">
-                <iframe
-                  class="spotify-player"
-                  src={spotifyEmbedUrl}
-                  width="100%"
-                  height="352"
-                  frameborder="0"
-                  allowfullscreen
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                  loading="lazy"
-                />
-              </section>
-            ) : null
-          }
+        <aside class="order-1 lg:sticky lg:top-20 lg:order-2">
+          <ListenPanel
+            episode={episode}
+            embedUrl={getSpotifyEmbedUrl(episode.spotifyUrl)}
+          />
         </aside>
       </div>
     </div>
@@ -272,464 +181,32 @@ const jsonLd = [
   </script>
 
   <script>
-    // Transcript toggle functionality
-    document.addEventListener('DOMContentLoaded', () => {
-      const toggleButton = document.getElementById('transcript-toggle');
-      const transcriptContainer = document.getElementById(
-        'transcript-container'
-      );
+    // Hidden URL editor: triple-click the invisible button to open it
+    const openUrlsModalBtn = document.getElementById('open-urls-modal-btn');
 
-      if (toggleButton && transcriptContainer) {
-        // Set initial state to collapsed
-        transcriptContainer.classList.add('collapsed');
+    if (openUrlsModalBtn) {
+      let clickCount = 0;
+      let clickTimeout: ReturnType<typeof setTimeout> | null = null;
 
-        toggleButton.addEventListener('click', () => {
-          const isCollapsed =
-            transcriptContainer.classList.contains('collapsed');
+      openUrlsModalBtn.addEventListener('click', () => {
+        clickCount++;
 
-          if (isCollapsed) {
-            transcriptContainer.classList.remove('collapsed');
-            toggleButton.classList.add('open');
-          } else {
-            transcriptContainer.classList.add('collapsed');
-            toggleButton.classList.remove('open');
+        if (clickTimeout) {
+          clearTimeout(clickTimeout);
+        }
+
+        if (clickCount === 3) {
+          const openModal = (window as any).__openEpisodeUrlModal;
+          if (openModal) {
+            openModal();
           }
-        });
-      }
-
-      // Modal button functionality - triple-click to open
-      const openUrlsModalBtn = document.getElementById('open-urls-modal-btn');
-
-      // URLs modal triple-click handler
-      if (openUrlsModalBtn) {
-        let urlsClickCount = 0;
-        let urlsClickTimeout: ReturnType<typeof setTimeout> | null = null;
-
-        openUrlsModalBtn.addEventListener('click', () => {
-          urlsClickCount++;
-
-          if (urlsClickTimeout) {
-            clearTimeout(urlsClickTimeout);
-          }
-
-          if (urlsClickCount === 3) {
-            const openModalFunc = (window as any).__openEpisodeUrlModal;
-            if (openModalFunc) {
-              openModalFunc();
-            }
-            urlsClickCount = 0;
-          } else {
-            urlsClickTimeout = setTimeout(() => {
-              urlsClickCount = 0;
-            }, 1000);
-          }
-        });
-      }
-    });
+          clickCount = 0;
+        } else {
+          clickTimeout = setTimeout(() => {
+            clickCount = 0;
+          }, 1000);
+        }
+      });
+    }
   </script>
 </BaseLayout>
-
-<style>
-  .episode-page {
-    flex: 1;
-    width: 100%;
-    padding: 2rem 0;
-  }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
-
-  .content-grid {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 2rem;
-    margin-top: 2rem;
-  }
-
-  .main-content {
-    min-width: 0; /* Prevents grid blowout */
-  }
-
-  .sidebar {
-    position: sticky;
-    top: 2rem;
-    height: fit-content;
-  }
-
-  .nav-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2rem;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--legacy-primary);
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  .back-link:hover {
-    transform: translateX(-4px);
-    color: var(--legacy-secondary);
-  }
-
-  .action-buttons {
-    display: flex;
-    gap: 0.5rem;
-  }
-
-  .action-btn {
-    width: 60px;
-    height: 30px;
-    opacity: 0;
-    cursor: default;
-    background: transparent;
-    border: none;
-    padding: 0;
-  }
-
-  .episode-header {
-    margin-bottom: 2rem;
-  }
-
-  .episode-title {
-    font-size: clamp(1.25rem, 3vw, 1.75rem);
-    font-weight: 700;
-    line-height: 1.3;
-    margin-bottom: 1rem;
-    background: linear-gradient(
-      135deg,
-      var(--legacy-primary),
-      var(--legacy-secondary)
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .episode-meta {
-    display: flex;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    font-size: 0.95rem;
-    color: var(--legacy-muted);
-  }
-
-  .meta-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .episode-description {
-    margin-bottom: 2rem;
-    padding: 2rem;
-    background: var(--legacy-background);
-    border-radius: 1rem;
-    border: 1px solid rgba(59, 130, 246, 0.1);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-  }
-
-  .episode-description h2 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: var(--legacy-text);
-  }
-
-  .episode-description p {
-    font-size: 1rem;
-    line-height: 1.8;
-    color: var(--legacy-text);
-    white-space: pre-wrap;
-  }
-
-  /* Highlights Section */
-  .highlights-section {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 2px solid rgba(59, 130, 246, 0.15);
-  }
-
-  .highlights-section h3 {
-    font-size: 1.15rem;
-    font-weight: 600;
-    margin-bottom: 1.25rem;
-    color: var(--legacy-text);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .highlights-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .highlight-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0;
-  }
-
-  .highlight-icon {
-    font-size: 1.25rem;
-    flex-shrink: 0;
-    line-height: 1.6;
-  }
-
-  .highlight-item p {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--legacy-text);
-  }
-
-  .platform-section {
-    padding: 1.5rem;
-    background: var(--legacy-background);
-    border-radius: 1rem;
-    border: 1px solid rgba(59, 130, 246, 0.1);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-  }
-
-  .platform-section h2 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: var(--legacy-text);
-  }
-
-  .platform-links {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .audio-section {
-    margin-top: 1.5rem;
-  }
-
-  .spotify-player {
-    width: 100%;
-    border-radius: 0.75rem;
-    border: none;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  /* Transcript Section */
-  .transcript-section {
-    margin-bottom: 2rem;
-  }
-
-  .transcript-toggle {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: transparent;
-    border: none;
-    padding: 0;
-    margin-bottom: 1rem;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
-  }
-
-  .transcript-toggle:hover {
-    opacity: 0.8;
-  }
-
-  .transcript-toggle h2 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin: 0;
-    color: var(--legacy-text);
-    text-align: left;
-  }
-
-  .toggle-icon {
-    flex-shrink: 0;
-    transition: transform 0.3s ease;
-    color: var(--legacy-primary);
-  }
-
-  .transcript-toggle.open .toggle-icon {
-    transform: rotate(180deg);
-  }
-
-  .transcript-container {
-    background: var(--legacy-background);
-    border-radius: 1rem;
-    border: 1px solid rgba(59, 130, 246, 0.1);
-    padding: 2rem;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-    max-height: 600px;
-    overflow-y: auto;
-    transition:
-      max-height 0.3s ease,
-      opacity 0.3s ease,
-      padding 0.3s ease;
-  }
-
-  .transcript-container.collapsed {
-    max-height: 0;
-    opacity: 0;
-    padding: 0;
-    overflow: hidden;
-    border: none;
-  }
-
-  .transcript-utterance {
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  }
-
-  .transcript-utterance:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-
-  .speaker-info {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .speaker-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid;
-    flex-shrink: 0;
-  }
-
-  .speaker-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    flex: 1;
-  }
-
-  .speaker-name {
-    font-weight: 700;
-    font-size: 1rem;
-  }
-
-  .timestamp {
-    font-size: 0.8rem;
-    color: var(--legacy-muted);
-    font-family: monospace;
-  }
-
-  .transcript-text {
-    font-size: 1rem;
-    line-height: 1.8;
-    color: var(--legacy-text);
-    margin: 0;
-    padding-left: 64px; /* Align with text, accounting for avatar width + gap */
-    white-space: pre-line; /* Preserve line breaks */
-  }
-
-  /* Mobile responsive */
-  @media (max-width: 768px) {
-    .episode-page {
-      padding: 1.5rem 0;
-    }
-
-    .nav-bar {
-      gap: 1rem;
-    }
-
-    .content-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
-    .sidebar {
-      position: static;
-      order: -1; /* Move sidebar above main content on mobile */
-    }
-
-    .platform-section {
-      padding: 1.5rem;
-    }
-
-    .platform-links {
-      flex-direction: row;
-      flex-wrap: wrap;
-    }
-
-    .episode-meta {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .episode-description {
-      padding: 1.5rem;
-    }
-
-    .highlights-section {
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-    }
-
-    .transcript-container {
-      padding: 1.5rem;
-      max-height: 500px;
-    }
-
-    .speaker-avatar {
-      width: 40px;
-      height: 40px;
-    }
-
-    .transcript-text {
-      padding-left: 0;
-    }
-  }
-
-  /* Dark mode support */
-  @media (prefers-color-scheme: dark) {
-    .episode-description {
-      background: rgba(15, 23, 42, 0.8);
-      border-color: rgba(59, 130, 246, 0.2);
-    }
-
-    .highlights-section {
-      border-color: rgba(59, 130, 246, 0.25);
-    }
-
-    .audio-section {
-      background: rgba(15, 23, 42, 0.8);
-      border-color: rgba(59, 130, 246, 0.2);
-    }
-
-    .transcript-container {
-      background: rgba(15, 23, 42, 0.8);
-      border-color: rgba(59, 130, 246, 0.2);
-    }
-
-    .transcript-utterance {
-      border-bottom-color: rgba(255, 255, 255, 0.1);
-    }
-  }
-</style>

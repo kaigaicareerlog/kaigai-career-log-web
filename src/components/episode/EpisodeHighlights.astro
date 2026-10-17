@@ -1,0 +1,28 @@
+---
+import { Check, Sparkles } from '@lucide/astro';
+
+interface Props {
+  highlights: string[];
+}
+
+const { highlights } = Astro.props;
+---
+
+{
+  highlights.length > 0 && (
+    <section class="rounded-xl border border-brand-border bg-brand-soft p-5">
+      <h2 class="mb-3 flex items-center gap-2 text-base font-semibold">
+        <Sparkles class="size-4 text-brand" aria-hidden="true" />
+        聴きどころ
+      </h2>
+      <ul class="space-y-2">
+        {highlights.map((highlight) => (
+          <li class="flex gap-2.5 text-sm leading-relaxed">
+            <Check class="mt-1 size-4 shrink-0 text-brand" aria-hidden="true" />
+            <span>{highlight}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
