@@ -1,5 +1,5 @@
 ---
-import { Mic } from '@lucide/astro';
+import { MapPin, Mic } from '@lucide/astro';
 import StartHereSection from '../components/home/StartHereSection.astro';
 import TopicTilesSection from '../components/home/TopicTilesSection.astro';
 import HostsSection from '../components/podcast/HostsSection.astro';
@@ -24,7 +24,11 @@ const metaMap = readEpisodeMetaMap();
 const stats = [
   { value: `${episodes.length}`, label: 'エピソード' },
   { value: `${countInterviews(episodes, metaMap)}`, label: 'インタビュー' },
-  { value: `${countDistinctCities(metaMap)}`, label: '都市' },
+  {
+    value: `${countDistinctCities(metaMap)}`,
+    label: '都市',
+    href: '/cities/',
+  },
 ];
 ---
 
@@ -66,9 +70,27 @@ const stats = [
       <dl class="grid grid-cols-3 gap-3">
         {
           stats.map((stat) => (
-            <div class="rounded-xl border p-4">
+            <div
+              class:list={[
+                'relative rounded-xl border p-4',
+                stat.href && 'transition-colors hover:bg-accent/40',
+              ]}
+            >
               <dd class="text-2xl font-semibold">{stat.value}</dd>
-              <dt class="text-sm text-muted-foreground">{stat.label}</dt>
+              <dt class="text-sm text-muted-foreground">
+                {stat.href ? (
+                  <a href={stat.href} class="after:absolute after:inset-0">
+                    {stat.label}
+                    <MapPin
+                      class="ml-1 inline size-3.5 align-[-2px]"
+                      aria-hidden="true"
+                    />
+                    <span class="sr-only">（地図で見る）</span>
+                  </a>
+                ) : (
+                  stat.label
+                )}
+              </dt>
             </div>
           ))
         }

@@ -8,6 +8,8 @@
  *   broad to resolve to it (e.g. 北米 matches both Canada and the USA)
  * - `pageHeading` / `pageDescription`: wording for the tag's own page when the
  *   generic "「<label>」に関するエピソード" would read badly
+ * - `lat` / `lon`: cities only. A city with episodes gets a pin on the map, so
+ *   adding a city here is all it takes to put it on the map.
  */
 
 export type TagKind = 'role' | 'country' | 'city' | 'topic';
@@ -19,6 +21,9 @@ export interface TagDefinition {
   readonly searchAliases?: readonly string[];
   readonly pageHeading?: string;
   readonly pageDescription?: (count: number) => string;
+  /** Cities only: where the pin goes on the world map (/cities/) */
+  readonly lat?: number;
+  readonly lon?: number;
 }
 
 export const ROLE_TAGS: readonly TagDefinition[] = [
@@ -120,30 +125,84 @@ export const COUNTRY_TAGS: readonly TagDefinition[] = [
 ];
 
 export const CITY_TAGS: readonly TagDefinition[] = [
-  { slug: 'vancouver', label: 'バンクーバー', aliases: ['vancouver'] },
-  { slug: 'toronto', label: 'トロント', aliases: ['toronto'] },
-  { slug: 'calgary', label: 'カルガリー', aliases: ['calgary'] },
-  { slug: 'ottawa', label: 'オタワ', aliases: ['ottawa'] },
-  { slug: 'waterloo', label: 'ウォータールー', aliases: ['waterloo'] },
-  { slug: 'montreal', label: 'モントリオール', aliases: ['montreal'] },
+  {
+    slug: 'vancouver',
+    lat: 49.2827,
+    lon: -123.1207,
+    label: 'バンクーバー',
+    aliases: ['vancouver'],
+  },
+  {
+    slug: 'toronto',
+    lat: 43.6532,
+    lon: -79.3832,
+    label: 'トロント',
+    aliases: ['toronto'],
+  },
+  {
+    slug: 'calgary',
+    lat: 51.0447,
+    lon: -114.0719,
+    label: 'カルガリー',
+    aliases: ['calgary'],
+  },
+  {
+    slug: 'ottawa',
+    lat: 45.4215,
+    lon: -75.6972,
+    label: 'オタワ',
+    aliases: ['ottawa'],
+  },
+  {
+    slug: 'waterloo',
+    lat: 43.4643,
+    lon: -80.5204,
+    label: 'ウォータールー',
+    aliases: ['waterloo'],
+  },
+  {
+    slug: 'montreal',
+    lat: 45.5017,
+    lon: -73.5673,
+    label: 'モントリオール',
+    aliases: ['montreal'],
+  },
   {
     slug: 'san-francisco',
+    lat: 37.7749,
+    lon: -122.4194,
     label: 'サンフランシスコ',
     aliases: ['san francisco', 'sf'],
     searchAliases: ['ベイエリア', 'シリコンバレー', 'bay area'],
   },
-  { slug: 'seattle', label: 'シアトル', aliases: ['seattle'] },
+  {
+    slug: 'seattle',
+    lat: 47.6062,
+    lon: -122.3321,
+    label: 'シアトル',
+    aliases: ['seattle'],
+  },
   {
     slug: 'los-angeles',
+    lat: 34.0522,
+    lon: -118.2437,
     label: 'ロサンゼルス',
     aliases: ['ロス', 'los angeles', 'la'],
   },
   {
     slug: 'new-york',
+    lat: 40.7128,
+    lon: -74.006,
     label: 'ニューヨーク',
     aliases: ['new york', 'nyc'],
   },
-  { slug: 'london', label: 'ロンドン', aliases: ['london'] },
+  {
+    slug: 'london',
+    lat: 51.5074,
+    lon: -0.1278,
+    label: 'ロンドン',
+    aliases: ['london'],
+  },
 ];
 
 export const TOPIC_TAGS: readonly TagDefinition[] = [

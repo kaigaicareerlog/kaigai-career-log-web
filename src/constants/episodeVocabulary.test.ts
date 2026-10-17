@@ -16,3 +16,16 @@ describe('episode vocabulary', () => {
     }
   });
 });
+
+describe('city coordinates', () => {
+  const cities = TAG_DEFINITIONS.city;
+
+  it('gives every city a valid map position', () => {
+    for (const city of cities) {
+      assert.equal(typeof city.lat, 'number', `${city.slug} lat`);
+      assert.equal(typeof city.lon, 'number', `${city.slug} lon`);
+      assert.ok(Math.abs(city.lat!) <= 90, `${city.slug} lat range`);
+      assert.ok(Math.abs(city.lon!) <= 180, `${city.slug} lon range`);
+    }
+  });
+});
