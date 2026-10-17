@@ -26,9 +26,19 @@ describe('getEpisodePills', () => {
     assert.deepEqual(getEpisodePills(meta, 'card'), [
       { kind: 'position', label: 'SRE' },
       { kind: 'company', label: 'Shopify' },
-      { kind: 'place', label: 'バンクーバー' },
-      { kind: 'place', label: 'カナダ' },
+      { kind: 'place', label: 'バンクーバー', slug: 'vancouver' },
+      { kind: 'place', label: 'カナダ', slug: 'canada' },
     ]);
+  });
+
+  it('gives place and topic pills their tag slug, but not position or company', () => {
+    const pills = getEpisodePills(meta, 'page');
+    const slugOf = (label: string) =>
+      pills.find((p) => p.label === label)?.slug;
+    assert.equal(slugOf('トロント'), 'toronto');
+    assert.equal(slugOf('ビザ・永住権'), 'visa');
+    assert.equal(slugOf('SRE'), undefined);
+    assert.equal(slugOf('Shopify'), undefined);
   });
 
   it('page variant shows everything, de-duplicated, plus topics', () => {

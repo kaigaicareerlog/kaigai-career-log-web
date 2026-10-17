@@ -7,6 +7,8 @@ export type EpisodePillKind = 'position' | 'company' | 'place' | 'topic';
 export interface EpisodePill {
   kind: EpisodePillKind;
   label: string;
+  /** Tag slug, for place and topic pills (these can link to a tag page) */
+  slug?: string;
 }
 
 /** 'card' is compact (one pill per kind); 'page' shows everything + topics */
@@ -16,10 +18,16 @@ function unique(values: Array<string | null>): string[] {
   return [...new Set(values.filter((v): v is string => Boolean(v)))];
 }
 
-function tagLabels(kind: TagKind, slugs: string[]): string[] {
-  return slugs
-    .map((slug) => findTagBySlug(kind, slug)?.label)
-    .filter((label): label is string => Boolean(label));
+interface TagRef {
+  slug: string;
+  label: string;
+}
+
+function tagRefs(kind: TagKind, slugs: string[]): TagRef[] {
+  return slugs.flatMap((slug) => {
+    const tag = findTagBySlug(kind, slug);
+    return tag ? [{ slug, label: tag.label }] : [];
+  });
 }
 
 /**
@@ -35,26 +43,28 @@ export function getEpisodePills(
 
   const positions = unique(meta.guests.map((guest) => guest.position));
   const companies = unique(meta.guests.map((guest) => guest.company));
-  const cities = tagLabels('city', meta.cities);
-  const countries = tagLabels('country', meta.countries);
+  const cities = tagRefs('city', meta.cities);
+  const countries = tagRefs('country', meta.countries);
 
-  const toPills = (kind: EpisodePillKind, labels: string[]): EpisodePill[] =>
+  const textPills = (kind: EpisodePillKind, labels: string[]): EpisodePill[] =>
     labels.map((label) => ({ kind, label }));
+  const tagPills = (kind: EpisodePillKind, tags: TagRef[]): EpisodePill[] =>
+    tags.map(({ slug, label }) => ({ kind, label, slug }));
 
   if (variant === 'card') {
     return [
-      ...toPills('position', positions.slice(0, 1)),
-      ...toPills('company', companies.slice(0, 1)),
-      ...toPills('place', cities.slice(0, 1)),
-      ...toPills('place', countries.slice(0, 1)),
+      ...textPills('position', positions.slice(0, 1)),
+      ...textPills('company', companies.slice(0, 1)),
+      ...tagPills('place', cities.slice(0, 1)),
+      ...tagPills('place', countries.slice(0, 1)),
     ];
   }
 
   return [
-    ...toPills('position', positions),
-    ...toPills('company', companies),
-    ...toPills('place', cities),
-    ...toPills('place', countries),
-    ...toPills('topic', tagLabels('topic', meta.topics)),
+    ...textPills('position', positions),
+    ...textPills('company', companies),
+    ...tagPills('place', cities),
+    ...tagPills('place', countries),
+    ...tagPills('topic', tagRefs('topic', meta.topics)),
   ];
 }

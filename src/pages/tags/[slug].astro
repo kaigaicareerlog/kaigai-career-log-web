@@ -1,0 +1,99 @@
+---
+import { ChevronRight } from '@lucide/astro';
+import PodcastEpisodeCard from '../../components/podcast/PodcastEpisodeCard.astro';
+import Badge from '../../components/ui/Badge.astro';
+import { SITE_NAME } from '../../constants/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { readEpisodeMetaMap } from '../../utils/episodeMeta/episodeMetaFile';
+import { getCoOccurringTags } from '../../utils/episodeMeta/getCoOccurringTags';
+import {
+  getTagPagePath,
+  getTagPages,
+} from '../../utils/episodeMeta/getTagPages';
+import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
+import {
+  buildBreadcrumbJsonLd,
+  buildCollectionPageJsonLd,
+} from '../../utils/seo';
+import { getTagPageSeo } from '../../utils/seo/getTagPageSeo';
+
+export async function getStaticPaths() {
+  const { episodes } = await getLatestEpisodes();
+  const pages = getTagPages(episodes, readEpisodeMetaMap());
+
+  return pages.map((page) => ({
+    params: { slug: page.slug },
+    props: { page, allPages: pages },
+  }));
+}
+
+const { page, allPages } = Astro.props;
+const seo = getTagPageSeo(page.kind, page.label, page.episodes.length);
+const path = getTagPagePath(page.slug);
+const relatedTags = getCoOccurringTags(page, allPages);
+
+const jsonLd = [
+  buildBreadcrumbJsonLd([
+    { name: SITE_NAME, url: '/' },
+    { name: 'トピック', url: '/tags/' },
+    { name: page.label, url: path },
+  ]),
+  buildCollectionPageJsonLd({
+    name: seo.heading,
+    description: seo.description,
+    url: path,
+    episodeUrls: page.episodes.map((episode) => `/episodes/${episode.guid}/`),
+  }),
+];
+---
+
+<BaseLayout
+  title={`${seo.title} - ${SITE_NAME}`}
+  description={seo.description}
+  jsonLd={jsonLd}
+>
+  <main class="flex-1">
+    <div class="mx-auto max-w-5xl px-4 py-8">
+      <nav
+        aria-label="パンくず"
+        class="mb-6 flex items-center gap-1 text-sm text-muted-foreground"
+      >
+        <a href="/tags/" class="transition-colors hover:text-foreground">
+          トピック
+        </a>
+        <ChevronRight class="size-3.5" aria-hidden="true" />
+        <span>{page.label}</span>
+      </nav>
+
+      <header class="mb-8">
+        <h1 class="mb-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+          {seo.heading}
+        </h1>
+        <p class="mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          {seo.description}
+        </p>
+        {
+          relatedTags.length > 0 && (
+            <div class="flex flex-wrap items-center gap-1.5">
+              <span class="mr-1 text-xs text-muted-foreground">関連:</span>
+              {relatedTags.map((tag) => (
+                <Badge href={getTagPagePath(tag.slug)}>{tag.label}</Badge>
+              ))}
+            </div>
+          )
+        }
+      </header>
+
+      <p class="mb-3 text-sm text-muted-foreground">
+        全{page.episodes.length}話
+      </p>
+      <div class="grid grid-cols-1 gap-3">
+        {
+          page.episodes.map((episode) => (
+            <PodcastEpisodeCard podcast={episode} />
+          ))
+        }
+      </div>
+    </div>
+  </main>
+</BaseLayout>

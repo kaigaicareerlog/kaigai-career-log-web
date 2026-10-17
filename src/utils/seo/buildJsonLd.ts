@@ -97,3 +97,35 @@ export function buildBreadcrumbJsonLd(items: BreadcrumbItem[]): JsonLd {
     })),
   };
 }
+
+/**
+ * schema.org CollectionPage whose main entity is the list of episodes on a
+ * tag page.
+ */
+export function buildCollectionPageJsonLd(page: {
+  name: string;
+  description: string;
+  /** Site-relative path or absolute URL of the page itself */
+  url: string;
+  /** Site-relative paths or absolute URLs of the episodes, in order */
+  episodeUrls: string[];
+}): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: page.name,
+    description: page.description,
+    url: toAbsoluteUrl(page.url),
+    inLanguage: SITE_LANGUAGE,
+    isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: `${SITE_URL}/` },
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: page.episodeUrls.length,
+      itemListElement: page.episodeUrls.map((url, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        url: toAbsoluteUrl(url),
+      })),
+    },
+  };
+}

@@ -1,0 +1,75 @@
+---
+import { FileText, Sprout, UserRound } from '@lucide/astro';
+import {
+  START_HERE_ITEMS,
+  type StartHereIcon,
+} from '../../constants/startHere';
+import type { PodcastEpisode } from '../../types';
+import {
+  getTagPagePath,
+  type TagPage,
+} from '../../utils/episodeMeta/getTagPages';
+
+interface Props {
+  episodes: PodcastEpisode[];
+  tagPages: TagPage[];
+}
+
+const { episodes, tagPages } = Astro.props;
+
+const icons: Record<StartHereIcon, typeof UserRound> = {
+  user: UserRound,
+  sprout: Sprout,
+  document: FileText,
+};
+
+const items = START_HERE_ITEMS.flatMap((item) => {
+  if (item.episodeGuid) {
+    const episode = episodes.find((e) => e.guid === item.episodeGuid);
+    return episode
+      ? [{ ...item, href: `/episodes/${episode.guid}/`, note: '' }]
+      : [];
+  }
+  const page = tagPages.find((p) => p.slug === item.tagSlug);
+  return page
+    ? [
+        {
+          ...item,
+          href: getTagPagePath(page.slug),
+          note: `${page.episodes.length}話`,
+        },
+      ]
+    : [];
+});
+---
+
+{
+  items.length > 0 && (
+    <section class="mx-auto max-w-5xl px-4 pt-12">
+      <h2 class="text-2xl font-semibold tracking-tight">はじめての方へ</h2>
+      <p class="mt-1 mb-4 text-sm text-muted-foreground">
+        どれから聴くか迷ったら、ここから。
+      </p>
+      <ul class="grid grid-cols-1 gap-3 md:grid-cols-3">
+        {items.map((item) => {
+          const Icon = icons[item.icon];
+          return (
+            <li>
+              <a
+                href={item.href}
+                class="block h-full rounded-xl border p-4 transition-colors hover:bg-accent/40"
+              >
+                <Icon class="mb-3 size-5 text-brand" aria-hidden="true" />
+                <p class="mb-1 text-sm font-semibold">{item.title}</p>
+                <p class="text-sm leading-relaxed text-muted-foreground">
+                  {item.description}
+                  {item.note && ` ${item.note}`}
+                </p>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  )
+}

@@ -18,7 +18,7 @@ const { episodes } = Astro.props;
   <EpisodeSearch />
   {
     episodes.length > 0 ? (
-      <div class="grid gap-3">
+      <div class="grid grid-cols-1 gap-3">
         {episodes.map((podcast) => (
           <PodcastEpisodeCard podcast={podcast} />
         ))}

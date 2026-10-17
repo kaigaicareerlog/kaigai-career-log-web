@@ -6,6 +6,13 @@ import hiroshi from '../../assets/hosts/hiroshi.jpg';
 import { ACTIVE_HOSTS } from '../../constants/actors';
 import Button from '../ui/Button.astro';
 
+interface Props {
+  /** Trim long bios (home page). The About page shows them in full. */
+  compact?: boolean;
+}
+
+const { compact = true } = Astro.props;
+
 const photos: Record<string, ImageMetadata> = {
   Ryo: ryo,
   Senna: senna,
@@ -30,7 +37,12 @@ const photos: Record<string, ImageMetadata> = {
           )}
           <div class="min-w-0">
             <p class="font-semibold">{host.name}</p>
-            <p class="mb-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+            <p
+              class:list={[
+                'mb-2 text-sm leading-relaxed text-muted-foreground',
+                compact && 'line-clamp-3',
+              ]}
+            >
               {host.bio}
             </p>
             <div class="flex gap-1.5">
