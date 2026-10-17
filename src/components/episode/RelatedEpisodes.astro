@@ -1,0 +1,54 @@
+---
+import { ArrowRight } from '@lucide/astro';
+import type { PodcastEpisode } from '../../types';
+import type { EpisodePartner } from '../../utils/episodeMeta/getEpisodePartner';
+import Badge from '../ui/Badge.astro';
+
+interface Props {
+  partner: EpisodePartner | null;
+  related: PodcastEpisode[];
+}
+
+const { partner, related } = Astro.props;
+const rows = [
+  ...(partner
+    ? [{ episode: partner.episode, label: partner.label as string | null }]
+    : []),
+  ...related.map((episode) => ({ episode, label: null })),
+];
+---
+
+{
+  rows.length > 0 && (
+    <section class="rounded-xl border bg-card p-5">
+      <h2 class="mb-1 text-base font-semibold">
+        {partner ? `${partner.label}と関連エピソード` : '関連エピソード'}
+      </h2>
+      <ul>
+        {rows.map(({ episode, label }) => (
+          <li class="border-t first:border-t-0">
+            <a
+              href={`/episodes/${episode.guid}/`}
+              class="group flex items-center justify-between gap-3 py-3 text-sm leading-snug"
+            >
+              <span class="min-w-0">
+                {label && (
+                  <Badge variant="brand" class="mr-2">
+                    {label}
+                  </Badge>
+                )}
+                <span class="transition-colors group-hover:text-brand">
+                  {episode.title}
+                </span>
+              </span>
+              <ArrowRight
+                class="size-4 shrink-0 text-muted-foreground"
+                aria-hidden="true"
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

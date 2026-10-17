@@ -1,0 +1,63 @@
+---
+import { ExternalLink } from '@lucide/astro';
+import {
+  AMAZON_MUSIC_CHANNEL_URL,
+  APPLE_PODCAST_CHANNEL_URL,
+  SPOTIFY_CHANNEL_URL,
+  YOUTUBE_CHANNEL_URL,
+} from '../../constants/podcastUrls';
+import type { PodcastEpisode } from '../../types';
+import Button from '../ui/Button.astro';
+
+interface Props {
+  episode: PodcastEpisode;
+  /** Spotify embed URL, when the episode has its own Spotify link */
+  embedUrl?: string | null;
+}
+
+const { episode, embedUrl } = Astro.props;
+
+// Use episode-specific URLs if available, otherwise the show's channel page
+const platforms = [
+  { label: 'Spotify', href: episode.spotifyUrl || SPOTIFY_CHANNEL_URL },
+  {
+    label: 'Apple Podcasts',
+    href: episode.applePodcastUrl || APPLE_PODCAST_CHANNEL_URL,
+  },
+  { label: 'YouTube', href: episode.youtubeUrl || YOUTUBE_CHANNEL_URL },
+  {
+    label: 'Amazon Music',
+    href: episode.amazonMusicUrl || AMAZON_MUSIC_CHANNEL_URL,
+  },
+];
+---
+
+<section class="rounded-xl border bg-card p-5">
+  <h2 class="mb-3 text-base font-semibold">このエピソードを聴く</h2>
+  {
+    embedUrl && (
+      <iframe
+        src={embedUrl}
+        title="Spotifyプレイヤー"
+        width="100%"
+        height="152"
+        loading="lazy"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        class="mb-4 rounded-xl border-0"
+      />
+    )
+  }
+  <div class="flex flex-col gap-2">
+    {
+      platforms.map((platform) => (
+        <Button href={platform.href} external class="w-full justify-between">
+          {platform.label}
+          <ExternalLink
+            class="size-4 text-muted-foreground"
+            aria-hidden="true"
+          />
+        </Button>
+      ))
+    }
+  </div>
+</section>
