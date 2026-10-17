@@ -5,13 +5,14 @@ import {
   writeEpisodeMetaMap,
 } from '../src/utils/episodeMeta/episodeMetaFile';
 import { formatEpisodeMetaReport } from '../src/utils/episodeMeta/formatEpisodeMetaReport';
+import { sharePartnerTags } from '../src/utils/episodeMeta/sharePartnerTags';
 import {
   DEFAULT_GROQ_MODEL,
   GroqDailyLimitError,
 } from '../src/utils/groq/chatCompletion';
 import { extractEpisodeMeta } from '../src/utils/groq/extractEpisodeMeta';
 import { createLogger } from '../src/utils/logger';
-import type { EpisodeMeta, PodcastEpisode } from '../src/types';
+import type { EpisodeMeta, EpisodeMetaMap, PodcastEpisode } from '../src/types';
 
 const logger = createLogger();
 
@@ -69,6 +70,28 @@ function shouldTag(
   return force;
 }
 
+/**
+ * Copies city, country and the returnee tag between the two halves of a
+ * two-part interview and saves the result. Runs after tagging, and also when
+ * there is nothing to tag, so a half tagged earlier still gets filled in.
+ */
+function shareTagsBetweenParts(
+  episodes: readonly PodcastEpisode[],
+  map: EpisodeMetaMap
+): void {
+  const { map: shared, changed } = sharePartnerTags(episodes, map);
+  if (changed.length === 0) return;
+
+  writeEpisodeMetaMap(shared);
+  logger.info(
+    `Shared city/country/returnee tags with the other half of ${changed.length} episode(s):`
+  );
+  changed.forEach((changedGuid) => {
+    const title = episodes.find((e) => e.guid === changedGuid)?.title;
+    logger.processing(title ?? changedGuid, 2);
+  });
+}
+
 async function main(): Promise<void> {
   const { episodes } = await getLatestEpisodes();
   const map = readEpisodeMetaMap();
@@ -106,6 +129,7 @@ async function main(): Promise<void> {
 
   if (targets.length === 0) {
     logger.success('Nothing to tag: all episodes already have metadata');
+    shareTagsBetweenParts(episodes, map);
     return;
   }
 
@@ -153,6 +177,8 @@ async function main(): Promise<void> {
 
     if (index < targets.length - 1) await sleep(delayMs);
   }
+
+  shareTagsBetweenParts(episodes, map);
 
   logger.summary({
     tagged: done,

@@ -1012,8 +1012,12 @@
     "roles": [
       "engineer"
     ],
-    "countries": [],
-    "cities": [],
+    "countries": [
+      "canada"
+    ],
+    "cities": [
+      "vancouver"
+    ],
     "topics": [
       "ai"
     ],
