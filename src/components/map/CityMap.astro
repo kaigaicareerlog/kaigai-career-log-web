@@ -113,7 +113,6 @@ const maps = views.map((view) => {
                   <circle cx="12" cy="9" r="2.6" class="fill-background" />
                 </g>
               </g>
-              <circle cy={PIN_BODY_CENTER_Y} r="24" class="fill-transparent" />
               {(view.id === 'north-america' || entry.count >= 10) && (
                 <text
                   x={labelOnLeft ? -(PIN_HALF_WIDTH + 4) : PIN_HALF_WIDTH + 4}
@@ -193,7 +192,11 @@ const maps = views.map((view) => {
 
     const select = (id: string) => {
       pins.forEach((pin) => {
-        pin.dataset.selected = String(pin.dataset.city === id);
+        const isSelected = pin.dataset.city === id;
+        pin.dataset.selected = String(isSelected);
+        // Bring the selected pin to the front, so one that was covered by a
+        // neighbour is fully visible (the last child of an <svg> is on top)
+        if (isSelected) pin.parentElement?.appendChild(pin);
       });
       panels.forEach((panel) => {
         panel.hidden = panel.dataset.panel !== id;
