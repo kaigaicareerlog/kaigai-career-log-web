@@ -1,10 +1,15 @@
 /**
- * 日付をフォーマットする
+ * 日付をフォーマットする（日本時間）
+ *
+ * Episodes go out around 06:30 JST, which is the previous evening in UTC. The
+ * timezone is fixed so the site shows the date listeners in Japan see, instead
+ * of whatever timezone the build server happens to use.
  */
 export function formatDate(dateString: string): string {
   try {
     const date = new Date(dateString);
     return date.toLocaleDateString('ja-JP', {
+      timeZone: 'Asia/Tokyo',
       year: 'numeric',
       month: 'long',
       day: 'numeric',
