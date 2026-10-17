@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
  * Notifies about a new episode to post to X by opening a GitHub issue with
- * the tweet text ready to copy (and a one-click "open X with this pre-filled"
- * link when it's short enough), instead of posting directly - X's API now
- * requires paid pay-per-use credits.
+ * the tweet text ready to copy (main tweet and reply each in their own code
+ * block, plus a one-click "open X with the main tweet pre-filled" link),
+ * instead of posting directly - X's API now requires paid pay-per-use
+ * credits.
  *
  * Usage: tsx scripts/notify-episode-to-post-x.ts <hosts> [assignee]
  *
@@ -18,35 +19,13 @@ import { findLatestEpisodesFile } from '../src/utils/findLatestEpisodesFile';
 import { getLatestEpisodeToTweet } from '../src/utils/getLatestEpisodeToTweet';
 import { createLogger } from '../src/utils/logger';
 import { truncateText } from '../src/utils/seo';
-import { buildTweetIntentUrl } from '../src/utils/x/buildTweetIntentUrl';
-import { formatFullEpisodeXPost } from '../src/utils/x/formatFullEpisodeXPost';
+import { buildEpisodePostIssueBody } from '../src/utils/x/buildEpisodePostIssueBody';
+import { formatNewEpisodeMainTweet } from '../src/utils/x/formatNewEpisodeMainTweet';
+import { formatNewEpisodeUrlsTweet } from '../src/utils/x/formatNewEpisodeUrlsTweet';
 import { markNewEpisodeIntroPostedToX } from '../src/utils/x/markNewEpisodeIntroPostedToX';
 
 const logger = createLogger();
 const ISSUE_TITLE_MAX_CHARS = 80;
-
-/**
- * Builds the GitHub issue body: the episode link, an optional one-click
- * "open X pre-filled" link, and the full post text in a single copy-able
- * code block.
- */
-function buildIssueBody(postText: string, episodePageUrl: string): string {
-  const intentUrl = buildTweetIntentUrl(postText);
-
-  return [
-    `**エピソードページ:** ${episodePageUrl}`,
-    '',
-    ...(intentUrl
-      ? [`[✏️ この内容でXの投稿画面を開く](${intentUrl})`, '']
-      : []),
-    '```',
-    postText,
-    '```',
-    '',
-    '---',
-    '投稿したらこのIssueをクローズしてください。',
-  ].join('\n');
-}
 
 async function main(): Promise<void> {
   const [hosts, assignee] = process.argv.slice(2);
@@ -67,10 +46,12 @@ async function main(): Promise<void> {
 
   logger.info(`Found episode to post: ${episode.title}`);
 
-  const postText = formatFullEpisodeXPost(episode, hosts);
-  const episodePageUrl = `${SITE_URL}/episodes/${episode.guid}/`;
   const title = `📣 Xに投稿: ${truncateText(episode.title, ISSUE_TITLE_MAX_CHARS)}`;
-  const body = buildIssueBody(postText, episodePageUrl);
+  const body = buildEpisodePostIssueBody({
+    episodePageUrl: `${SITE_URL}/episodes/${episode.guid}/`,
+    mainTweetText: formatNewEpisodeMainTweet(episode, hosts),
+    urlsTweetText: formatNewEpisodeUrlsTweet(episode),
+  });
 
   const args = ['issue', 'create', '--title', title, '--body', body];
   if (assignee) args.push('--assignee', assignee);
