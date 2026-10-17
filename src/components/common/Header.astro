@@ -8,6 +8,7 @@ import ThemeToggle from './ThemeToggle.astro';
 
 const navLinks = [
   { href: '/#episodes', label: 'エピソード' },
+  { href: '/tags/', label: 'トピック' },
   { href: '/about/', label: 'About' },
 ];
 ---
@@ -32,7 +33,7 @@ const navLinks = [
           navLinks.map((link) => (
             <a
               href={link.href}
-              class="text-muted-foreground transition-colors hover:text-foreground"
+              class="whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground"
             >
               {link.label}
             </a>
@@ -41,14 +42,11 @@ const navLinks = [
       </nav>
     </div>
     <div class="flex items-center gap-2">
-      <Button
-        href={SPOTIFY_CHANNEL_URL}
-        size="sm"
-        external
-        class="hidden sm:inline-flex"
-      >
-        Spotifyで聴く
-      </Button>
+      <span class="hidden sm:block">
+        <Button href={SPOTIFY_CHANNEL_URL} size="sm" external>
+          Spotifyで聴く
+        </Button>
+      </span>
       <ThemeToggle />
     </div>
   </div>

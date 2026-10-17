@@ -1,118 +1,81 @@
 ---
+import { Mail, MessageSquare } from '@lucide/astro';
+import HostsSection from '../components/podcast/HostsSection.astro';
+import SponsorCard from '../components/podcast/SponsorCard.astro';
+import Badge from '../components/ui/Badge.astro';
+import Button from '../components/ui/Button.astro';
+import {
+  CONTACT_EMAIL,
+  CONTACT_FORM_URL,
+  X_ACCOUNT_URL,
+} from '../constants/contact';
+import {
+  APPLE_PODCAST_CHANNEL_URL,
+  SPOTIFY_CHANNEL_URL,
+  YOUTUBE_CHANNEL_URL,
+} from '../constants/podcastUrls';
+import { SITE_NAME } from '../constants/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import HostItem from '../components/about/HostItem.astro';
-import SponsorSection from '../components/about/SponsorSection.astro';
-import PlatformLinks from '../components/about/PlatformLinks.astro';
-import ContactLinks from '../components/about/ContactLinks.astro';
-import { ACTIVE_HOSTS } from '../constants/actors';
+import { buildBreadcrumbJsonLd } from '../utils/seo';
+
+const platforms = [
+  { label: 'Spotify', href: SPOTIFY_CHANNEL_URL },
+  { label: 'Apple Podcasts', href: APPLE_PODCAST_CHANNEL_URL },
+  { label: 'YouTube', href: YOUTUBE_CHANNEL_URL },
+  { label: 'X', href: X_ACCOUNT_URL },
+];
 ---
 
 <BaseLayout
-  title="About - 海外キャリアログ"
+  title={`海外キャリアログについて（ホスト紹介・番組情報） - ${SITE_NAME}`}
   description="海外キャリアログについて - ホスト紹介とポッドキャストの詳細"
+  jsonLd={buildBreadcrumbJsonLd([
+    { name: SITE_NAME, url: '/' },
+    { name: 'About', url: '/about/' },
+  ])}
 >
-  <main class="about-page">
-    <div class="container">
-      <!-- Hero Section -->
-      <section class="hero">
-        <h1>About</h1>
-        <p class="tagline">海外キャリアログについて</p>
-      </section>
+  <main class="flex-1">
+    <div class="mx-auto max-w-3xl space-y-12 px-4 py-10">
+      <header>
+        <Badge variant="brand" class="mb-4">毎週日曜更新</Badge>
+        <h1 class="mb-4 text-3xl font-semibold tracking-tight">
+          海外キャリアログについて
+        </h1>
+        <p class="mb-5 leading-relaxed text-muted-foreground">
+          日本から海外に飛び出し、IT業界で活躍する専門家たちにインタビュー。なぜ海外を目指したのか？英語の壁、就活のリアル、ビザや生活事情まで、リアルな声を記録していきます。これから海外キャリアを目指すあなたへ、道しるべとなるログをお届けします。
+        </p>
+        <div class="flex flex-wrap gap-2">
+          {
+            platforms.map((platform) => (
+              <Button href={platform.href} external>
+                {platform.label}
+              </Button>
+            ))
+          }
+        </div>
+      </header>
 
-      <!-- Hosts Section -->
-      <section class="hosts-section">
-        <h2>ホスト</h2>
-        <div class="hosts-list">
-          {ACTIVE_HOSTS.map((host) => <HostItem {...host} />)}
+      <HostsSection compact={false} />
+      <SponsorCard />
+
+      <section>
+        <h2 class="mb-2 text-2xl font-semibold tracking-tight">
+          お問い合わせ・質問
+        </h2>
+        <p class="mb-4 text-sm text-muted-foreground">
+          番組への感想や質問、ゲスト出演のご相談はこちらから。
+        </p>
+        <div class="flex flex-wrap gap-2">
+          <Button href={`mailto:${CONTACT_EMAIL}`}>
+            <Mail class="size-4" aria-hidden="true" />
+            メールで連絡
+          </Button>
+          <Button href={CONTACT_FORM_URL} external>
+            <MessageSquare class="size-4" aria-hidden="true" />
+            お便りフォーム
+          </Button>
         </div>
       </section>
-
-      <!-- Sponsor Section -->
-      <SponsorSection />
-
-      <!-- Podcast Links Section -->
-      <PlatformLinks />
-
-      <!-- Contact Section -->
-      <ContactLinks />
     </div>
   </main>
 </BaseLayout>
-
-<style>
-  .about-page {
-    flex: 1;
-    width: 100%;
-    padding: 2rem 0;
-  }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
-
-  /* Hero Section */
-  .hero {
-    text-align: center;
-    margin-bottom: 3rem;
-    padding-top: 1rem;
-  }
-
-  .hero h1 {
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 700;
-    background: linear-gradient(
-      135deg,
-      var(--legacy-primary),
-      var(--legacy-secondary)
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 0.5rem;
-  }
-
-  .tagline {
-    font-size: clamp(1rem, 2vw, 1.3rem);
-    color: var(--legacy-muted);
-    font-weight: 400;
-    margin-bottom: 0;
-  }
-
-  /* Hosts Section */
-  .hosts-section {
-    margin-bottom: 4rem;
-  }
-
-  .hosts-section h2 {
-    font-size: 1.8rem;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 2rem;
-    color: var(--legacy-text);
-  }
-
-  .hosts-list {
-    max-width: 700px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  /* Mobile responsive */
-  @media (max-width: 768px) {
-    .about-page {
-      padding: 1.5rem 0;
-    }
-
-    .hero {
-      margin-bottom: 2rem;
-    }
-
-    .hosts-section {
-      margin-bottom: 3rem;
-    }
-  }
-</style>

@@ -1,5 +1,7 @@
 ---
 import { Mic } from '@lucide/astro';
+import StartHereSection from '../components/home/StartHereSection.astro';
+import TopicTilesSection from '../components/home/TopicTilesSection.astro';
 import HostsSection from '../components/podcast/HostsSection.astro';
 import LatestEpisodeCard from '../components/podcast/LatestEpisodeCard.astro';
 import PodcastEpisodeCardList from '../components/podcast/PodcastEpisodeCardList.astro';
@@ -10,11 +12,13 @@ import { ACTIVE_HOSTS } from '../constants/actors';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { countDistinctCities } from '../utils/episodeMeta/countDistinctCities';
 import { readEpisodeMetaMap } from '../utils/episodeMeta/episodeMetaFile';
+import { getTagPages } from '../utils/episodeMeta/getTagPages';
 import { getLatestEpisodes } from '../utils/getLatestEpisodes';
 import { buildPodcastSeriesJsonLd } from '../utils/seo';
 
 const { episodes } = await getLatestEpisodes();
 const latest = episodes[0];
+const tagPages = getTagPages(episodes, readEpisodeMetaMap());
 
 const stats = [
   { value: `${episodes.length}`, label: 'エピソード' },
@@ -27,7 +31,7 @@ const stats = [
   <main class="flex-1">
     <section class="border-b border-brand-border bg-brand-soft">
       <div
-        class="mx-auto grid max-w-5xl items-center gap-8 px-4 py-12 md:grid-cols-[minmax(0,1fr)_320px] md:py-16"
+        class="mx-auto grid max-w-5xl grid-cols-1 items-center gap-8 px-4 py-12 md:grid-cols-[minmax(0,1fr)_320px] md:py-16"
       >
         <div>
           <Badge variant="brand" class="mb-4">
@@ -70,9 +74,13 @@ const stats = [
       </dl>
     </section>
 
+    <StartHereSection episodes={episodes} tagPages={tagPages} />
+    <TopicTilesSection tagPages={tagPages} />
     <PodcastEpisodeCardList episodes={episodes} />
 
-    <section class="mx-auto mt-16 grid max-w-5xl gap-8 px-4 md:grid-cols-2">
+    <section
+      class="mx-auto mt-16 grid max-w-5xl grid-cols-1 gap-8 px-4 md:grid-cols-2"
+    >
       <HostsSection />
       <SponsorCard />
     </section>

@@ -3,6 +3,7 @@
  */
 export {
   buildBreadcrumbJsonLd,
+  buildCollectionPageJsonLd,
   buildPodcastEpisodeJsonLd,
   buildPodcastSeriesJsonLd,
 } from './buildJsonLd';

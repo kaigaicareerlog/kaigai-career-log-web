@@ -1,0 +1,17 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  count: number;
+}
+
+const { href, label, count } = Astro.props;
+---
+
+<a
+  href={href}
+  class="flex items-center justify-between gap-3 rounded-lg border px-4 py-3 text-sm transition-colors hover:bg-accent"
+>
+  <span class="font-medium">{label}</span>
+  <span class="shrink-0 text-muted-foreground">{count}話</span>
+</a>

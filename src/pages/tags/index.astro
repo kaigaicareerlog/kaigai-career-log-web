@@ -1,0 +1,71 @@
+---
+import TagTile from '../../components/podcast/TagTile.astro';
+import type { TagKind } from '../../constants/episodeVocabulary';
+import { SITE_NAME } from '../../constants/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { readEpisodeMetaMap } from '../../utils/episodeMeta/episodeMetaFile';
+import {
+  getTagPagePath,
+  getTagPages,
+  TAG_KIND_ORDER,
+} from '../../utils/episodeMeta/getTagPages';
+import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
+import { buildBreadcrumbJsonLd } from '../../utils/seo';
+
+const { episodes } = await getLatestEpisodes();
+const pages = getTagPages(episodes, readEpisodeMetaMap());
+
+const GROUP_TITLES: Record<TagKind, string> = {
+  country: '国から探す',
+  city: '都市から探す',
+  role: '職種から探す',
+  topic: 'テーマから探す',
+};
+
+const groups = TAG_KIND_ORDER.map((kind) => ({
+  kind,
+  title: GROUP_TITLES[kind],
+  pages: pages.filter((page) => page.kind === kind),
+})).filter((group) => group.pages.length > 0);
+
+const description =
+  '国・都市・職種・テーマ別に、海外で働く日本人へのインタビューを探せます。海外就職、海外エンジニア転職、ビザ、英語、年収など。';
+---
+
+<BaseLayout
+  title={`トピックから探す - ${SITE_NAME}`}
+  description={description}
+  jsonLd={buildBreadcrumbJsonLd([
+    { name: SITE_NAME, url: '/' },
+    { name: 'トピック', url: '/tags/' },
+  ])}
+>
+  <main class="flex-1">
+    <div class="mx-auto max-w-5xl px-4 py-10">
+      <h1 class="mb-2 text-3xl font-semibold tracking-tight">
+        トピックから探す
+      </h1>
+      <p class="mb-10 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        {description}
+      </p>
+      <div class="space-y-10">
+        {
+          groups.map((group) => (
+            <section>
+              <h2 class="mb-3 text-lg font-semibold">{group.title}</h2>
+              <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                {group.pages.map((page) => (
+                  <TagTile
+                    href={getTagPagePath(page.slug)}
+                    label={page.label}
+                    count={page.episodes.length}
+                  />
+                ))}
+              </div>
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </main>
+</BaseLayout>
