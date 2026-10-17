@@ -18,11 +18,11 @@ const { entries } = Astro.props;
 const initialId = entries[0]?.id;
 
 // The standard map-marker shape (a teardrop with a dot) in a 24-unit box whose
-// tip is at (12, 22). It is scaled up for the 680-unit-wide map, and drawn
+// tip is at (12, 22). It is scaled for the 680-unit-wide map, and drawn
 // with its tip at the pin's position.
 const PIN_PATH =
   'M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z';
-const PIN_SCALE = 1.9;
+const PIN_SCALE = 1.3;
 const PIN_BODY_CENTER_Y = -13 * PIN_SCALE; // where the dot is, relative to the tip
 const PIN_HALF_WIDTH = 7 * PIN_SCALE;
 
@@ -108,17 +108,11 @@ const maps = views.map((view) => {
                     d={PIN_PATH}
                     stroke-width="1"
                     stroke-linejoin="round"
-                    class:list={[
-                      'stroke-background group-focus-visible:stroke-ring group-data-[selected=true]:stroke-foreground',
-                      entry.kind === 'returnee'
-                        ? 'fill-orange-500'
-                        : 'fill-brand',
-                    ]}
+                    class="fill-brand stroke-background group-focus-visible:stroke-ring group-data-[selected=true]:stroke-foreground"
                   />
                   <circle cx="12" cy="9" r="2.6" class="fill-background" />
                 </g>
               </g>
-              <circle cy={PIN_BODY_CENTER_Y} r="28" class="fill-transparent" />
               {(view.id === 'north-america' || entry.count >= 10) && (
                 <text
                   x={labelOnLeft ? -(PIN_HALF_WIDTH + 4) : PIN_HALF_WIDTH + 4}
@@ -198,7 +192,11 @@ const maps = views.map((view) => {
 
     const select = (id: string) => {
       pins.forEach((pin) => {
-        pin.dataset.selected = String(pin.dataset.city === id);
+        const isSelected = pin.dataset.city === id;
+        pin.dataset.selected = String(isSelected);
+        // Bring the selected pin to the front, so one that was covered by a
+        // neighbour is fully visible (the last child of an <svg> is on top)
+        if (isSelected) pin.parentElement?.appendChild(pin);
       });
       panels.forEach((panel) => {
         panel.hidden = panel.dataset.panel !== id;
