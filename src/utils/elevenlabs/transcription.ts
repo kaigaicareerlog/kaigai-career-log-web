@@ -71,6 +71,8 @@ export interface ScribeOptions {
   numSpeakers?: number;
   /** Proper nouns to bias recognition towards (adds a 20% surcharge) */
   keyterms?: string[];
+  /** Keep filler words and false starts (default: drop them) */
+  verbatim?: boolean;
 }
 
 /**
@@ -82,7 +84,7 @@ export interface ScribeOptions {
 export async function transcribeAudioWithElevenLabs(
   audioUrl: string,
   apiKey: string,
-  { numSpeakers, keyterms = [] }: ScribeOptions = {}
+  { numSpeakers, keyterms = [], verbatim = false }: ScribeOptions = {}
 ): Promise<TranscriptionResult> {
   const form = new FormData();
   form.append('model_id', 'scribe_v2');
@@ -92,7 +94,7 @@ export async function transcribeAudioWithElevenLabs(
   form.append('timestamps_granularity', 'word');
   form.append('tag_audio_events', 'false');
   // Drop filler words (えー, あの, ...) and false starts
-  form.append('no_verbatim', 'true');
+  if (!verbatim) form.append('no_verbatim', 'true');
   if (numSpeakers) form.append('num_speakers', String(numSpeakers));
   for (const term of keyterms) form.append('keyterms', term);
 
