@@ -6,7 +6,9 @@ Guide to update speaker labels in transcripts (e.g., from "A", "B", "C" to real 
 
 ## Why Update Speakers?
 
-After transcription, speakers are labeled as "A", "B", "C", etc. You should update these to real names so:
+Transcripts made with ElevenLabs Scribe get names automatically (see [TRANSCRIPTION_GUIDE.md](TRANSCRIPTION_GUIDE.md)); use this guide for the labels it could not name or got wrong. Older AssemblyAI transcripts use "A", "B", "C"; Scribe transcripts use "speaker_0", "speaker_1", .... The workflow's Speaker A / B / C / D fields map to whichever the transcript uses.
+
+You should update labels to real names so:
 
 - ✅ Visitors see who's speaking
 - ✅ Host avatars and colors display correctly
@@ -18,11 +20,12 @@ After transcription, speakers are labeled as "A", "B", "C", etc. You should upda
 
 ### Hosts
 
-| Name      | Avatar | Color  |
-| --------- | ------ | ------ |
-| **Ryo**   | 👨     | Blue   |
-| **Senna** | 👩     | Pink   |
-| **Ayaka** | 👩     | Purple |
+| Name        | Avatar | Color  |
+| ----------- | ------ | ------ |
+| **Ryo**     | 👨     | Blue   |
+| **Senna**   | 👩     | Pink   |
+| **Hiroshi** | 👨     | Green  |
+| **Ayaka**   | 👩     | Purple |
 
 ### Guests
 
@@ -291,13 +294,13 @@ After updating speakers:
 
 ## Quick Reference
 
-| Task                         | Command                                                       |
-| ---------------------------- | ------------------------------------------------------------- |
-| Update via GitHub Actions    | Actions → Update Transcript Speakers → Fill all names → Run   |
-| Update locally               | `npm run update-speakers <guid> <A-name> [B] [C] [D]`        |
-| Check current speakers       | `cat public/transcripts/{guid}.json \| grep speaker`          |
-| Host names (special display) | Ryo, Senna, Ayaka (get custom avatars/colors)                 |
-| Guest names                  | Any name (e.g., "John Smith" - gets default appearance)       |
+| Task                         | Command                                                     |
+| ---------------------------- | ----------------------------------------------------------- |
+| Update via GitHub Actions    | Actions → Update Transcript Speakers → Fill all names → Run |
+| Update locally               | `npm run update-speakers <guid> <A-name> [B] [C] [D]`       |
+| Check current speakers       | `cat public/transcripts/{guid}.json \| grep speaker`        |
+| Host names (special display) | Ryo, Senna, Ayaka (get custom avatars/colors)               |
+| Guest names                  | Any name (e.g., "John Smith" - gets default appearance)     |
 
 ---
 

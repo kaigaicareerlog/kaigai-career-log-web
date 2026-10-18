@@ -11,8 +11,9 @@
     "format:check": "prettier --check .",
     "update-episode-urls": "tsx scripts/update-episode-urls.ts",
     "transcribe": "tsx scripts/transcribe-episode.ts",
-    "cleanup-transcript": "tsx scripts/cleanup-transcript.ts",
+    "apply-glossary": "tsx scripts/apply-glossary.ts",
     "update-speakers": "tsx scripts/update-transcript-speakers.ts",
+    "name-speakers": "tsx scripts/name-speakers.ts",
     "generate-highlights": "tsx scripts/generate-highlights.ts",
     "update-new-episode-urls": "tsx scripts/update-new-episode-urls.ts",
     "update-episode-by-guid": "tsx scripts/update-episode-by-guid.ts",
@@ -21,6 +22,7 @@
     "generate-episodes": "tsx scripts/generate-episodes.ts",
     "cleanup-rss-files": "tsx scripts/cleanup-old-rss-files.ts",
     "tag-episodes": "tsx scripts/tag-episodes.ts",
+    "compare-transcription": "tsx scripts/compare-transcription.ts",
     "test": "tsx --test \"src/**/*.test.ts\"",
     "backfill-city-tags": "tsx scripts/backfill-city-tags.ts"
   },

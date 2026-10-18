@@ -14,7 +14,8 @@ Each episode has guest facts and tags stored in `src/data/episodeMeta.json`
 ## How the data is made
 
 `npm run tag-episodes` asks Groq (`openai/gpt-oss-120b`) to read each episode's
-title, description (and highlights, if a transcript exists) and return:
+title, description (and, if a transcript exists, its highlights and opening
+minutes, where guests introduce their job, company and city) and return:
 
 ```json
 {
@@ -33,8 +34,11 @@ title, description (and highlights, if a transcript exists) and return:
   a warning (add it to the vocabulary if it is worth keeping).
 - Every result is saved with `"reviewed": false`.
 
-The weekly RSS workflow runs the same script, so new episodes are tagged
-automatically. Existing entries are never overwritten unless you ask.
+The daily RSS workflow runs the same script, so new episodes are tagged
+automatically from the title and description. When an episode is transcribed
+later, the transcription workflow retags it with the transcript
+(`--guid=<guid> --force --keep-reviewed`), unless a human already reviewed
+it. Existing entries are never overwritten otherwise.
 
 ## Reviewing (do this once, and spot-check new episodes)
 
@@ -55,13 +59,14 @@ Note: positions and companies are as of the recording and can go out of date.
 
 ## Other commands
 
-| Command                                         | What it does                                   |
-| ----------------------------------------------- | ---------------------------------------------- |
-| `npm run tag-episodes -- --limit=5`             | Tag at most 5 untagged episodes                |
-| `npm run tag-episodes -- --guid=<guid> --force` | Redo one episode (also works on reviewed ones) |
-| `npm run tag-episodes -- --force`               | Redo all **unreviewed** episodes               |
-| `npm run tag-episodes -- --model=<groq-model>`  | Use another Groq model                         |
-| `npm run tag-episodes -- --delay=8000`          | Wait longer between requests                   |
+| Command                                                         | What it does                                   |
+| --------------------------------------------------------------- | ---------------------------------------------- |
+| `npm run tag-episodes -- --limit=5`                             | Tag at most 5 untagged episodes                |
+| `npm run tag-episodes -- --guid=<guid> --force`                 | Redo one episode (also works on reviewed ones) |
+| `npm run tag-episodes -- --guid=<guid> --force --keep-reviewed` | Redo one episode unless it was reviewed        |
+| `npm run tag-episodes -- --force`                               | Redo all **unreviewed** episodes               |
+| `npm run tag-episodes -- --model=<groq-model>`                  | Use another Groq model                         |
+| `npm run tag-episodes -- --delay=8000`                          | Wait longer between requests                   |
 
 Groq's free tier has per-minute and per-day token limits. The script waits and
 retries on per-minute limits; on the daily limit it stops, keeps everything

@@ -2,23 +2,36 @@
 
 ## Overview
 
-The RSS update workflow now automatically transcribes new episodes and generates highlights when it runs.
+New episodes are transcribed automatically every day, each into its own pull
+request for review. See [TRANSCRIPTION_GUIDE.md](TRANSCRIPTION_GUIDE.md) for
+setup, the budget guard and the proper-noun glossary.
 
 ## How It Works
 
-When the `update-rss.yml` workflow runs (daily or manually):
+1. `update-rss.yml` (daily, 23:00 UTC) adds new episodes and tags them from
+   the title and description
+2. `transcribe-new-episodes.yml` (daily, 01:00 UTC) finds episodes with no
+   transcript, newest first (1 per run by default), skipping any that already
+   have an open transcript PR, and runs **Transcribe Episode** for each
+3. **Transcribe Episode**:
+   - checks the monthly budget, transcribes with ElevenLabs Scribe and records
+     the spend on `main`
+   - generates highlights and names the speakers
+   - retags the episode with the transcript (reviewed tags are kept) and
+     pushes the tags to `main`
+   - opens a PR with the transcript; the description lists the speaker names
+     and anything to check
+4. Merge the PR to publish the transcript
 
-1. **Downloads RSS feed** - Fetches the latest podcast RSS feed
-2. **Converts to JSON** - Parses episode data into structured format
-3. **Generates episodes.json** - Creates/updates episode data with metadata
-4. **Updates URLs** - Finds Spotify and YouTube URLs for new episodes
-5. **Commits changes** - Saves all updates to the repository
+To transcribe several older episodes at once, run **Transcribe New Episodes**
+manually with a larger "How many episodes" value (raise
+`MONTHLY_TRANSCRIPTION_BUDGET_USD` first if needed).
 
 ## Required Secrets
 
 Make sure these secrets are configured in your GitHub repository:
 
-- `ASSEMBLYAI_API_KEY` - For episode transcription
+- `ELEVENLABS_API_KEY` - For episode transcription (see [TRANSCRIPTION_GUIDE.md](TRANSCRIPTION_GUIDE.md))
 - `GROQ_API_KEY` - For AI-generated highlights
 - `SPOTIFY_CLIENT_ID` - For Spotify URL finding
 - `SPOTIFY_CLIENT_SECRET` - For Spotify URL finding
@@ -36,8 +49,7 @@ If you need to manually transcribe an episode:
 
 The workflow will:
 
-- Transcribe the episode using AssemblyAI
-- Clean up the transcript
+- Transcribe the episode using ElevenLabs Scribe (within the monthly budget)
 - Generate highlights (unless unchecked)
 - Commit the changes
 
@@ -45,7 +57,7 @@ The workflow will:
 
 ✅ **Manual transcription** - Transcribe episodes on-demand via GitHub Actions
 ✅ **AI-generated highlights** - Automatically creates episode highlights
-✅ **Clean transcripts** - Automatic cleanup and formatting
+✅ **Readable transcripts** - Punctuation and consistent proper nouns
 ✅ **Speaker diarization** - Identifies different speakers in episodes
 
 ## Troubleshooting

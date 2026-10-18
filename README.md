@@ -76,7 +76,8 @@ npm run preview
 - `npm run preview` - Preview production build locally
 - `npm run astro` - Run Astro CLI commands
 - `npm run update-episode-urls` - Update episode URLs by GUID
-- `npm run transcribe <guid>` - Transcribe an episode using AssemblyAI
+- `npm run transcribe <guid>` - Transcribe an episode using ElevenLabs Scribe (see [docs/TRANSCRIPTION_GUIDE.md](docs/TRANSCRIPTION_GUIDE.md))
+- `npm run apply-glossary <guid>` - Re-apply the proper-noun glossary to an existing transcript
 - `npm run tag-episodes` - Tag episodes with guest info and topics (see [docs/EPISODE_TAGGING.md](docs/EPISODE_TAGGING.md))
 - `npm test` - Run unit tests
 - `npm run update-new-episode-urls <file>` - Update platform URLs (Spotify, YouTube, Apple Podcasts, Amazon Music) in episodes file
@@ -152,44 +153,16 @@ npm run update-episode-urls <guid> [spotify_url] [youtube_url] [apple_podcast_ur
 
 ## 📝 エピソード文字起こし
 
-AssemblyAI を使用してエピソードの自動文字起こしを生成できます。
+ElevenLabs Scribe v2 を使用してエピソードの自動文字起こしを生成できます。セットアップ（ElevenLabs 側の上限設定を含む）、固有名詞の辞書、予算ガードは [docs/TRANSCRIPTION_GUIDE.md](docs/TRANSCRIPTION_GUIDE.md) を参照してください。
 
-### セットアップ
-
-1. API キーを取得：
-   - [AssemblyAI](https://www.assemblyai.com/) で API キーを取得
-2. GitHub リポジトリの Secrets に追加：
-   - `ASSEMBLYAI_API_KEY`
-3. GitHub Actions から「Transcribe Episode」ワークフローを実行
-
-### 使い方
-
-**GitHub Actions（推奨）:**
-
-1. Actions タブ → Transcribe Episode を選択
-2. Episode GUID を入力
-3. （オプション）"Generate highlights after transcription" にチェックを入れる
-4. 実行 - 文字起こし + テキスト整形（+ ハイライト生成）が自動で完了！
-5. 変更が自動的に main ブランチにコミットされます
+**GitHub Actions（推奨）:** Actions タブ → Transcribe Episode → Episode GUID を入力して実行
 
 **ローカル実行:**
 
 ```bash
-# ステップ1: 文字起こし（音声→テキスト）
-export ASSEMBLYAI_API_KEY="your-api-key"
+export ELEVENLABS_API_KEY="your-api-key"
 npm run transcribe <episode-guid>
-
-# ステップ2: テキスト整形（スペース削除）
-npm run cleanup-transcript <episode-guid>
 ```
-
-### テキスト整形
-
-文字起こし後、テキストを自動整形します：
-
-- すべてのスペースを削除
-- ピリオド (.) を日本語の句点 (。) に変換
-- 句点で改行を追加
 
 ### ハイライト生成
 
