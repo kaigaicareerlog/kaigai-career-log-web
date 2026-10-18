@@ -1,12 +1,16 @@
 {
   "2026-10": {
-    "audioSeconds": 13402,
-    "estimatedUsd": 1.2062,
+    "audioSeconds": 22716,
+    "estimatedUsd": 2.0444,
     "episodes": [
       "649318c7-c7cd-478b-9270-5ea26028adb8",
       "649318c7-c7cd-478b-9270-5ea26028adb8",
       "033e04d5-afc4-4715-a2ed-49bd8d229c75",
-      "033e04d5-afc4-4715-a2ed-49bd8d229c75"
+      "033e04d5-afc4-4715-a2ed-49bd8d229c75",
+      "33115e65-8fd7-4b72-98bd-62adc4124b7a",
+      "33115e65-8fd7-4b72-98bd-62adc4124b7a",
+      "bff2d6e2-5867-40ee-a1d4-9a7d6e9db2c8",
+      "bff2d6e2-5867-40ee-a1d4-9a7d6e9db2c8"
     ]
   }
 }
