@@ -1004,7 +1004,7 @@
   "90366a52-c998-4704-a4d2-909aeeec5b24": {
     "guests": [
       {
-        "name": "ケムケム",
+        "name": "Kemkem",
         "position": "FDE",
         "company": null
       }
@@ -1019,7 +1019,9 @@
       "vancouver"
     ],
     "topics": [
-      "ai"
+      "job-change",
+      "startup",
+      "job-hunting"
     ],
     "reviewed": false
   },
