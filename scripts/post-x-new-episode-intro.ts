@@ -18,6 +18,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import OAuth from 'oauth-1.0a';
 import crypto from 'crypto';
+import { SITE_URL } from '../src/constants/site';
 import { formatNewEpisodeMainTweet } from '../src/utils/x/formatNewEpisodeMainTweet';
 import { findLatestEpisodesFile } from '../src/utils/findLatestEpisodesFile';
 import { getEpisodeByGuid } from '../src/utils/getEpisodeByGuid';
@@ -128,7 +129,10 @@ async function main() {
   const mainTweetText = formatNewEpisodeMainTweet(episode, hosts);
 
   // Format URLs tweet (as reply)
-  const urlsTweetText = formatNewEpisodeUrlsTweet(episode);
+  const urlsTweetText = formatNewEpisodeUrlsTweet(
+    episode,
+    `${SITE_URL}/episodes/${episode.guid}/`
+  );
 
   console.log('📄 Main tweet content:');
   console.log('─'.repeat(50));

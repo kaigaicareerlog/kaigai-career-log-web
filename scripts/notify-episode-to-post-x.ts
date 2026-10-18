@@ -47,10 +47,11 @@ async function main(): Promise<void> {
   logger.info(`Found episode to post: ${episode.title}`);
 
   const title = `📣 Xに投稿: ${truncateText(episode.title, ISSUE_TITLE_MAX_CHARS)}`;
+  const episodePageUrl = `${SITE_URL}/episodes/${episode.guid}/`;
   const body = buildEpisodePostIssueBody({
-    episodePageUrl: `${SITE_URL}/episodes/${episode.guid}/`,
+    episodePageUrl,
     mainTweetText: formatNewEpisodeMainTweet(episode, hosts),
-    urlsTweetText: formatNewEpisodeUrlsTweet(episode),
+    urlsTweetText: formatNewEpisodeUrlsTweet(episode, episodePageUrl),
   });
 
   const args = ['issue', 'create', '--title', title, '--body', body];
