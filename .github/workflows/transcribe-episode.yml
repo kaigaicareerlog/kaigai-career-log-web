@@ -24,6 +24,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 # One transcription at a time, so the monthly budget check can't be raced
 concurrency:
@@ -63,16 +64,55 @@ jobs:
           if [ "$FORCE" = "true" ]; then ARGS+=("--force"); fi
           npx tsx scripts/transcribe-episode.ts "${ARGS[@]}"
 
+      # Record spend on main straight away, even if the transcript PR is
+      # never merged, so the monthly budget check stays accurate
+      - name: Record transcription usage
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/data/transcriptionUsage.json
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: record transcription usage for ${{ inputs.episode_guid }}"
+            git push
+          fi
+
+      # Groq steps may fail (e.g. daily limit); the paid transcript still
+      # goes to the PR and these can be rerun later
       - name: Generate highlights
         if: ${{ inputs.generate_highlights }}
+        continue-on-error: true
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: npm run generate-highlights ${{ inputs.episode_guid }}
 
-      - name: Commit and push changes
+      - name: Name speakers
+        continue-on-error: true
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add public/transcripts/${{ inputs.episode_guid }}.json src/data/transcriptionUsage.json
-          git diff --staged --quiet || git commit -m "Add transcription for episode ${{ inputs.episode_guid }}"
-          git push
+          npx tsx scripts/name-speakers.ts ${{ inputs.episode_guid }} --report="$RUNNER_TEMP/speakers.md" \
+            || echo "⚠️ 話者名の自動付与に失敗しました。Update Transcript Speakers ワークフローで付けてください。" > "$RUNNER_TEMP/speakers.md"
+
+      - name: Write PR description
+        run: |
+          {
+            echo "Scribe で文字起こししました。マージするとサイトに公開されます。"
+            echo
+            cat "$RUNNER_TEMP/speakers.md" 2>/dev/null || true
+            echo
+            echo "- Workflow run: [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+          } > "$RUNNER_TEMP/pr-body.md"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          add-paths: public/transcripts/${{ inputs.episode_guid }}.json
+          commit-message: 'Add transcription for episode ${{ inputs.episode_guid }}'
+          title: '🎙️ Transcript: ${{ inputs.episode_guid }}'
+          body-path: ${{ runner.temp }}/pr-body.md
+          branch: automated/transcript-${{ inputs.episode_guid }}
+          delete-branch: true
+          labels: |
+            automated
+            transcript

@@ -165,6 +165,8 @@ export interface TranscriptJSON {
     end: number;
     timestamp: string;
   }>;
+  /** Diarization label → person, set when speakers were named automatically */
+  speakerMap?: Record<string, string>;
   highlight1?: string;
   highlight2?: string;
   highlight3?: string;

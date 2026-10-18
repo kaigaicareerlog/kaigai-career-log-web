@@ -1,6 +1,8 @@
 /**
  * Script to update speaker labels in a transcript
  * Usage: tsx scripts/update-transcript-speakers.ts <guid> <speaker-A-name> [speaker-B-name] [speaker-C-name] [speaker-D-name]
+ * Names map in order to A, B, C, D (AssemblyAI transcripts) or to speaker_0,
+ * speaker_1, ... (ElevenLabs Scribe transcripts).
  * Examples:
  *   tsx scripts/update-transcript-speakers.ts <guid> Ryo Senna
  *   tsx scripts/update-transcript-speakers.ts <guid> Ryo "John Smith"
@@ -115,8 +117,12 @@ if (args.length < 2) {
 
 const [guid, ...speakerNames] = args;
 
-// Build speaker mappings (A, B, C, D, ...)
-const speakerLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+// Build speaker mappings: A, B, C, ... or speaker_0, speaker_1, ... for Scribe
+const isScribe =
+  getTranscriptByGuid(guid).transcriber === 'elevenlabs-scribe-v2';
+const speakerLabels = isScribe
+  ? Array.from({ length: 8 }, (_, i) => `speaker_${i}`)
+  : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const speakerMappings: SpeakerMapping[] = speakerNames.map((name, index) => ({
   oldLabel: speakerLabels[index],
   newName: name,

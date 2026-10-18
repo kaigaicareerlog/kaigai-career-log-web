@@ -60,7 +60,14 @@ GitHub Actions がコミットできるように設定します：
    - **Redo**（任意）: Scribe で文字起こし済みの回をやり直す時だけチェック
 4. **Run workflow** をクリック
 
-文字起こし、ハイライト生成（既にある場合は残す）、コミットまで自動で行います。
+次の順に自動で進み、最後に **PR** が作られます：
+
+1. 予算チェック → Scribe で文字起こし（使用量の記録はすぐ main にコミット）
+2. ハイライト生成（既にある場合は残す）
+3. 話者名の自動付与（下記）
+4. 文字起こしの PR を作成。本文に話者名の結果と要確認の点が載るので、確認してマージするとサイトに公開されます
+
+ハイライトや話者名（Groq）が失敗しても、文字起こしは PR に入ります。
 
 ### 方法 2: ローカルで実行
 
@@ -70,6 +77,21 @@ export ELEVENLABS_API_KEY="your-api-key"
 npm run transcribe <episode-guid>
 npm run transcribe <episode-guid> -- --speakers=3   # 話者数を指定
 npm run transcribe <episode-guid> -- --force        # Scribe 済みの回をやり直す
+```
+
+## 🗣️ 話者名の自動付与
+
+`npm run name-speakers <guid>` が、冒頭の自己紹介（「FROGのSennaです」など）から `speaker_0` などを名前に置き換えます（Groq）。間違った名前を付けるより残す方を優先しています：
+
+- モデルが確信を持てた名前で、ローマ字で、**文字起こしの冒頭に実際に出てくる名前**だけを使います
+- 1 人だけ残った場合は、まだ割り当てていない登場人物が 1 人ならその人にします（PR では「消去法・要確認」と表示）
+- 2 つのラベルが同じ人になった場合は、どちらも付けません
+- インタビュー回でゲストより他の人の発話が多い場合は、話者分離が混ざっている可能性として警告します
+
+残ったラベルは [Update Speakers](UPDATE_SPEAKERS.md) で付けてください。Scribe の話者分離は回の後半でずれたり、2 人が 1 つのラベルに混ざったりすることがあるので、PR では後半の発言者も確認してください。
+
+```bash
+npm run name-speakers <episode-guid> -- --dry-run   # 保存せずに結果だけ見る
 ```
 
 ## 📖 固有名詞の辞書
@@ -127,7 +149,7 @@ npm run apply-glossary -- --all   # Scribe の文字起こし全部
 
 `duration` は秒、`start` / `end` はミリ秒です。`transcriber` がない文字起こしは、以前の AssemblyAI のものです。
 
-話者名は [Update Speakers](UPDATE_SPEAKERS.md) で付けられます（例: `speaker_0` → `Senna`）。
+話者名は自動で付けられ（上記）、`speakerMap` に元のラベルとの対応が残ります。手で直す場合は [Update Speakers](UPDATE_SPEAKERS.md) を使います（例: `speaker_0` → `Senna`）。
 
 ## 🔧 トラブルシューティング
 

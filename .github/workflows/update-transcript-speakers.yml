@@ -8,19 +8,19 @@ on:
         required: true
         type: string
       speaker_a_name:
-        description: 'Speaker A name (leave empty to skip)'
+        description: 'Speaker A / speaker_0 name (leave empty to skip)'
         required: false
         type: string
       speaker_b_name:
-        description: 'Speaker B name (leave empty to skip)'
+        description: 'Speaker B / speaker_1 name (leave empty to skip)'
         required: false
         type: string
       speaker_c_name:
-        description: 'Speaker C name (leave empty to skip)'
+        description: 'Speaker C / speaker_2 name (leave empty to skip)'
         required: false
         type: string
       speaker_d_name:
-        description: 'Speaker D name (leave empty to skip)'
+        description: 'Speaker D / speaker_3 name (leave empty to skip)'
         required: false
         type: string
 

@@ -13,6 +13,7 @@
     "transcribe": "tsx scripts/transcribe-episode.ts",
     "apply-glossary": "tsx scripts/apply-glossary.ts",
     "update-speakers": "tsx scripts/update-transcript-speakers.ts",
+    "name-speakers": "tsx scripts/name-speakers.ts",
     "generate-highlights": "tsx scripts/generate-highlights.ts",
     "update-new-episode-urls": "tsx scripts/update-new-episode-urls.ts",
     "update-episode-by-guid": "tsx scripts/update-episode-by-guid.ts",
