@@ -129,7 +129,7 @@
     "guests": [
       {
         "name": "ケムケム",
-        "position": null,
+        "position": "engineer",
         "company": null
       }
     ],
@@ -143,11 +143,11 @@
       "vancouver"
     ],
     "topics": [
+      "english",
       "study-abroad",
       "job-hunting",
       "salary",
-      "english",
-      "startup"
+      "big-tech"
     ],
     "reviewed": false
   },
@@ -245,8 +245,10 @@
       "vancouver"
     ],
     "topics": [
+      "job-hunting",
       "no-experience",
-      "job-hunting"
+      "english",
+      "local-hire"
     ],
     "reviewed": false
   },
@@ -274,7 +276,7 @@
       {
         "name": "Misuzu",
         "position": "SRE",
-        "company": null
+        "company": "Vancity"
       }
     ],
     "roles": [
@@ -288,9 +290,10 @@
     ],
     "topics": [
       "english",
-      "no-experience",
+      "visa",
       "job-change",
-      "work-style"
+      "local-hire",
+      "study-abroad"
     ],
     "reviewed": false
   },
@@ -448,7 +451,7 @@
     "guests": [
       {
         "name": "Naoya",
-        "position": "ソフトウェアエンジニア",
+        "position": "エンジニア",
         "company": null
       }
     ],
@@ -464,9 +467,8 @@
     "topics": [
       "english",
       "job-change",
-      "job-hunting",
-      "no-experience",
-      "study-abroad"
+      "study-abroad",
+      "visa"
     ],
     "reviewed": false
   },
@@ -544,8 +546,8 @@
     ],
     "topics": [
       "visa",
-      "job-change",
-      "study-abroad"
+      "job-hunting",
+      "startup"
     ],
     "reviewed": false
   },
@@ -602,7 +604,7 @@
     "guests": [
       {
         "name": "Naoya",
-        "position": "エンジニア",
+        "position": "フロントエンドデベロッパー",
         "company": null
       }
     ],
@@ -616,9 +618,10 @@
       "vancouver"
     ],
     "topics": [
-      "local-hire",
-      "ai",
+      "english",
       "visa",
+      "local-hire",
+      "startup",
       "job-change"
     ],
     "reviewed": false
@@ -994,17 +997,17 @@
     ],
     "topics": [
       "visa",
-      "ai",
       "job-change",
-      "work-style",
-      "local-hire"
+      "startup",
+      "ai",
+      "work-style"
     ],
     "reviewed": false
   },
   "90366a52-c998-4704-a4d2-909aeeec5b24": {
     "guests": [
       {
-        "name": "ケムケム",
+        "name": "Kemkem",
         "position": "FDE",
         "company": null
       }
@@ -1019,7 +1022,9 @@
       "vancouver"
     ],
     "topics": [
-      "ai"
+      "job-change",
+      "startup",
+      "job-hunting"
     ],
     "reviewed": false
   },
@@ -1038,12 +1043,14 @@
       "canada"
     ],
     "cities": [
-      "vancouver"
+      "toronto"
     ],
     "topics": [
+      "english",
+      "visa",
       "job-hunting",
-      "work-style",
-      "startup"
+      "startup",
+      "work-style"
     ],
     "reviewed": false
   },
@@ -1514,15 +1521,15 @@
       "canada"
     ],
     "cities": [
-      "vancouver",
-      "toronto"
+      "toronto",
+      "vancouver"
     ],
     "topics": [
       "english",
-      "no-experience",
+      "visa",
+      "job-hunting",
       "local-hire",
-      "job-change",
-      "study-abroad"
+      "startup"
     ],
     "reviewed": false
   },
@@ -1643,11 +1650,11 @@
       "vancouver"
     ],
     "topics": [
+      "visa",
+      "job-hunting",
       "salary",
-      "startup",
-      "ai",
-      "return-to-japan",
-      "work-style"
+      "work-style",
+      "return-to-japan"
     ],
     "reviewed": false
   },
