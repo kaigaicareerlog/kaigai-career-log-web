@@ -134,7 +134,12 @@ Youtube
 
 Amazon Music
 [Amazon Music URL]
+
+文字起こし・聴きどころ
+[Episode page URL on kaigaicareerlog.com]
 ```
+
+The episode page goes last because X builds the link card from the last URL: the reply then shows the episode's share image (generated at build time, `/og/episodes/<guid>.png`).
 
 **Benefits:**
 

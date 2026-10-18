@@ -112,6 +112,8 @@ const jsonLd = [
   title={`${episode.title} - ${SITE_NAME}`}
   description={truncateText(episode.description, META_DESCRIPTION_MAX_LENGTH)}
   ogType="article"
+  ogImage={`/og/episodes/${episode.guid}.png`}
+  largeImage
   jsonLd={jsonLd}
 >
   <main class="flex-1">
