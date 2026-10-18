@@ -11,7 +11,7 @@ import {
   SITE_NAME,
   SITE_URL,
 } from '../../constants/site';
-import type { PodcastEpisode } from '../../types';
+import type { EpisodeGuest, PodcastEpisode } from '../../types';
 import { toAbsoluteUrl } from './toAbsoluteUrl';
 import { toIsoDuration } from './toIsoDuration';
 
@@ -44,16 +44,50 @@ export function buildPodcastSeriesJsonLd(): JsonLd {
   };
 }
 
+export interface PodcastEpisodeDetails {
+  /** Hosts heard in the episode */
+  hostNames?: string[];
+  /** Tagged guests (name, position, company) */
+  guests?: EpisodeGuest[];
+  /** Tag labels (countries, cities, roles, topics) */
+  keywords?: string[];
+}
+
+function guestPerson(guest: EpisodeGuest): JsonLd | null {
+  if (!guest.name) return null;
+  return {
+    '@type': 'Person',
+    name: guest.name,
+    ...(guest.position ? { jobTitle: guest.position } : {}),
+    ...(guest.company
+      ? { worksFor: { '@type': 'Organization', name: guest.company } }
+      : {}),
+  };
+}
+
 /**
  * schema.org PodcastEpisode for an episode page
  * @param episode - The episode being rendered
  * @param pageUrl - Canonical absolute URL of the episode page
+ * @param details - People and tags, when known
  */
 export function buildPodcastEpisodeJsonLd(
   episode: PodcastEpisode,
-  pageUrl: string
+  pageUrl: string,
+  { hostNames = [], guests = [], keywords = [] }: PodcastEpisodeDetails = {}
 ): JsonLd {
   const published = new Date(episode.date);
+  const actors = [
+    ...hostNames.map((name) => ({ '@type': 'Person', name })),
+    ...guests.flatMap((guest) => guestPerson(guest) ?? []),
+  ];
+  // The same episode on the listening platforms
+  const sameAs = [
+    episode.spotifyUrl,
+    episode.applePodcastUrl,
+    episode.youtubeUrl,
+    episode.amazonMusicUrl,
+  ].filter((url): url is string => Boolean(url));
 
   return {
     '@context': 'https://schema.org',
@@ -79,6 +113,9 @@ export function buildPodcastEpisodeJsonLd(
       name: SITE_NAME,
       url: `${SITE_URL}/`,
     },
+    ...(actors.length > 0 ? { actor: actors } : {}),
+    ...(keywords.length > 0 ? { keywords: keywords.join(', ') } : {}),
+    ...(sameAs.length > 0 ? { sameAs } : {}),
   };
 }
 

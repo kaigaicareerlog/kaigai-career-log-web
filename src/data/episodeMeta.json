@@ -583,7 +583,7 @@
       {
         "name": "Wataru",
         "position": "スタッフエンジニア",
-        "company": null
+        "company": "Unity"
       }
     ],
     "roles": [
@@ -1039,7 +1039,7 @@
       {
         "name": "Yugo",
         "position": "iOSエンジニア",
-        "company": null
+        "company": "TransCrypts"
       }
     ],
     "roles": [
@@ -1231,7 +1231,7 @@
       {
         "name": "Shoko",
         "position": "iOSエンジニア",
-        "company": "LightSpeed"
+        "company": "Lightspeed"
       }
     ],
     "roles": [
@@ -1734,7 +1734,7 @@
       {
         "name": "Aki",
         "position": "プリンシパルエンジニア",
-        "company": "TresureData"
+        "company": "Treasure Data"
       }
     ],
     "roles": [
@@ -1898,7 +1898,7 @@
   "fff05294-4f54-4e0f-a290-490b01bb949a": {
     "guests": [
       {
-        "name": "ケイ",
+        "name": "Kei",
         "position": "シニアエンジニア",
         "company": null
       }

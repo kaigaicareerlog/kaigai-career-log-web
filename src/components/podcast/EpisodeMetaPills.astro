@@ -5,6 +5,11 @@ import {
   getEpisodePills,
   type EpisodePillVariant,
 } from '../../utils/episodeMeta/getEpisodePills';
+import {
+  getCompanyPagePath,
+  getCompanySlug,
+} from '../../utils/episodeMeta/getCompanyPages';
+import { getLinkableCompanySlugs } from '../../utils/episodeMeta/getLinkableCompanySlugs';
 import { getLinkableTagSlugs } from '../../utils/episodeMeta/getLinkableTagSlugs';
 import { getTagPagePath } from '../../utils/episodeMeta/getTagPages';
 import Badge from '../ui/Badge.astro';
@@ -19,11 +24,18 @@ interface Props {
 const { meta, variant = 'card', class: className = '' } = Astro.props;
 const pills = getEpisodePills(meta, variant);
 const linkable = await getLinkableTagSlugs();
+const linkableCompanies = await getLinkableCompanySlugs();
 
 // Place and topic badges link to their tag page when there is one. `relative
 // z-10` keeps them clickable above a card's full-card link.
 const hrefFor = (slug?: string) =>
   slug && linkable.has(slug) ? getTagPagePath(slug) : undefined;
+const companyHref = (name: string) => {
+  const slug = getCompanySlug(name);
+  return slug && linkableCompanies.has(slug)
+    ? getCompanyPagePath(slug)
+    : undefined;
+};
 ---
 
 {
@@ -38,7 +50,7 @@ const hrefFor = (slug?: string) =>
             </Badge>
           )}
           {pill.kind === 'company' && (
-            <Badge>
+            <Badge href={companyHref(pill.label)} class="relative z-10">
               <Building2 class="size-3" aria-hidden="true" />
               {pill.label}
             </Badge>

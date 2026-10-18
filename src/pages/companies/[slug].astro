@@ -1,0 +1,93 @@
+---
+import { ChevronRight } from '@lucide/astro';
+import PodcastEpisodeCard from '../../components/podcast/PodcastEpisodeCard.astro';
+import { SITE_NAME } from '../../constants/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { readEpisodeMetaMap } from '../../utils/episodeMeta/episodeMetaFile';
+import {
+  getCompanyPagePath,
+  getCompanyPages,
+} from '../../utils/episodeMeta/getCompanyPages';
+import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
+import {
+  buildBreadcrumbJsonLd,
+  buildCollectionPageJsonLd,
+} from '../../utils/seo';
+import { getCompanyPageSeo } from '../../utils/seo/getCompanyPageSeo';
+
+export async function getStaticPaths() {
+  const { episodes } = await getLatestEpisodes();
+  return getCompanyPages(episodes, readEpisodeMetaMap()).map((company) => ({
+    params: { slug: company.slug },
+    props: { company },
+  }));
+}
+
+const { company } = Astro.props;
+const seo = getCompanyPageSeo(
+  company.name,
+  company.episodes.length,
+  company.guests
+);
+const path = getCompanyPagePath(company.slug);
+
+const jsonLd = [
+  buildBreadcrumbJsonLd([
+    { name: SITE_NAME, url: '/' },
+    { name: '会社', url: '/companies/' },
+    { name: company.name, url: path },
+  ]),
+  buildCollectionPageJsonLd({
+    name: seo.heading,
+    description: seo.description,
+    url: path,
+    episodeUrls: company.episodes.map(
+      (episode) => `/episodes/${episode.guid}/`
+    ),
+  }),
+];
+---
+
+<BaseLayout
+  title={`${seo.title} - ${SITE_NAME}`}
+  description={seo.description}
+  jsonLd={jsonLd}
+>
+  <main class="flex-1">
+    <div class="mx-auto max-w-5xl px-4 py-8">
+      <nav
+        aria-label="パンくず"
+        class="mb-6 flex items-center gap-1 text-sm text-muted-foreground"
+      >
+        <a href="/companies/" class="transition-colors hover:text-foreground">
+          会社
+        </a>
+        <ChevronRight class="size-3.5" aria-hidden="true" />
+        <span>{company.name}</span>
+      </nav>
+
+      <header class="mb-8">
+        <h1 class="mb-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+          {seo.heading}
+        </h1>
+        <p class="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          {seo.description}
+        </p>
+        <p class="mt-2 text-xs text-muted-foreground">
+          肩書・所属は収録時点の情報です。
+        </p>
+      </header>
+
+      <p class="mb-3 text-sm text-muted-foreground">
+        全{company.episodes.length}話
+      </p>
+      <div class="grid grid-cols-1 gap-3">
+        {
+          company.episodes.map((episode) => (
+            <PodcastEpisodeCard podcast={episode} />
+          ))
+        }
+      </div>
+    </div>
+  </main>
+</BaseLayout>
