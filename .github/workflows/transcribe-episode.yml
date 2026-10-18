@@ -7,6 +7,15 @@ on:
         description: 'Episode GUID to transcribe'
         required: true
         type: string
+      num_speakers:
+        description: 'Exact number of speakers (Scribe only, leave empty to auto-detect)'
+        required: false
+        type: string
+      force:
+        description: 'Redo an episode that was already transcribed with Scribe'
+        required: false
+        type: boolean
+        default: false
       generate_highlights:
         description: 'Generate highlights after transcription'
         required: false
@@ -15,6 +24,11 @@ on:
 
 permissions:
   contents: write
+
+# One transcription at a time, so the monthly budget check can't be raced
+concurrency:
+  group: transcription
+  cancel-in-progress: false
 
 jobs:
   transcribe:
@@ -38,11 +52,16 @@ jobs:
 
       - name: Run transcription
         env:
-          ASSEMBLYAI_API_KEY: ${{ secrets.ASSEMBLYAI_API_KEY }}
-        run: npm run transcribe ${{ inputs.episode_guid }}
-
-      - name: Cleanup transcript
-        run: npx tsx scripts/cleanup-transcript.ts ${{ inputs.episode_guid }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          MONTHLY_TRANSCRIPTION_BUDGET_USD: ${{ vars.MONTHLY_TRANSCRIPTION_BUDGET_USD || '5' }}
+          EPISODE_GUID: ${{ inputs.episode_guid }}
+          NUM_SPEAKERS: ${{ inputs.num_speakers }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          ARGS=("$EPISODE_GUID")
+          if [ -n "$NUM_SPEAKERS" ]; then ARGS+=("--speakers=$NUM_SPEAKERS"); fi
+          if [ "$FORCE" = "true" ]; then ARGS+=("--force"); fi
+          npx tsx scripts/transcribe-episode.ts "${ARGS[@]}"
 
       - name: Generate highlights
         if: ${{ inputs.generate_highlights }}
@@ -54,6 +73,6 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add public/transcripts/${{ inputs.episode_guid }}.json
+          git add public/transcripts/${{ inputs.episode_guid }}.json src/data/transcriptionUsage.json
           git diff --staged --quiet || git commit -m "Add transcription for episode ${{ inputs.episode_guid }}"
           git push

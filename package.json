@@ -11,7 +11,7 @@
     "format:check": "prettier --check .",
     "update-episode-urls": "tsx scripts/update-episode-urls.ts",
     "transcribe": "tsx scripts/transcribe-episode.ts",
-    "cleanup-transcript": "tsx scripts/cleanup-transcript.ts",
+    "apply-glossary": "tsx scripts/apply-glossary.ts",
     "update-speakers": "tsx scripts/update-transcript-speakers.ts",
     "generate-highlights": "tsx scripts/generate-highlights.ts",
     "update-new-episode-urls": "tsx scripts/update-new-episode-urls.ts",

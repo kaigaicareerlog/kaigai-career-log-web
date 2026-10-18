@@ -1,0 +1,82 @@
+{
+  "keyterms": [
+    "Ryo",
+    "Senna",
+    "Hiroshi",
+    "海外キャリアログ",
+    "FROG",
+    "Asana",
+    "Avanade",
+    "LeetCode",
+    "Kiro",
+    "SaaS",
+    "Open Work Permit",
+    "RSU"
+  ],
+  "corrections": [
+    {
+      "from": "富樫諒",
+      "to": "Ryo Togashi"
+    },
+    {
+      "from": "富樫亮",
+      "to": "Ryo Togashi"
+    },
+    {
+      "from": "富樫洋",
+      "to": "Ryo Togashi"
+    },
+    {
+      "from": "富樫遼",
+      "to": "Ryo Togashi"
+    },
+    {
+      "from": "富樫",
+      "to": "Togashi"
+    },
+    {
+      "from": "諒",
+      "to": "Ryo"
+    },
+    {
+      "from": "Togashi遼",
+      "to": "Ryo Togashi"
+    },
+    {
+      "from": "TogashiRyo",
+      "to": "Ryo Togashi"
+    },
+    {
+      "from": "遼",
+      "to": "Ryo"
+    },
+    {
+      "from": "リョウ",
+      "to": "Ryo"
+    },
+    {
+      "from": "瀬名",
+      "to": "Senna"
+    },
+    {
+      "from": "セナ",
+      "to": "Senna"
+    },
+    {
+      "from": "ヒロシ",
+      "to": "Hiroshi"
+    },
+    {
+      "from": "リードコード",
+      "to": "LeetCode"
+    },
+    {
+      "from": "リートコード",
+      "to": "LeetCode"
+    },
+    {
+      "from": "AVANAADO",
+      "to": "Avanade"
+    }
+  ]
+}

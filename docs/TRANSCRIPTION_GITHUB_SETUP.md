@@ -6,9 +6,9 @@ This guide shows how to set up automatic transcription using GitHub Actions.
 
 ### 1. Get API Key
 
-- **AssemblyAI** (transcription): https://www.assemblyai.com/
-  - Create an account
-  - Get your API key from the dashboard
+- **ElevenLabs** (transcription): https://elevenlabs.io/
+  - Create an API key with only the Speech to Text permission
+  - Set a credit limit on the key (see [TRANSCRIPTION_GUIDE.md](TRANSCRIPTION_GUIDE.md))
 
 ### 2. Add Secret to GitHub
 
@@ -18,7 +18,9 @@ This guide shows how to set up automatic transcription using GitHub Actions.
 
 | Secret Name          | Value               | Required |
 | -------------------- | ------------------- | -------- |
-| `ASSEMBLYAI_API_KEY` | Your AssemblyAI key | ✅ Yes   |
+| `ELEVENLABS_API_KEY` | Your ElevenLabs key | ✅ Yes   |
+
+Optionally add the repository **variable** `MONTHLY_TRANSCRIPTION_BUDGET_USD` (default `5`).
 
 ### 3. Run the Workflow
 
@@ -33,19 +35,19 @@ This guide shows how to set up automatic transcription using GitHub Actions.
 
 The workflow will automatically:
 
-1. ✅ Transcribe the audio (AssemblyAI)
-2. ✅ Clean up extra spaces in the text
-3. ✅ Create a pull request with the transcript
+1. ✅ Check the monthly budget, then transcribe the audio (ElevenLabs Scribe)
+2. ✅ Apply the proper-noun glossary
+3. ✅ Generate highlights and commit the transcript
 
-After running, you'll get a PR with:
+The transcript has:
 
-- Speaker-labeled transcript
+- Speaker labels (`speaker_0`, `speaker_1`, ...)
 - Timestamps for each utterance
-- Cleaned text (extra spaces removed)
+- Punctuated text
 
 ## Troubleshooting
 
-### "ASSEMBLYAI_API_KEY not set"
+### "ELEVENLABS_API_KEY environment variable is required"
 
 Make sure you added the secret in GitHub repository settings.
 
@@ -57,7 +59,7 @@ Make sure you added the secret in GitHub repository settings.
 
 ## Next Steps
 
-After the PR is merged:
+After the transcript is committed:
 
 1. The transcript automatically appears on the episode page
 2. Visitors can read the full conversation

@@ -66,6 +66,13 @@ export function groupWordsIntoUtterances(
   }));
 }
 
+export interface ScribeOptions {
+  /** Exact number of speakers; improves diarization when known */
+  numSpeakers?: number;
+  /** Proper nouns to bias recognition towards (adds a 20% surcharge) */
+  keyterms?: string[];
+}
+
 /**
  * Transcribe audio using ElevenLabs Scribe (speech-to-text only)
  * @param audioUrl - Public URL of the audio file to transcribe
@@ -74,7 +81,8 @@ export function groupWordsIntoUtterances(
  */
 export async function transcribeAudioWithElevenLabs(
   audioUrl: string,
-  apiKey: string
+  apiKey: string,
+  { numSpeakers, keyterms = [] }: ScribeOptions = {}
 ): Promise<TranscriptionResult> {
   const form = new FormData();
   form.append('model_id', 'scribe_v2');
@@ -83,6 +91,10 @@ export async function transcribeAudioWithElevenLabs(
   form.append('diarize', 'true');
   form.append('timestamps_granularity', 'word');
   form.append('tag_audio_events', 'false');
+  // Drop filler words (えー, あの, ...) and false starts
+  form.append('no_verbatim', 'true');
+  if (numSpeakers) form.append('num_speakers', String(numSpeakers));
+  for (const term of keyterms) form.append('keyterms', term);
 
   const response = await fetch('https://api.elevenlabs.io/v1/speech-to-text', {
     method: 'POST',

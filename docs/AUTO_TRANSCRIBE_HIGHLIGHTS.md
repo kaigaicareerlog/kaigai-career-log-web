@@ -18,7 +18,7 @@ When the `update-rss.yml` workflow runs (daily or manually):
 
 Make sure these secrets are configured in your GitHub repository:
 
-- `ASSEMBLYAI_API_KEY` - For episode transcription
+- `ELEVENLABS_API_KEY` - For episode transcription (see [TRANSCRIPTION_GUIDE.md](TRANSCRIPTION_GUIDE.md))
 - `GROQ_API_KEY` - For AI-generated highlights
 - `SPOTIFY_CLIENT_ID` - For Spotify URL finding
 - `SPOTIFY_CLIENT_SECRET` - For Spotify URL finding
@@ -36,8 +36,7 @@ If you need to manually transcribe an episode:
 
 The workflow will:
 
-- Transcribe the episode using AssemblyAI
-- Clean up the transcript
+- Transcribe the episode using ElevenLabs Scribe (within the monthly budget)
 - Generate highlights (unless unchecked)
 - Commit the changes
 
@@ -45,7 +44,7 @@ The workflow will:
 
 ✅ **Manual transcription** - Transcribe episodes on-demand via GitHub Actions
 ✅ **AI-generated highlights** - Automatically creates episode highlights
-✅ **Clean transcripts** - Automatic cleanup and formatting
+✅ **Readable transcripts** - Punctuation and consistent proper nouns
 ✅ **Speaker diarization** - Identifies different speakers in episodes
 
 ## Troubleshooting

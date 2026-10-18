@@ -138,7 +138,7 @@ export interface TranscriptUtterance {
 }
 
 /**
- * Full transcription result from AssemblyAI
+ * Full transcription result with speaker diarization
  */
 export interface TranscriptionResult {
   text: string;
@@ -154,6 +154,8 @@ export interface TranscriptJSON {
   episodeGuid: string;
   episodeTitle: string;
   transcribedAt: string;
+  /** Set on ElevenLabs Scribe transcripts; absent on older AssemblyAI ones */
+  transcriber?: 'elevenlabs-scribe-v2';
   duration: number;
   fullText: string;
   utterances: Array<{
