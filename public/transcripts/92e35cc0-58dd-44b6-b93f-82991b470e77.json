@@ -14,7 +14,7 @@
       "timestamp": "00:00"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "「英検も余裕だったよ」昔からやっていたっていう。",
       "start": 19460,
       "end": 23700,
@@ -28,7 +28,7 @@
       "timestamp": "00:24"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "うん。",
       "start": 40600,
       "end": 40740,
@@ -42,7 +42,7 @@
       "timestamp": "00:42"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうですね、1社目です。",
       "start": 45940,
       "end": 47080,
@@ -56,7 +56,7 @@
       "timestamp": "00:47"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "会社は、もともとアメリカのサンフランシスコの会社で、verification checkのプロダクトを作っていたんですけど、今回、自分が就職する直前にカナダのブランチを立ち上げて、「全く別のプロダクトを作ろう」っていう形でジョインして、今は全く別のものを作っています。",
       "start": 51280,
       "end": 71100,
@@ -70,7 +70,7 @@
       "timestamp": "01:11"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "いや、ないはずですね。でも、去年ちょっと話題になったSection 177。",
       "start": 80220,
       "end": 86840,
@@ -84,7 +84,7 @@
       "timestamp": "01:26"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "あれのあおりを受けて作ったんじゃないかな。",
       "start": 89620,
       "end": 92000,
@@ -98,7 +98,7 @@
       "timestamp": "01:32"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "はい、頑張ります。何年前？2、3年くらい前かな。アメリカで人を雇ったら、エンジニアとかを雇ってしまうと、今までだったら経費扱いにできていたのができなくなってしまって、人一人雇うとむちゃくちゃな税金を取られてしまうという風になってしまったと。アメリカ国内で4、5千万円の人を雇ったらアホみたいな税金を取られる。アメリカで雇うよりも、カナダみたいな、ビザが簡単、同じ英語圏、同じ時差っていうところで人を雇った方が絶対いいやんっていうことになって、たくさんのブランチがこっちにできて、ポジションが空いたっていうことがありました。これがSection 174の時期ですね。",
       "start": 98940,
       "end": 134280,
@@ -112,7 +112,7 @@
       "timestamp": "02:14"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "猿ではわからない気がする。",
       "start": 136960,
       "end": 139200,
@@ -126,7 +126,7 @@
       "timestamp": "02:19"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "ちょっと高い。うん。なので、正直そこは割とイージーなんじゃないの？それはやはり「金融の街」っていう部分の文脈が大きいのかなと僕は勝手に思っていたんですけど。",
       "start": 155240,
       "end": 165860,
@@ -140,7 +140,7 @@
       "timestamp": "02:45"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "でも確かにトロントの方が人は、募集が来る、応募が来るみたいなことは言っていましたね。",
       "start": 174820,
       "end": 182600,
@@ -154,7 +154,7 @@
       "timestamp": "03:02"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうそう。だって人口だけでも3倍あってっていう風になって、人を確保するためにっていう風になると、SF側に連携を実施するか、それとも純粋に欲しい人材を重視するかで言うと、結構企業によっては方針がずれるんじゃないですか？",
       "start": 186140,
       "end": 202960,
@@ -168,7 +168,7 @@
       "timestamp": "03:23"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "うん、確かに。",
       "start": 208780,
       "end": 209320,
@@ -182,7 +182,7 @@
       "timestamp": "03:30"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "Transcript自体は、今はverification checkのプロダクトで、自分が今作っているのは本当に完全に全く別のプロダクトで、簡単に言うと、証券口座と連携して、連携したデータを使ってAIにデータを読み込ませてインサイトをもらうみたいなアプリを作っていますね。",
       "start": 215460,
       "end": 236000,
@@ -196,7 +196,7 @@
       "timestamp": "03:56"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "マネーフォワード。でも、ちょっと若干似ていると思います。",
       "start": 237720,
       "end": 240560,
@@ -210,7 +210,7 @@
       "timestamp": "04:00"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "はい、そうですね。",
       "start": 248760,
       "end": 249540,
@@ -224,7 +224,7 @@
       "timestamp": "04:09"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "Verification checkの方はアメリカメインで、ただ今カナダの方にも広げていて。",
       "start": 259880,
       "end": 265020,
@@ -238,7 +238,7 @@
       "timestamp": "04:25"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "カナダのブランチで今営業の人を雇ったりとか、新しい人が増えていたりもしていますね。",
       "start": 266780,
       "end": 272380,
@@ -252,7 +252,7 @@
       "timestamp": "04:32"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうですね。",
       "start": 281580,
       "end": 282060,
@@ -266,7 +266,7 @@
       "timestamp": "04:43"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "完全にもう消費者向けBtoCですね。",
       "start": 294140,
       "end": 296320,
@@ -280,7 +280,7 @@
       "timestamp": "04:56"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "一般ユーザー向けに作っています。",
       "start": 297440,
       "end": 299660,
@@ -294,7 +294,7 @@
       "timestamp": "05:01"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうですね。",
       "start": 304660,
       "end": 305280,
@@ -308,7 +308,7 @@
       "timestamp": "05:05"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "僕、初期メンです。そうです。",
       "start": 313980,
       "end": 315220,
@@ -322,7 +322,7 @@
       "timestamp": "05:15"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "僕は、今カナダのブランチで一番古株になりました。",
       "start": 320020,
       "end": 323060,
@@ -336,7 +336,7 @@
       "timestamp": "05:23"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そう、先輩。",
       "start": 326420,
       "end": 328260,
@@ -350,7 +350,7 @@
       "timestamp": "05:28"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "同じチームにいます。",
       "start": 341280,
       "end": 342000,
@@ -364,7 +364,7 @@
       "timestamp": "05:42"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "言っていいです。",
       "start": 347460,
       "end": 348240,
@@ -378,7 +378,7 @@
       "timestamp": "05:48"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "なんか踊っていたやつですよね。",
       "start": 353940,
       "end": 355180,
@@ -392,7 +392,7 @@
       "timestamp": "05:55"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "太極拳ですよ、太極拳。",
       "start": 359880,
       "end": 361080,
@@ -406,329 +406,329 @@
       "timestamp": "06:01"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "影響力がある人なんだって俺は思っていて、ユウゴさんが。",
       "start": 375976,
       "end": 378596,
       "timestamp": "06:15"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "ありがとうございます。",
       "start": 379376,
       "end": 379896,
       "timestamp": "06:19"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "だから、やっぱり初期面の推薦であればっていうので、少し優遇してもらった感はやっぱりあったんですかね、そうすると。",
       "start": 380416,
       "end": 388356,
       "timestamp": "06:20"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "ちゃんとカンスケさんが選考を全部0から受けて受かったっていうそれもあると思うんですけど、自分自身もそうですね、一番古かったのもあって、結構気に入ってもらえてたって、自分で言うのもあれですけど、結構「誰かいい人いない？」みたいなことは結構聞かれていたので、それで「あっ」って感じです。",
       "start": 390636,
       "end": 413736,
       "timestamp": "06:30"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "素晴らしい。じゃあどんどん入れていけばコミュニティ的には。もうボンボンだよ本当に。その時は俺ユウゴさんのところに頭を下げに行くわ、トロントに。「いっぱい紹介してくれて」って。なるほどね。でもチーム的には今人材を募集しているフェーズなんですか？ちなみに。拡大している？",
       "start": 413736,
       "end": 436836,
       "timestamp": "06:53"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "今はもうストップしてしまっていたんですけど。でもそれこそリファラルをしていた時は、本当に一気に3人ぐらい増えましたね、カンスケさん含めて。",
       "start": 437756,
       "end": 446476,
       "timestamp": "07:17"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうなんですね。全体のチームとしては何人くらい今トロントの方にはいらっしゃるんですか？",
       "start": 446496,
       "end": 450956,
       "timestamp": "07:26"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "エンジニアが、正社員6人で、インターンシップが今2人ぐらいエンジニアでいますね。",
       "start": 451776,
       "end": 462956,
       "timestamp": "07:31"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "じゃあもう本当に出来たてほやほやな感じなんですね、そうすると。",
       "start": 463016,
       "end": 465536,
       "timestamp": "07:43"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "本当にそうですね。",
       "start": 465756,
       "end": 466936,
       "timestamp": "07:45"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "なるほどね。アメリカの本社の方はやっぱり少し大きい？何人ぐらいかな？",
       "start": 467396,
       "end": 474056,
       "timestamp": "07:47"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "アメリカの情報は全然持っていなくて、まだ帰ってきていなくて。ただ今はもうあまり新規っていうよりかは、運用で最小限の人数で回しているみたいなことは聞いていますね。",
       "start": 474076,
       "end": 483876,
       "timestamp": "07:54"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "出張とかはあるんですか？ちなみに。",
       "start": 485016,
       "end": 486376,
       "timestamp": "08:05"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "いや、全然ないと思います。",
       "start": 486856,
       "end": 487956,
       "timestamp": "08:06"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "めちゃくちゃプロダクトだもんね。",
       "start": 488296,
       "end": 489676,
       "timestamp": "08:08"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "エンジニアだしね。",
       "start": 489736,
       "end": 490536,
       "timestamp": "08:09"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "エンジニアだしね、来てもらってもねっていう感じなのか、きっと。",
       "start": 490876,
       "end": 494116,
       "timestamp": "08:10"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "いや、行きたいですけどね。サンフランシスコとか。",
       "start": 494436,
       "end": 497516,
       "timestamp": "08:14"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "確かにSF来るんだったら経由でバンクーバーに少し寄ってくれれば。さすがに直行はあるでしょう。 安くならないか。",
       "start": 497876,
       "end": 507896,
       "timestamp": "08:17"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "いや、素晴らしい。",
       "start": 510216,
       "end": 511136,
       "timestamp": "08:30"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "少し話を戻して、プロセスというか、就職活動全般について聞いていきたいんですけど、色々なところを出したとかとは聞いたんですけど、それ以外の会社でバンクーバーでレジュメを送って通ったよみたいなこととかってありました？",
       "start": 511356,
       "end": 529596,
       "timestamp": "08:31"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "あります。でも、そうですね、自分の場合は紛らわしいんですけど、第1次の就活と第2次の就活があるんですけど、第1次の時は全部で100社出して、バンクーバーは本当に1社ぐらいしか通らなかったんですけど、第2次の時は3、4社ぐらい通った気はします。覚えがありますね。",
       "start": 530236,
       "end": 553916,
       "timestamp": "08:50"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "その3、4社はトロントも含めてっていうことですかね？",
       "start": 554336,
       "end": 557376,
       "timestamp": "09:14"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "いや、バンクーバーだけで。",
       "start": 557396,
       "end": 558716,
       "timestamp": "09:17"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうなんだ、なるほど。でもすごか。",
       "start": 558976,
       "end": 560916,
       "timestamp": "09:18"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "去年バンクーバーにめちゃめちゃ戻りたくて、バンクーバーの就活をしていた時は。",
       "start": 561736,
       "end": 565776,
       "timestamp": "09:21"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "あったな、そういえば。なんかヤンバーさんの会社かどこか。",
       "start": 566556,
       "end": 569836,
       "timestamp": "09:26"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "受けてオファーまで行ったんですけど、ちょうどビザの兼ね合いで結局ダメになってしまって、とかもありました。",
       "start": 572256,
       "end": 578756,
       "timestamp": "09:32"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "あれはね、実はFROGも責任を感じていないわけではなくて、ワーホリのアクティベートのタイミングさえ少し早かったらねっていう、本当にそれだけの話だったからですね、あれって。ビザは本当にアクティベートのタイミングが重要なのでっていう良い啓発になりました。ありがとうございます。",
       "start": 578936,
       "end": 597576,
       "timestamp": "09:38"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "いえいえ、全然。",
       "start": 597636,
       "end": 598616,
       "timestamp": "09:57"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "その1次の就職活動の時は100件ぐらいバンクーバーに出して、トロントはどのぐらい出したんですか？",
       "start": 605036,
       "end": 610076,
       "timestamp": "10:05"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "ごめんなさい。100件は全部トロントとカナダ全域含めての話です。すみません。",
       "start": 610656,
       "end": 615276,
       "timestamp": "10:10"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "バンクーバーは1件。",
       "start": 616256,
       "end": 617116,
       "timestamp": "10:16"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "1件で、トロントとか他の州を含めると3件ぐらい。なので全部で4件ぐらいです。",
       "start": 617556,
       "end": 623016,
       "timestamp": "10:17"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "4件くらいか。100件中4件だったら全然打率がいい方なんじゃないかっていうふうに思います。他の面接とかはどんな感じでした？今受かったところ以外。",
       "start": 623176,
       "end": 634616,
       "timestamp": "10:23"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "うん。でもそれでも本当に1次で落ちてしまうところもあれば、2次とか行っても全然ダメみたいなところで、最終まで行ったところは今の会社しかないですね。",
       "start": 636195,
       "end": 646336,
       "timestamp": "10:36"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "ふん。そうか、なるほどね。1次って言っているあれが、時期的には一昨年くらいっていうことですか？",
       "start": 646456,
       "end": 657256,
       "timestamp": "10:46"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "いや、去年ですね。去年の2、3月ぐらいですね。",
       "start": 657296,
       "end": 662496,
       "timestamp": "10:57"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "3月ぐらい。なるほどね。じゃあ本当に今の会社で働く3、4ヶ月前くらいっていう感じですか？",
       "start": 662796,
       "end": 668356,
       "timestamp": "11:02"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね。",
       "start": 668436,
       "end": 668956,
       "timestamp": "11:08"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうかそうか。じゃあその後にあれがあるんですか？ 第2波の就活の波があるんですか？ 1波と2波は何が違う？でも2波っていうのは就職した後ですよね。",
       "start": 669396,
       "end": 679856,
       "timestamp": "11:09"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうです。そうです。",
       "start": 679936,
       "end": 680396,
       "timestamp": "11:19"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そういうことか。失礼しました。ちょっと勘違いした。なるほどね、そうかそうか。そしたら今の会社のインタビューの流れについて聞いていきたいんですけど、どんな感じの流れでした？",
       "start": 680776,
       "end": 693296,
       "timestamp": "11:20"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "僕の時は全部で2ラウンドあって、1ラウンド目の時は最初がCTOとCEOで約90分、モバイルのシステムデザインと、あとは特殊だったんですけど、僕の場合は個人で開発したプロジェクトを用意して、そのプロジェクトの概要とソースコードを見せる、ウォークスルー形式で一緒に見ていくみたいな内容でしたね。",
       "start": 694256,
       "end": 719496,
       "timestamp": "11:34"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "なるほどね。2次で終わったのはすごい。それは1次ですか？",
       "start": 720036,
       "end": 724116,
       "timestamp": "12:00"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "1次がそのシステムデザインと。",
       "start": 725396,
       "end": 727236,
       "timestamp": "12:05"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうなんだ。時間とかでもよりますからね。1次が7時まであっても、毎回1時間のところもあれば。",
       "start": 727856,
       "end": 735576,
@@ -742,28 +742,28 @@
       "timestamp": "12:16"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "なるほどね。すると、その前にHRとかから声がかかって、オファーを受け取った人からビヘイビアルのインタビューや、ビヘイビアルはその後かもしれないけど、テックインタビューの前のフェーズはなかったんですか？",
       "start": 742744,
       "end": 756204,
       "timestamp": "12:22"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね、もういきなり。",
       "start": 756804,
       "end": 757824,
       "timestamp": "12:36"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "いきなり？本当に？",
       "start": 758324,
       "end": 759444,
       "timestamp": "12:38"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "テックのシステムデザイン、最初に自己紹介して。",
       "start": 759504,
       "end": 762664,
@@ -777,14 +777,14 @@
       "timestamp": "12:43"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "多分そうだと思いますね。",
       "start": 770164,
       "end": 771524,
       "timestamp": "12:50"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "うーん、なるほどね。",
       "start": 771604,
       "end": 773184,
@@ -798,14 +798,14 @@
       "timestamp": "12:53"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "1次が全部で90分ぐらいかけてやりましたね。",
       "start": 776644,
       "end": 779964,
       "timestamp": "12:56"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "1時間半か。",
       "start": 781124,
       "end": 781964,
@@ -819,14 +819,14 @@
       "timestamp": "13:02"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "やりました。",
       "start": 791404,
       "end": 791484,
       "timestamp": "13:11"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "なるほどね。",
       "start": 791484,
       "end": 793664,
@@ -840,21 +840,21 @@
       "timestamp": "13:13"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね、本当におっしゃる通りで。",
       "start": 801844,
       "end": 803964,
       "timestamp": "13:21"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "なるほどね。対策とかって、割と事前に入念にやっていた方ですか？",
       "start": 804644,
       "end": 810064,
       "timestamp": "13:24"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね、今の会社が結構親切だったんですけど、面接前にメールでそもそもインタビューの流れのアジェンダをもらっていたんですよね。",
       "start": 810944,
       "end": 818604,
@@ -868,21 +868,21 @@
       "timestamp": "13:39"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "「こういうシステムデザインがあります、プロジェクトのウォークスルーの質問をします」みたいな。それがあったので、結構事前から対策してというか。",
       "start": 820444,
       "end": 829424,
       "timestamp": "13:40"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "うーん、なるほどね。",
       "start": 829944,
       "end": 831064,
       "timestamp": "13:49"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "やっていました。",
       "start": 831464,
       "end": 832004,
@@ -896,7 +896,7 @@
       "timestamp": "13:52"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "他社で経験はしていたんですけど、そうですね、その中にビヘイビアルもあって、やりましたね。",
       "start": 838844,
       "end": 845164,
@@ -910,7 +910,7 @@
       "timestamp": "14:05"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね、システムデザインで。システムデザイン自体も、モバイルアプリのお題を与えられて、バックエンドのインフラストラクチャー周りとかは全く無視して、モバイルだけに特化したデザインみたいなものをやりましたね。",
       "start": 852024,
       "end": 866923,
@@ -924,7 +924,7 @@
       "timestamp": "14:27"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "APIのレスポンスからデザインしてっていう感じです。",
       "start": 878544,
       "end": 882024,
@@ -938,35 +938,35 @@
       "timestamp": "14:42"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね、一応求人はシニアでした。",
       "start": 892544,
       "end": 894464,
       "timestamp": "14:52"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "うんうん。難易度的にというか、やりとりをもちろん含めてだろうからね。一概に良い悪いって自己自身で判断も難しいかもしれませんが、サイバーに2年いて、その前も別のスタートアップさんで2年いらっしゃってっていうiOSエンジニアが受けた、英語での技術面接、システムデザインっていう目線で、実際どうでした？感触的には。「いけたな、これは」って、「楽勝だぜ」って。",
       "start": 894984,
       "end": 918644,
       "timestamp": "14:54"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "いや、全然もう「落ちたな」って。",
       "start": 919364,
       "end": 921264,
       "timestamp": "15:19"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "って言うよね、みんな。なるほどね。そうか。",
       "start": 921344,
       "end": 925904,
       "timestamp": "15:21"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "全然できなかったけど、もう本当に必死だったので、とにかく黙っちゃダメだと思ってずっと喋っていました。",
       "start": 926944,
       "end": 933704,
@@ -980,28 +980,28 @@
       "timestamp": "15:34"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "技術的なところで言えない、技術的なところっていうよりも、やはりそれを英語で説明するところが一番難しくて。",
       "start": 949084,
       "end": 956224,
       "timestamp": "15:49"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "なるほどね。英語の国際学科にいらっしゃって、英語にそこそこ慣れていたであろうユウゴさんでも、やはりそこは大変だったんですね。",
       "start": 956824,
       "end": 964564,
       "timestamp": "15:56"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね、難しかったですね。",
       "start": 965044,
       "end": 966484,
       "timestamp": "16:05"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "使う脳みそが違いますもんね、完全にね。",
       "start": 966744,
       "end": 968664,
@@ -1015,7 +1015,7 @@
       "timestamp": "16:09"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "うんうん。",
       "start": 999624,
       "end": 1000504,
@@ -1029,7 +1029,7 @@
       "timestamp": "16:40"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "確かに。採用支援っていうかね、面接支援はトガシさんもたくさんいただろうし、ユウゴさんも、やはりそこら辺は今は初期面ということもあるから、採用だったりとかはこれからなのか、今までもあったのかもしれないですけど、少し俺はそこを2人の意見を聞いておきたくて。技術面接もアルゴリズムも、どんな技術面接でもいいんだけど、システムデザインでも、「俺全然できなかった」っていう人がなぜか受かっているケースがすごく聞くなと思っていて。よその国の人たちがどうなのかは、情報不足でわからないけど。とはいえ、やはり僕が勝手に皆さんの話を聞いていて思うのは、技術的に答えられなかったとしても、その過程におけるコミュニケーションは実はうまくいっていたんじゃないの？みたいな。質疑応答、もしくは疑問の投げ方だったりに、結構受かる要素があったんじゃないの？みたいに勝手に思ってはいるんだけど、その辺どう思います？技術的にはぐちゃぐちゃだったけど、なぜか受かっているみたいな人の解というか傾向。ユウゴさんはそれだったわけですよね。技術的には答えられなくて、おそらく「これは落ちたかな」みたいに思われたと思うんですが。",
       "start": 1029364,
       "end": 1097764,
@@ -1043,14 +1043,14 @@
       "timestamp": "18:18"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね。",
       "start": 1107116,
       "end": 1107696,
       "timestamp": "18:27"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "じゃあ技術的にわかっているっていうことが使ってたのか。",
       "start": 1108476,
       "end": 1110716,
@@ -1064,7 +1064,7 @@
       "timestamp": "18:31"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうかそうか。",
       "start": 1112756,
       "end": 1114296,
@@ -1078,7 +1078,7 @@
       "timestamp": "18:34"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "2時間。大変ですね。",
       "start": 1124036,
       "end": 1124276,
@@ -1092,7 +1092,7 @@
       "timestamp": "18:45"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "なるほどね。あくまでもマッチングというかね、お互いの良し悪しだったりとか、持ち味だったりとかの確認作業も当然あるだろうから。問題が解けたら受かるし、解けなかったら受からないみたいな、割とシンプルに考える人が逆に多いなっていう気が日本の場合はしてて。俺はでもやっぱり「採用受かりました」とか、「こういうふうなプロセスでした」って聞いて、そういうふうには1回も思ったことがなくて。",
       "start": 1200096,
       "end": 1224476,
@@ -1106,7 +1106,7 @@
       "timestamp": "20:25"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "いや、出たことはあります。置物ですけど。他のエンジニアと一緒に、はい、出ていますけど。でも確かにおっしゃる通り、問題を出して一緒に答えに近づいていく過程みたいなものは結構見ている人は多いなとは思いますね。全然わからなくてもいいから。",
       "start": 1231576,
       "end": 1248816,
@@ -1120,7 +1120,7 @@
       "timestamp": "20:51"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "確かに確かに。だからユウゴさんの、システムデザインをやってボロボロだったっていうので受かっていて、しかも初期面接っていうと、割と見せれないというかね、結構大事な人員を探さなくちゃいけない時に、ボロボロって言ったらどのくらいのボロボロかはもちろん俺らはわからないけど、自信がないっていう状態で受かっているっていうのも当然あるので、だいぶ日本の方々には自信を届けるんじゃないかなと勝手に思っていますけどね。",
       "start": 1324776,
       "end": 1349956,
@@ -1134,7 +1134,7 @@
       "timestamp": "22:30"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "はい。フェーズ2が最終面接で、時間は3時間使って、プロジェクトのソースコードを渡されて、そのプロジェクトのソースコードを画面共有しながら、使っているアーキテクチャだとか、今どこにバグがあるかわかるかみたいなところを探したりとか、機能追加の練習をやったりとかを一緒にライブコーディング形式でやっていくみたいな選考内容でしたね。",
       "start": 1368076,
       "end": 1395256,
@@ -1148,14 +1148,14 @@
       "timestamp": "23:16"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "ガチですね。",
       "start": 1399636,
       "end": 1400196,
       "timestamp": "23:19"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "めちゃめちゃ大変でしたね。確かに3時間。",
       "start": 1401496,
       "end": 1404696,
@@ -1169,21 +1169,21 @@
       "timestamp": "23:26"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "完全にオンザジョブトレーニングみたいなものですか？じゃあもう本当にそこにある、実際稼働しているプロジェクトをあてがわれて？",
       "start": 1424856,
       "end": 1432376,
       "timestamp": "23:44"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "ごめんなさい、稼働してないです。",
       "start": 1432436,
       "end": 1433736,
       "timestamp": "23:52"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "だったら、だったら。びっくりした。なんて本格的な。",
       "start": 1435716,
       "end": 1439776,
@@ -1197,7 +1197,7 @@
       "timestamp": "24:00"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "間違いない。どこだったかな。これ言っていいのかわからないけど、Axiom Zenっていうバンクーバーにある結構有名な、プロダクトも作っているし、請負もやっているしみたいな。あそこは一番最後に、昔だから今はわからないけど、本当にガチのプロジェクトに参加させられて、本当のチームメンバーとチームを組まされてみたいなので、すごいガチでやっているなと思ったことがあったから、それかと思った一瞬。",
       "start": 1449636,
       "end": 1473016,
@@ -1211,7 +1211,7 @@
       "timestamp": "24:33"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "なかったです。はい。",
       "start": 1482288,
       "end": 1483248,
@@ -1225,21 +1225,21 @@
       "timestamp": "24:43"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうだよね。",
       "start": 1496308,
       "end": 1496808,
       "timestamp": "24:56"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね。",
       "start": 1496868,
       "end": 1497288,
       "timestamp": "24:56"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "なるほどね。",
       "start": 1498128,
       "end": 1498608,
@@ -1253,7 +1253,7 @@
       "timestamp": "24:58"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "はい。実際に使った題材が、GitHubのAPIを使ったGitHubのリポジトリ検索アプリみたいな感じのアプリで、例えばですけど、検索フィールドがあって、文字を打つたびにAPIリクエストが走るのを、例えばdebounceを使ってAPIリクエストを減らしたりするとか、そういうのを修正していくとか、あとは「お気に入り機能を追加してほしい」みたいなので、データをどこに永続させたり持ったりするかとか、そういうものを見ていたと思います。",
       "start": 1505028,
       "end": 1541688,
@@ -1267,14 +1267,14 @@
       "timestamp": "25:41"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "口頭で指示をされて、自分が「ああ、こんな感じで」って、本当にライブでコードを書きながら説明しながらっていう形でやりました。",
       "start": 1549528,
       "end": 1559508,
       "timestamp": "25:49"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "面白いな。大変だわ。Asanaはそこまでやらないの？",
       "start": 1560348,
       "end": 1565048,
@@ -1288,7 +1288,7 @@
       "timestamp": "26:06"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうよね。",
       "start": 1587468,
       "end": 1588048,
@@ -1302,7 +1302,7 @@
       "timestamp": "26:28"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "アルゴリズムに乗っている、ツリーズがポインターがみたいな。",
       "start": 1591988,
       "end": 1594868,
@@ -1316,35 +1316,35 @@
       "timestamp": "26:35"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "うん。設定している方がきちんといらっしゃるっていう。最近の傾向はどうなんだろうね。俺は、ユウゴさんのところみたいに、システムデザインから、その人の地盤というか地頭というか、そういうものを見て、割とガチ目の自分たちのプロダクトを模倣した問題を出してっていうのを、少し聞くようになった気がするなっていう気はしているんだけど。その辺って、お二人の肌感的に、アルゴリズムとか、やはりそっちのCSの知識がいまだに大事よねなのか、実務に寄った問題の方が最近出されるようなのか、Asanaとまた少し違うかもしれないけど、感覚としてどっちの方が多いとかってあります？",
       "start": 1606168,
       "end": 1642728,
       "timestamp": "26:46"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "ちなみに僕の会社だと、前までやっていた選考とかだと、本当に今作っているプロダクトに似たようなお題のシステムデザインを結構やらせていましたね。",
       "start": 1645688,
       "end": 1656868,
       "timestamp": "27:25"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "うん。過程のやり取りをきちんと見ながら、コミュニケーションも含めてきちんと取れるかなみたいなところが、システムデザイン関連ではやはり見られるっていうことですね。",
       "start": 1656948,
       "end": 1667528,
       "timestamp": "27:36"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね。LeetCodeとかはうちではやってないです。",
       "start": 1668148,
       "end": 1671068,
       "timestamp": "27:48"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうよね。最近減ったのかな。うん。",
       "start": 1671408,
       "end": 1675248,
@@ -1358,7 +1358,7 @@
       "timestamp": "27:55"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうか。",
       "start": 1678988,
       "end": 1679268,
@@ -1372,7 +1372,7 @@
       "timestamp": "27:59"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "それはそうかな。",
       "start": 1741168,
       "end": 1741688,
@@ -1386,7 +1386,7 @@
       "timestamp": "29:01"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "うんうん。",
       "start": 1758488,
       "end": 1758808,
@@ -1400,7 +1400,7 @@
       "timestamp": "29:19"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "面接の中で「使っていいよ」とは言われていたんですけど、自分は使わなかったですね。",
       "start": 1764928,
       "end": 1770608,
@@ -1414,7 +1414,7 @@
       "timestamp": "29:31"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "演習でですね。どうだろう。",
       "start": 1781468,
       "end": 1783808,
@@ -1428,7 +1428,7 @@
       "timestamp": "29:45"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうなると思いますね。",
       "start": 1788008,
       "end": 1789528,
@@ -1442,7 +1442,7 @@
       "timestamp": "29:49"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "緊張するな。甘い自分で。",
       "start": 1790868,
       "end": 1793468,
@@ -1456,7 +1456,7 @@
       "timestamp": "29:53"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "嫌ですよね。",
       "start": 1796128,
       "end": 1797188,
@@ -1470,7 +1470,7 @@
       "timestamp": "29:57"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "うん。でも正直、僕はいまだにAIで日本語でプロンプトを打っているから。",
       "start": 1803688,
       "end": 1808748,
@@ -1484,7 +1484,7 @@
       "timestamp": "30:08"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "あまりそれも見せられないなと思いつつ、使っていいよとは言われたんです。",
       "start": 1809428,
       "end": 1813508,
@@ -1498,7 +1498,7 @@
       "timestamp": "30:13"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうよね。",
       "start": 1816028,
       "end": 1816408,
@@ -1512,7 +1512,7 @@
       "timestamp": "30:16"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "「使っていいよ」とは言いつつ、使っている人はあまり見ないですね。",
       "start": 1842704,
       "end": 1846444,
@@ -1526,7 +1526,7 @@
       "timestamp": "30:46"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "でも、やっている内容自体がシステムデザインなので、システムデザインでAIを使う場面はそれほどないのかもしれない。",
       "start": 1855064,
       "end": 1863124,
@@ -1540,7 +1540,7 @@
       "timestamp": "31:03"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうか。",
       "start": 1873224,
       "end": 1873604,
@@ -1554,7 +1554,7 @@
       "timestamp": "31:14"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "よく考えたら、システムデザインのときにプロンプトに載せなくてはいけないって、多分面接官に聞くべき内容だよ。",
       "start": 1876164,
       "end": 1881404,
@@ -1568,7 +1568,7 @@
       "timestamp": "31:26"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "確かに。",
       "start": 1892164,
       "end": 1892664,
@@ -1582,7 +1582,7 @@
       "timestamp": "31:32"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "「これ知らないの？」っていうことは、多分そこから見えるだろうしな。",
       "start": 1894724,
       "end": 1897744,
@@ -1596,7 +1596,7 @@
       "timestamp": "31:37"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうか、それは面白いな。分析として。なるほど。じゃあ、あまり「AIをベースにしたから楽勝だぜ」みたいな人はたまにいますけども、そんなことは絶対ないよっていうことは、みんなの共通認識ということですね、そうすると。",
       "start": 1909224,
       "end": 1922624,
@@ -1610,7 +1610,7 @@
       "timestamp": "32:03"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "うん、はい。",
       "start": 1926724,
       "end": 1927824,
@@ -1624,7 +1624,7 @@
       "timestamp": "32:11"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "確かに。",
       "start": 1950204,
       "end": 1950544,
@@ -1638,7 +1638,7 @@
       "timestamp": "32:31"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "単純にやはり英語を使って働きたかったのと、あとはやはり一生に一度の人生なので、海外で少し暮らしてみたいなっていうことが一番大きかったですね。",
       "start": 1974944,
       "end": 1985144,
@@ -1652,7 +1652,7 @@
       "timestamp": "33:05"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうですね、達成したと思います。",
       "start": 1991364,
       "end": 1993764,
@@ -1666,7 +1666,7 @@
       "timestamp": "33:14"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "うん。",
       "start": 1994524,
       "end": 1996344,
@@ -1680,7 +1680,7 @@
       "timestamp": "33:16"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "今でも一番すごいと感じるギャップが、SlackとかでDM文化が結構すごいなっていうことは思います。",
       "start": 2015844,
       "end": 2024484,
@@ -1694,7 +1694,7 @@
       "timestamp": "33:44"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "うん。仕事とかのやりとりは、基本結構DMが使われることが多くて。日本の会社だと、僕今まで全部業務にまつわることはパブリックなチャンネルで記録を残して、何をやっているかを見せるみたいなことが常識だったので、こちら来て、CTO、CEOから急にDMが飛んで依頼が飛んでくるみたいなことが結構意外でした。",
       "start": 2027364,
       "end": 2052984,
@@ -1708,7 +1708,7 @@
       "timestamp": "34:14"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "何か言っていたんだよ。何だっけ？",
       "start": 2056404,
       "end": 2057424,
@@ -1722,7 +1722,7 @@
       "timestamp": "34:17"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "うーん。",
       "start": 2070484,
       "end": 2070944,
@@ -1736,7 +1736,7 @@
       "timestamp": "34:31"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そういうプレッシャーか。なるほどね。全部パブリックに言わなくてはいけないというプレッシャーが嫌だみたいな感じですか？",
       "start": 2073044,
       "end": 2078464,
@@ -1750,7 +1750,7 @@
       "timestamp": "34:38"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "やっぱそうだよね。",
       "start": 2079704,
       "end": 2080364,
@@ -1764,7 +1764,7 @@
       "timestamp": "34:40"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "あー。",
       "start": 2085484,
       "end": 2085504,
@@ -1778,7 +1778,7 @@
       "timestamp": "34:45"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "そうよね。FROGはやはり日本からエンジニアさんがたくさん来るわけじゃないですか。「なぜFROGはDMを禁止にしないんですか？」って多分10人くらいに言われことがあって、今まで。",
       "start": 2092404,
       "end": 2103463,
@@ -1792,7 +1792,7 @@
       "timestamp": "35:05"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "洗脳されているのかな、やはり。だから俺はわざわざFROGのWikiに「FROGはDMを禁止にしていません」って書かなければと思って書いたんですけど。やはり日本のDM禁止は、意味は分からなくはないんじゃないの？どれが共有すべき情報なのか分からないから、全てをゼロからパブリックにしておきましょうよっていうことは、意味は俺は分かったけどね。禁止は意味は分かったけど。",
       "start": 2106384,
       "end": 2130924,
@@ -1806,7 +1806,7 @@
       "timestamp": "35:30"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "確かに。",
       "start": 2144804,
       "end": 2144804,
@@ -1820,7 +1820,7 @@
       "timestamp": "35:44"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "なるほどね。視聴者の方に聞いてみたいな。北部予選でDMを禁止にしているところはあるのかなっていう。",
       "start": 2167184,
       "end": 2174204,
@@ -1834,7 +1834,7 @@
       "timestamp": "36:14"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "ないかな？0かな？",
       "start": 2175604,
       "end": 2176944,
@@ -1848,7 +1848,7 @@
       "timestamp": "36:17"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "やべえ、これ炎上するからやめといて、ちょっと。",
       "start": 2182004,
       "end": 2183884,
@@ -1862,7 +1862,7 @@
       "timestamp": "36:24"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "怖い怖い、やだやだ。少し素が出てきたよ、トウガさん、大丈夫？",
       "start": 2186044,
       "end": 2188344,
@@ -1876,7 +1876,7 @@
       "timestamp": "36:29"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "素晴らしい。そういうことですね。",
       "start": 2193644,
       "end": 2194564,
@@ -1890,14 +1890,14 @@
       "timestamp": "36:34"
     },
     {
-      "speaker": "speaker_1",
+      "speaker": "Senna",
       "text": "パブリックにすべきだーっつって。うん、そうですね。やはりでも-",
       "start": 2201964,
       "end": 2205784,
       "timestamp": "36:41"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "パブリックにしてほしいなって思うこともあるし。",
       "start": 2206452,
       "end": 2209192,
@@ -1911,7 +1911,7 @@
       "timestamp": "36:49"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "半々ですね、本当に。",
       "start": 2211412,
       "end": 2213392,
@@ -1925,7 +1925,7 @@
       "timestamp": "36:54"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね。急にインターンの子が「プルリクオープンしたから見て」みたいな。「え、この仕事どこで進んでたの？」みたいな。「いや、社長から飛んできて」みたいな。",
       "start": 2217392,
       "end": 2225892,
@@ -1939,7 +1939,7 @@
       "timestamp": "37:06"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "「仕様とかも何も知らない」みたいな。そういうことが起きたりとか。",
       "start": 2226832,
       "end": 2231652,
@@ -1953,7 +1953,7 @@
       "timestamp": "37:12"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね。でも本当に実装によっては、「バックエンドに手をつけちゃったんだよね」みたいな。後で調べたら、フロントでは完結するのに、バックエンドに手をつけちゃった後でみたいなことも発生したりとか。",
       "start": 2236972,
       "end": 2252292,
@@ -1967,7 +1967,7 @@
       "timestamp": "37:32"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね。あり得るっていうとあり得るよねっていう。だからそういうのも含めて。",
       "start": 2266592,
       "end": 2270272,
@@ -1981,7 +1981,7 @@
       "timestamp": "37:50"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "ないです。",
       "start": 2277792,
       "end": 2278492,
@@ -1995,7 +1995,7 @@
       "timestamp": "37:58"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "なるほどね。そこはそうですね、議論の余地がまだありそうなので、次回に回すとして。",
       "start": 2289672,
       "end": 2295452,
@@ -2009,7 +2009,7 @@
       "timestamp": "38:15"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "うんうん。イージーです。",
       "start": 2303012,
       "end": 2306392,
@@ -2023,7 +2023,7 @@
       "timestamp": "38:26"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "楽ですね。最近少し忙しくなってきたなって感覚はありますけど、それでもほぼ残業したこととかは全然ないですね。",
       "start": 2311992,
       "end": 2320232,
@@ -2037,7 +2037,7 @@
       "timestamp": "38:41"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね、5時に帰る人がほとんどですよね。5時になってなくても帰る人も多いし。",
       "start": 2333112,
       "end": 2338992,
@@ -2051,7 +2051,7 @@
       "timestamp": "39:00"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "なるほどね。",
       "start": 2368252,
       "end": 2368492,
@@ -2065,7 +2065,7 @@
       "timestamp": "39:28"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "これからやっていきたいのは、もう今すでに少しやらせてもらっていたりもするんですけど、結構裁量が大きい会社なので、そういう新機能の提案とかをモック画面を作って上に提案することを今やっているんですけど、そういうプロダクトのディレクションとかグロース的な方面を結構力を入れてやっていきたいなとは思っています。",
       "start": 2412152,
       "end": 2435892,
@@ -2079,7 +2079,7 @@
       "timestamp": "40:35"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "日本ではやっていなくて。自分自身、趣味が個人開発をやっているので、そういった方向に舵を切っていきたいなとは思っています。",
       "start": 2439972,
       "end": 2448512,
@@ -2093,7 +2093,7 @@
       "timestamp": "40:48"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね。",
       "start": 2458872,
       "end": 2459332,
@@ -2107,7 +2107,7 @@
       "timestamp": "40:59"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そこがまさに今悩んでいて。それを英語でやる難しさも最近まさにずっと感じていて。",
       "start": 2467472,
       "end": 2473892,
@@ -2121,7 +2121,7 @@
       "timestamp": "41:14"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "はい。実装者よりもずっと難しいじゃないですか。もっと密にコミュニケーションを取らないといけないので。",
       "start": 2475312,
       "end": 2482092,
@@ -2135,7 +2135,7 @@
       "timestamp": "41:23"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね。なので本当に、カナダでできたらすごいんですけど。なので日本に帰ってそういうことをやるっていうのも全然前向きに考えていますね。",
       "start": 2506392,
       "end": 2518712,
@@ -2149,7 +2149,7 @@
       "timestamp": "42:00"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "長期的にも本当に今まさに考えてはいますね。本当に全然決まっていないんですけど。ただ、カナダにずっといるかって言われると、いないような気もするし、全然いつでも日本に帰ってもいいなとは思っています。",
       "start": 2533272,
       "end": 2546572,
@@ -2163,7 +2163,7 @@
       "timestamp": "42:27"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "他の国はもう正直あまり考えていないですね。",
       "start": 2549792,
       "end": 2552592,
@@ -2177,7 +2177,7 @@
       "timestamp": "42:32"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね、おっしゃる通りで。",
       "start": 2561412,
       "end": 2562532,
@@ -2191,7 +2191,7 @@
       "timestamp": "42:46"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "はい。",
       "start": 2571952,
       "end": 2572092,
@@ -2205,7 +2205,7 @@
       "timestamp": "42:52"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "下がりますよね。",
       "start": 2579564,
       "end": 2579864,
@@ -2219,7 +2219,7 @@
       "timestamp": "43:00"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね。下がることに対してはあんまり抵抗はないですね。",
       "start": 2599184,
       "end": 2602104,
@@ -2233,7 +2233,7 @@
       "timestamp": "43:22"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "行き着く先は、それこそ個人開発で起業できたら一番最高だなとは思いますけど。そうですね。でも全然小さい規模は関係なく、そういうディレクションができたらいいなとは思っています。",
       "start": 2631764,
       "end": 2644764,
@@ -2247,7 +2247,7 @@
       "timestamp": "44:05"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね。",
       "start": 2671424,
       "end": 2671664,
@@ -2261,7 +2261,7 @@
       "timestamp": "44:31"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうですね。こっちのカナダ人のカルチャーだったりとか、そういうのはアドバンテージになるかなとは思っていますね。",
       "start": 2675724,
       "end": 2681844,
@@ -2275,7 +2275,7 @@
       "timestamp": "44:43"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "就職される方ですよね。",
       "start": 2713264,
       "end": 2714964,
@@ -2289,7 +2289,7 @@
       "timestamp": "45:15"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "目指す方ですね。自分的には、本当に海外就職はとにかく早くApply始めた人が、結局最終的に就職できるなと思っていて。Sennaさんがよくおっしゃっているように、結局カナダの景気に一番左右されるじゃないですか。なので、やっぱり一番長く有効なビザを持っているのが自分も重要だと思っていて。なので、自分がそうだったんですけど、例えば50点のレジュメとか50点の面接対策でも、景気さえ良ければなんとかなってしまう要素が、結構自分は大きいかなと思っていて。なので、一番最初のApplyするところを本当に早くした方がいいんじゃないかなっていうのは伝えたいですね。あと、実際に書類も通ったら、そこの後の対策ももっと火がついて、死ぬ気で準備するようになると思うので、本当に早く始めることが一番大事だなと思います。",
       "start": 2717484,
       "end": 2774564,
@@ -2303,7 +2303,7 @@
       "timestamp": "46:14"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "来る前で言ったら、やっぱり英語が一番大事なんだなと思います。あと、僕、Togashiさんの、Ryoさんのレジュメセミナー出たんですけど、去年の1月ぐらいにやっていた。その時に会社のOKRとか半期の目標値みたいなものを、そこから引用してレジュメ作るみたいなことを言っていたと思うんですけど、今日本で働いている人とかは、そういうOKRとか半期の目標をどこかで持っておいたら、本当にレジュメ作成にめちゃめちゃ便利だなと思います。",
       "start": 2782624,
       "end": 2815164,
@@ -2317,7 +2317,7 @@
       "timestamp": "46:55"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "そうです、そうです。おっしゃる通りです。",
       "start": 2852704,
       "end": 2853984,
@@ -2331,7 +2331,7 @@
       "timestamp": "47:35"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "あーなるほど。確かに。",
       "start": 2885424,
       "end": 2886804,
@@ -2345,7 +2345,7 @@
       "timestamp": "48:06"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "モチベーションの面でですか。",
       "start": 2902124,
       "end": 2903984,
@@ -2359,7 +2359,7 @@
       "timestamp": "48:25"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "僕、そうですね、それこそ学校通っている間、授業を聞かずにずっとApplyしていたので、あんまりそこに苦しみとかは感じなかったですけど。でも確かにおっしゃる通り、本当に長くいればいるほど、中だらみする人も結構いるなっていうのは確かにおっしゃる通りで。うーん。",
       "start": 2912444,
       "end": 2929524,
@@ -2373,7 +2373,7 @@
       "timestamp": "48:53"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "かわいそうですね、確かに。",
       "start": 2984528,
       "end": 2985828,
@@ -2387,7 +2387,7 @@
       "timestamp": "49:45"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "でも本当に、自分の尻を叩いてもコミュニティに入るしかないなとは思いますよね。",
       "start": 2989048,
       "end": 2994588,
@@ -2401,7 +2401,7 @@
       "timestamp": "49:55"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "気合いしかない。気合いのしかない気もしますけど。でもそれで正直、それでもダメだって思っちゃうんだったら、冷たい言い方になっちゃうかもですけど、そこまでなんじゃないかなとも思っちゃいます。そうです。",
       "start": 2996828,
       "end": 3009868,
@@ -2415,7 +2415,7 @@
       "timestamp": "50:10"
     },
     {
-      "speaker": "speaker_2",
+      "speaker": "Yugo",
       "text": "ありがとうございます。",
       "start": 3015108,
       "end": 3015708,
@@ -2429,10 +2429,12 @@
       "timestamp": "50:17"
     }
   ],
-  "highlight1": "サンフランシスコ本社の税制変更（Section 174）で、カナダ・トロントへブランチ設立が急増。エンジニア求人が3倍に増え、年収もやや上回るという実情を語ります。詳しくはPodcastで話しています",
-  "highlight2": "「90分の面接でCTOとCEOが直接コードウォークスルー」―実際にユウゴさんが受けたシステムデザイン面接の流れと、英語で技術を説明するコツを公開。聞き逃さないで！",
+  "highlight1": "米国の税制変更（Section 174）で、カナダ・トロントへブランチ設立が急増。エンジニア求人が3倍に増え、年収もやや上回るという実情を語ります。詳しくはPodcastで話しています",
+  "highlight2": "「90分の面接でCTOとCEOが直接コードウォークスルー」―実際にYugoさんが受けたシステムデザイン面接の流れと、英語で技術を説明するコツを公開。聞き逃さないで！",
   "highlight3": "「100社応募で4社通過」――カナダ就活の成功率と、ビザタイミングの重要性を実体験で解説。日本人が抱える“完璧主義”とどう向き合うかも必聴です。詳しくはPodcastで！",
   "speakerMap": {
-    "speaker_0": "Ryo"
+    "speaker_0": "Ryo",
+    "speaker_1": "Senna",
+    "speaker_2": "Yugo"
   }
 }

@@ -128,8 +128,8 @@
   "15f55b32-de3b-4959-931c-eea802d1cade": {
     "guests": [
       {
-        "name": "ケムケム",
-        "position": "engineer",
+        "name": "Kemkem",
+        "position": "FDE",
         "company": null
       }
     ],
@@ -147,9 +147,10 @@
       "study-abroad",
       "job-hunting",
       "salary",
-      "big-tech"
+      "big-tech",
+      "return-to-japan"
     ],
-    "reviewed": false
+    "reviewed": true
   },
   "170e584c-f2b8-42a2-926c-0a93b3336781": {
     "guests": [
@@ -300,9 +301,9 @@
   "306ce5e4-844e-4788-938b-fb3e355db374": {
     "guests": [
       {
-        "name": "udon",
+        "name": "Udon",
         "position": "ファイナンス",
-        "company": null
+        "company": "Match Group"
       }
     ],
     "roles": [
@@ -324,7 +325,7 @@
   "33115e65-8fd7-4b72-98bd-62adc4124b7a": {
     "guests": [
       {
-        "name": "こじけん",
+        "name": "Kojiken",
         "position": "PM兼デザイナー兼エンジニア",
         "company": null
       }
@@ -351,7 +352,7 @@
   "35eb5621-3f33-44aa-a9a2-4a138f67aafe": {
     "guests": [
       {
-        "name": "ヤンマー",
+        "name": "Yanmer",
         "position": "エンジニア",
         "company": null
       }
@@ -400,7 +401,7 @@
   "39cf6d7a-a8fc-4f4f-a0f7-3ad0e8e1bc7d": {
     "guests": [
       {
-        "name": "さとみ",
+        "name": "Satomi",
         "position": "ソフトウェアエンジニア",
         "company": null
       }
@@ -555,11 +556,13 @@
     "guests": [
       {
         "name": "Mikiya",
-        "position": null,
+        "position": "ソフトウェアエンジニア",
         "company": null
       }
     ],
-    "roles": [],
+    "roles": [
+      "engineer"
+    ],
     "countries": [
       "canada"
     ],
@@ -664,14 +667,16 @@
     "countries": [
       "canada"
     ],
-    "cities": [],
+    "cities": [
+      "vancouver"
+    ],
     "topics": [
       "english",
       "job-hunting",
       "networking",
       "study-abroad"
     ],
-    "reviewed": false
+    "reviewed": true
   },
   "6631759e-5f0b-4723-84f3-fc7a5fa9bf6b": {
     "guests": [
@@ -879,7 +884,7 @@
   "7e8c554e-4828-4a62-acc3-9feb5f8e2c69": {
     "guests": [
       {
-        "name": "ryoppippi",
+        "name": "Ryoppippi",
         "position": "AIエンジニア",
         "company": "Rork"
       }
@@ -1024,14 +1029,15 @@
     "topics": [
       "job-change",
       "startup",
-      "job-hunting"
+      "job-hunting",
+      "return-to-japan"
     ],
-    "reviewed": false
+    "reviewed": true
   },
   "92e35cc0-58dd-44b6-b93f-82991b470e77": {
     "guests": [
       {
-        "name": "ユウゴ",
+        "name": "Yugo",
         "position": "iOSエンジニア",
         "company": null
       }
@@ -1085,7 +1091,7 @@
     "guests": [
       {
         "name": "Nori",
-        "position": "Excelエンジニア",
+        "position": "エンジニア",
         "company": null
       }
     ],
@@ -1135,7 +1141,7 @@
   "9801adae-b65f-478f-837c-c3081ab8e51c": {
     "guests": [
       {
-        "name": "ヤンマー",
+        "name": "Yanmer",
         "position": "バックエンドエンジニア",
         "company": null
       }
@@ -1371,7 +1377,7 @@
   "bff2d6e2-5867-40ee-a1d4-9a7d6e9db2c8": {
     "guests": [
       {
-        "name": "翔太",
+        "name": "Shota",
         "position": "エンジニア",
         "company": null
       }
@@ -1464,7 +1470,7 @@
   "ccfb6b6f-fb3d-45f3-8173-6983a5ecd6aa": {
     "guests": [
       {
-        "name": "さとみ",
+        "name": "Satomi",
         "position": "ソフトウェアエンジニア",
         "company": null
       }
@@ -1489,7 +1495,7 @@
   "ce272287-4ed3-44ea-ab1c-b13feda40c83": {
     "guests": [
       {
-        "name": "ナオト",
+        "name": "Naoto",
         "position": "ソフトウェアエンジニア",
         "company": "Arista Networks"
       }
@@ -1588,7 +1594,7 @@
   "de7977b4-eea1-482f-9c67-08b9289b14c9": {
     "guests": [
       {
-        "name": "こじけん",
+        "name": "Kojiken",
         "position": "ソフトウェアエンジニア",
         "company": null
       }
@@ -1613,7 +1619,7 @@
   "e0e0d208-9d63-4d18-8c90-55b291731f56": {
     "guests": [
       {
-        "name": "ゆうと",
+        "name": "Yuto",
         "position": "エンジニア",
         "company": null
       }
@@ -1700,7 +1706,7 @@
   "e848c1df-6345-45f9-89dc-c9d6f14f94d2": {
     "guests": [
       {
-        "name": "ヤンマー",
+        "name": "Yanmer",
         "position": "バックエンドエンジニア",
         "company": null
       }
@@ -1816,7 +1822,7 @@
   "f7a7e001-5826-4aad-ba33-0fde633308be": {
     "guests": [
       {
-        "name": "ナオト",
+        "name": "Naoto",
         "position": "ソフトウェアエンジニア",
         "company": "Arista Networks"
       }
@@ -1841,7 +1847,7 @@
   "fad07f2e-34d6-4e7d-abe7-d2ff7705635e": {
     "guests": [
       {
-        "name": "ゆうと",
+        "name": "Yuto",
         "position": "ソフトウェアエンジニア",
         "company": null
       }
