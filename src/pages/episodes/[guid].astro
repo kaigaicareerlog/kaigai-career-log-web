@@ -9,6 +9,7 @@ import EpisodeTranscript from '../../components/episode/EpisodeTranscript.astro'
 import ListenPanel from '../../components/episode/ListenPanel.astro';
 import RelatedEpisodes from '../../components/episode/RelatedEpisodes.astro';
 import EpisodeMetaPills from '../../components/podcast/EpisodeMetaPills.astro';
+import { HOSTS } from '../../constants/actors';
 import { META_DESCRIPTION_MAX_LENGTH, SITE_NAME } from '../../constants/site';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import type { TranscriptJSON } from '../../types';
@@ -18,6 +19,7 @@ import {
 } from '../../utils/episodeMeta/episodeMetaFile';
 import { getEpisodePartner } from '../../utils/episodeMeta/getEpisodePartner';
 import { getRelatedEpisodes } from '../../utils/episodeMeta/getRelatedEpisodes';
+import { findTagBySlug } from '../../utils/episodeMeta/resolveTag';
 import { formatDate, formatDuration } from '../../utils/formatters';
 import { getEpisodeNumber } from '../../utils/getEpisodeNumber';
 import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
@@ -80,8 +82,25 @@ const episodeNumber = getEpisodeNumber(episode.title);
 
 // SEO metadata
 const episodePath = `/episodes/${episode.guid}/`;
+const speakers = new Set(transcript?.utterances.map((u) => u.speaker));
+const keywords = meta
+  ? [
+      ...meta.countries.map((slug) => findTagBySlug('country', slug)),
+      ...meta.cities.map((slug) => findTagBySlug('city', slug)),
+      ...meta.roles.map((slug) => findTagBySlug('role', slug)),
+      ...meta.topics.map((slug) => findTagBySlug('topic', slug)),
+    ].flatMap((tag) => (tag ? [tag.label] : []))
+  : [];
 const jsonLd = [
-  buildPodcastEpisodeJsonLd(episode, toAbsoluteUrl(episodePath)),
+  buildPodcastEpisodeJsonLd(episode, toAbsoluteUrl(episodePath), {
+    // Hosts heard in the transcript; a host interviewed as the guest is
+    // listed once, as the guest
+    hostNames: HOSTS.map((host) => host.name).filter(
+      (name) => speakers.has(name) && !meta?.guests.some((g) => g.name === name)
+    ),
+    guests: meta?.guests,
+    keywords,
+  }),
   buildBreadcrumbJsonLd([
     { name: SITE_NAME, url: '/' },
     { name: episode.title, url: episodePath },

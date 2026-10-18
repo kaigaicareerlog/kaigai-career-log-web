@@ -1,0 +1,60 @@
+---
+import TagTile from '../../components/podcast/TagTile.astro';
+import { SITE_NAME } from '../../constants/site';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { readEpisodeMetaMap } from '../../utils/episodeMeta/episodeMetaFile';
+import {
+  getCompanies,
+  getCompanyPagePath,
+  MIN_EPISODES_FOR_COMPANY_PAGE,
+} from '../../utils/episodeMeta/getCompanyPages';
+import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
+import { buildBreadcrumbJsonLd } from '../../utils/seo';
+
+const { episodes } = await getLatestEpisodes();
+const companies = getCompanies(episodes, readEpisodeMetaMap());
+
+// A company without its own page links straight to its episode
+const hrefFor = (company: (typeof companies)[number]) =>
+  company.episodes.length >= MIN_EPISODES_FOR_COMPANY_PAGE
+    ? getCompanyPagePath(company.slug)
+    : `/episodes/${company.episodes[0].guid}/`;
+
+const examples = companies
+  .slice(0, 3)
+  .map((company) => company.name)
+  .join('、');
+const description = `${examples}など、海外の${companies.length}社で働く（働いていた）日本人へのインタビューを会社別に探せます。入社までの就活や面接、現地での働き方のリアル。`;
+---
+
+<BaseLayout
+  title={`会社から探す - ${SITE_NAME}`}
+  description={description}
+  jsonLd={buildBreadcrumbJsonLd([
+    { name: SITE_NAME, url: '/' },
+    { name: '会社', url: '/companies/' },
+  ])}
+>
+  <main class="flex-1">
+    <div class="mx-auto max-w-5xl px-4 py-10">
+      <h1 class="mb-2 text-3xl font-semibold tracking-tight">会社から探す</h1>
+      <p class="mb-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        {description}
+      </p>
+      <p class="mb-8 text-xs text-muted-foreground">
+        所属は収録時点の情報です。
+      </p>
+      <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          companies.map((company) => (
+            <TagTile
+              href={hrefFor(company)}
+              label={company.name}
+              count={company.episodes.length}
+            />
+          ))
+        }
+      </div>
+    </div>
+  </main>
+</BaseLayout>

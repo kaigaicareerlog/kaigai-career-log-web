@@ -7,7 +7,11 @@ export {
   buildPodcastEpisodeJsonLd,
   buildPodcastSeriesJsonLd,
 } from './buildJsonLd';
-export type { BreadcrumbItem, JsonLd } from './buildJsonLd';
+export type {
+  BreadcrumbItem,
+  JsonLd,
+  PodcastEpisodeDetails,
+} from './buildJsonLd';
 export { toAbsoluteUrl } from './toAbsoluteUrl';
 export { toIsoDuration } from './toIsoDuration';
 export { truncateText } from './truncateText';
