@@ -1,17 +1,33 @@
 ---
+import { ArrowRight } from '@lucide/astro';
 import { Image } from 'astro:assets';
 import ryo from '../../assets/hosts/ryo.jpg';
 import senna from '../../assets/hosts/senna.jpg';
 import hiroshi from '../../assets/hosts/hiroshi.jpg';
 import { ACTIVE_HOSTS } from '../../constants/actors';
+import { readEpisodeMetaMap } from '../../utils/episodeMeta/episodeMetaFile';
+import { getHostInterviews } from '../../utils/episodeMeta/getHostInterviews';
+import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
 import Button from '../ui/Button.astro';
 
 interface Props {
-  /** Trim long bios (home page). The About page shows them in full. */
+  /**
+   * Trim long bios (home page). The About page shows them in full, along
+   * with the episodes where each host was interviewed.
+   */
   compact?: boolean;
 }
 
 const { compact = true } = Astro.props;
+
+const { episodes } = compact ? { episodes: [] } : await getLatestEpisodes();
+const metaMap = readEpisodeMetaMap();
+const interviewsByHost = Object.fromEntries(
+  ACTIVE_HOSTS.map((host) => [
+    host.name,
+    getHostInterviews(host.name, episodes, metaMap),
+  ])
+);
 
 const photos: Record<string, ImageMetadata> = {
   Ryo: ryo,
@@ -52,6 +68,31 @@ const photos: Record<string, ImageMetadata> = {
                 </Button>
               ))}
             </div>
+            {interviewsByHost[host.name].length > 0 && (
+              <div class="mt-3">
+                <p class="text-xs font-medium text-muted-foreground">
+                  {host.name}のインタビュー回
+                </p>
+                <ul>
+                  {interviewsByHost[host.name].map((episode) => (
+                    <li class="border-t first:border-t-0">
+                      <a
+                        href={`/episodes/${episode.guid}/`}
+                        class="group flex items-center justify-between gap-3 py-2 text-sm leading-snug"
+                      >
+                        <span class="min-w-0 transition-colors group-hover:text-brand">
+                          {episode.title}
+                        </span>
+                        <ArrowRight
+                          class="size-4 shrink-0 text-muted-foreground"
+                          aria-hidden="true"
+                        />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </li>
       ))
