@@ -11,7 +11,8 @@
     "Kiro",
     "SaaS",
     "Open Work Permit",
-    "RSU"
+    "RSU",
+    "Hootsuite"
   ],
   "corrections": [
     {
@@ -89,6 +90,10 @@
     {
       "from": "AVANAADO",
       "to": "Avanade"
+    },
+    {
+      "from": "FoodSuite",
+      "to": "Hootsuite"
     }
   ]
 }
