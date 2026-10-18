@@ -3,7 +3,7 @@
     "guests": [
       {
         "name": "Ryo",
-        "position": null,
+        "position": "エンジニア",
         "company": "Asana"
       }
     ],
@@ -18,11 +18,11 @@
       "vancouver"
     ],
     "topics": [
-      "salary",
       "visa",
+      "salary",
       "job-change",
-      "layoff",
-      "work-style"
+      "work-style",
+      "big-tech"
     ],
     "reviewed": false
   },
@@ -661,12 +661,12 @@
     "countries": [
       "canada"
     ],
-    "cities": [
-      "vancouver"
-    ],
+    "cities": [],
     "topics": [
+      "english",
       "job-hunting",
-      "networking"
+      "networking",
+      "study-abroad"
     ],
     "reviewed": false
   },

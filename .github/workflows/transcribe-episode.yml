@@ -21,19 +21,35 @@ on:
         required: false
         type: boolean
         default: true
+  # Called once per episode by transcribe-new-episodes.yml
+  workflow_call:
+    inputs:
+      episode_guid:
+        required: true
+        type: string
+      num_speakers:
+        required: false
+        type: string
+      force:
+        required: false
+        type: boolean
+        default: false
+      generate_highlights:
+        required: false
+        type: boolean
+        default: true
 
 permissions:
   contents: write
   pull-requests: write
 
-# One transcription at a time, so the monthly budget check can't be raced
-concurrency:
-  group: transcription
-  cancel-in-progress: false
-
 jobs:
   transcribe:
     runs-on: ubuntu-latest
+    # One transcription at a time, so the monthly budget check can't be raced
+    concurrency:
+      group: transcription
+      cancel-in-progress: false
 
     steps:
       - name: Checkout repository
@@ -51,6 +67,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Configure git
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
       - name: Run transcription
         env:
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
@@ -65,14 +86,14 @@ jobs:
           npx tsx scripts/transcribe-episode.ts "${ARGS[@]}"
 
       # Record spend on main straight away, even if the transcript PR is
-      # never merged, so the monthly budget check stays accurate
+      # never merged, so the monthly budget check stays accurate. The
+      # transcript itself stays uncommitted (autostash) until the PR step.
       - name: Record transcription usage
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
           git add src/data/transcriptionUsage.json
           if ! git diff --staged --quiet; then
             git commit -m "chore: record transcription usage for ${{ inputs.episode_guid }}"
+            git pull --rebase --autostash
             git push
           fi
 
@@ -93,13 +114,33 @@ jobs:
           npx tsx scripts/name-speakers.ts ${{ inputs.episode_guid }} --report="$RUNNER_TEMP/speakers.md" \
             || echo "⚠️ 話者名の自動付与に失敗しました。Update Transcript Speakers ワークフローで付けてください。" > "$RUNNER_TEMP/speakers.md"
 
-      - name: Write PR description
+      # Redo the episode's tags now that the guests' self-introductions are
+      # available. Reviewed tags are left alone. Tags go straight to main like
+      # the daily RSS tagging, so separate transcript PRs never conflict.
+      - name: Retag episode with the transcript
+        continue-on-error: true
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
+          npx tsx scripts/tag-episodes.ts --guid=${{ inputs.episode_guid }} --force --keep-reviewed
+          git add src/data/episodeMeta.json
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: retag episode ${{ inputs.episode_guid }} from its transcript"
+            git pull --rebase --autostash
+            git push
+          fi
+
+      - name: Write PR description
+        id: pr
+        run: |
+          TITLE=$(jq -r .episodeTitle public/transcripts/${{ inputs.episode_guid }}.json)
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
           {
             echo "Scribe で文字起こししました。マージするとサイトに公開されます。"
             echo
             cat "$RUNNER_TEMP/speakers.md" 2>/dev/null || true
             echo
+            echo "- Episode GUID: \`${{ inputs.episode_guid }}\`"
             echo "- Workflow run: [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})"
           } > "$RUNNER_TEMP/pr-body.md"
 
@@ -109,7 +150,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           add-paths: public/transcripts/${{ inputs.episode_guid }}.json
           commit-message: 'Add transcription for episode ${{ inputs.episode_guid }}'
-          title: '🎙️ Transcript: ${{ inputs.episode_guid }}'
+          title: '🎙️ 文字起こし: ${{ steps.pr.outputs.title }}'
           body-path: ${{ runner.temp }}/pr-body.md
           branch: automated/transcript-${{ inputs.episode_guid }}
           delete-branch: true

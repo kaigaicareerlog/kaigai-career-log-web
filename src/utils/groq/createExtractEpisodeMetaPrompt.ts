@@ -12,6 +12,8 @@ export interface EpisodeMetaPromptInput {
   description: string;
   /** Highlights from the transcript, when the episode has one */
   highlights?: string[];
+  /** Opening lines of the transcript ("[speaker] text"), where guests introduce themselves */
+  transcriptOpening?: string;
 }
 
 // Keeps the prompt within Groq's free-tier token limits
@@ -38,11 +40,15 @@ export function createExtractEpisodeMetaPrompt(
   const highlights = input.highlights?.length
     ? `\nHighlights:\n${input.highlights.map((h) => `- ${h}`).join('\n')}`
     : '';
+  const transcriptOpening = input.transcriptOpening
+    ? `\nTranscript opening (speech-to-text, may contain errors):\n${input.transcriptOpening}`
+    : '';
 
   return `You extract structured metadata from a Japanese podcast episode. The podcast interviews Japanese people who work or have worked abroad in IT.
 
 Rules:
-- Use ONLY what the title and description explicitly state. Never guess. If a value is not stated, use null (or an empty list).
+- Use ONLY what the title, description, highlights and transcript opening explicitly state. Never guess. If a value is not stated, use null (or an empty list).
+- The transcript opening is where guests introduce themselves: use it for the guest's position, company and where they work, but only when a speaker says it plainly.
 - "guests": the interviewee(s). The podcast hosts are ${hostNames}: do NOT list a host unless the episode is explicitly about that host's own career. Special discussion episodes (特別回, 対談) with only hosts have no guests: return [].
 - Part 2 episodes (後半) often continue with the same guest as part 1; extract the guest if the text names them or their job.
 - guest.name: the name as written (e.g. "Naoya"), without さん.
@@ -62,5 +68,5 @@ Return ONLY a JSON object with exactly this shape:
 {"guests":[{"name":string|null,"position":string|null,"company":string|null}],"roles":[string],"countries":[string],"cities":[string],"topics":[string],"otherPlaces":[string]}
 
 Title: ${input.title}
-Description: ${description}${highlights}`;
+Description: ${description}${highlights}${transcriptOpening}`;
 }

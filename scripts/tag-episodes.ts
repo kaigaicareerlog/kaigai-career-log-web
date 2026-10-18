@@ -12,6 +12,7 @@ import {
 } from '../src/utils/groq/chatCompletion';
 import { extractEpisodeMeta } from '../src/utils/groq/extractEpisodeMeta';
 import { createLogger } from '../src/utils/logger';
+import { openingLines } from '../src/utils/transcript/buildSpeakerExcerpt';
 import type { EpisodeMeta, EpisodeMetaMap, PodcastEpisode } from '../src/types';
 
 const logger = createLogger();
@@ -28,6 +29,9 @@ const DEFAULT_DELAY_MS = 6000;
  *   tsx scripts/tag-episodes.ts                 tag all untagged episodes
  *   tsx scripts/tag-episodes.ts --limit=5       tag at most 5
  *   tsx scripts/tag-episodes.ts --guid=<guid> --force   redo one episode
+ *   tsx scripts/tag-episodes.ts --guid=<guid> --force --keep-reviewed
+ *                                   redo one episode unless a human reviewed it
+ *                                   (used after transcription)
  *   tsx scripts/tag-episodes.ts --report        print the review report
  *   tsx scripts/tag-episodes.ts --approve       mark all entries as reviewed
  */
@@ -56,6 +60,24 @@ function loadHighlights(guid: string): string[] {
   }
 }
 
+// Opening of the transcript sent with the title and description. The Groq
+// free tier allows 8,000 tokens/minute; the prompt is ~1,400 tokens and the
+// response budget 2,000, and Japanese runs ~0.73 tokens/char
+const TRANSCRIPT_OPENING_MAX_CHARS = 3000;
+
+/** Where guests introduce themselves (job, company, city), if transcribed */
+function loadTranscriptOpening(guid: string): string | undefined {
+  try {
+    const lines = openingLines(
+      getTranscriptByGuid(guid).utterances,
+      TRANSCRIPT_OPENING_MAX_CHARS
+    );
+    return lines.length > 0 ? lines.join('\n') : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 /**
  * Reviewed entries are protected: they are only redone when a specific
  * --guid is given together with --force.
@@ -63,10 +85,11 @@ function loadHighlights(guid: string): string[] {
 function shouldTag(
   existing: EpisodeMeta | undefined,
   force: boolean,
-  explicitGuid: boolean
+  explicitGuid: boolean,
+  keepReviewed: boolean
 ): boolean {
   if (!existing) return true;
-  if (existing.reviewed) return force && explicitGuid;
+  if (existing.reviewed) return force && explicitGuid && !keepReviewed;
   return force;
 }
 
@@ -118,13 +141,16 @@ async function main(): Promise<void> {
   }
 
   const force = hasFlag('force');
+  const keepReviewed = hasFlag('keep-reviewed');
   const limit = Number(getOption('limit')) || Infinity;
   const delayMs = Number(getOption('delay')) || DEFAULT_DELAY_MS;
   const model = getOption('model') ?? DEFAULT_GROQ_MODEL;
 
   const targets: PodcastEpisode[] = episodes
     .filter((episode) => !guid || episode.guid === guid)
-    .filter((episode) => shouldTag(map[episode.guid], force, Boolean(guid)))
+    .filter((episode) =>
+      shouldTag(map[episode.guid], force, Boolean(guid), keepReviewed)
+    )
     .slice(0, limit);
 
   if (targets.length === 0) {
@@ -149,6 +175,7 @@ async function main(): Promise<void> {
           title: episode.title,
           description: episode.description,
           highlights: loadHighlights(episode.guid),
+          transcriptOpening: loadTranscriptOpening(episode.guid),
         },
         model
       );

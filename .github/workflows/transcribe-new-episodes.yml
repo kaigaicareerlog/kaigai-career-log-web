@@ -1,0 +1,65 @@
+name: Transcribe New Episodes
+
+# Daily, after the RSS update (23:00 UTC): transcribe episodes that have no
+# transcript yet, newest first, each into its own PR. The monthly budget in
+# transcribe-episode.ts still applies to every run.
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+    inputs:
+      max_episodes:
+        description: 'How many episodes to transcribe in this run'
+        required: false
+        type: number
+        default: 1
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    outputs:
+      guids: ${{ steps.find.outputs.guids }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Episodes with an open transcript PR are skipped: their transcript is
+      # not on main yet, and transcribing them again would be paid twice
+      - name: Find episodes without a transcript
+        id: find
+        env:
+          MAX_EPISODES: ${{ inputs.max_episodes || 1 }}
+        run: |
+          PENDING=$(git ls-remote --heads origin 'automated/transcript-*' \
+            | sed 's#.*refs/heads/automated/transcript-##' | paste -sd, -)
+          GUIDS=$(npx tsx scripts/list-untranscribed.ts --exclude="$PENDING" \
+            | jq -c --argjson n "$MAX_EPISODES" '.[:$n]')
+          echo "Pending PRs: ${PENDING:-none}"
+          echo "To transcribe: $GUIDS"
+          echo "guids=$GUIDS" >> "$GITHUB_OUTPUT"
+
+  transcribe:
+    needs: find
+    if: ${{ needs.find.outputs.guids != '[]' }}
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        guid: ${{ fromJson(needs.find.outputs.guids) }}
+    uses: ./.github/workflows/transcribe-episode.yml
+    with:
+      episode_guid: ${{ matrix.guid }}
+    secrets: inherit
