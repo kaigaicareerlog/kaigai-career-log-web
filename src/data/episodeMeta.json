@@ -972,12 +972,11 @@
       "canada"
     ],
     "cities": [
-      "vancouver"
+      "vancouver",
+      "toronto"
     ],
     "topics": [
-      "job-hunting",
-      "salary",
-      "networking"
+      "job-hunting"
     ],
     "reviewed": false
   },
