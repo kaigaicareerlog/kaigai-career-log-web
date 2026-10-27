@@ -28,21 +28,37 @@ const ROMAJI_NAME = /^[A-Za-z][A-Za-z .'-]*$/;
  * When exactly one label is left and exactly one known person (host or tagged
  * guest) mentioned in the excerpt is still unmatched, that person is used by
  * elimination (typically the host who never introduces themselves).
+ *
+ * aliases lists other names a known person goes by (e.g. Ryo introduces
+ * himself by his family name, Togashi). An alias counts as a mention, and a
+ * guess of an alias is saved under the known name.
  */
 export function resolveSpeakerMap({
   guesses,
   labels,
   knownNames,
+  aliases = {},
   excerpt,
 }: {
   guesses: SpeakerGuess[];
   labels: string[];
   knownNames: string[];
+  aliases?: Record<string, string[]>;
   excerpt: string;
 }): ResolvedSpeakers {
   const canonical = new Map(
-    knownNames.map((name) => [name.toLowerCase(), name])
+    knownNames.flatMap((name) => [
+      [name.toLowerCase(), name] as const,
+      ...(aliases[name] ?? []).map(
+        (alias) => [alias.toLowerCase(), name] as const
+      ),
+    ])
   );
+  const lowerExcerpt = excerpt.toLowerCase();
+  const isMentioned = (name: string) =>
+    [name, ...(aliases[name] ?? [])].some((n) =>
+      lowerExcerpt.includes(n.toLowerCase())
+    );
   const unresolved: ResolvedSpeakers['unresolved'] = [];
   const candidates = new Map<string, string>();
 
@@ -56,10 +72,13 @@ export function resolveSpeakerMap({
       unresolved.push({ label, reason: `low confidence (${name}?)` });
     } else if (!ROMAJI_NAME.test(name)) {
       unresolved.push({ label, reason: `name not in romaji (${name})` });
-    } else if (!excerpt.toLowerCase().includes(name.toLowerCase())) {
-      unresolved.push({ label, reason: `${name} is not mentioned` });
     } else {
-      candidates.set(label, canonical.get(name.toLowerCase()) ?? name);
+      const resolvedName = canonical.get(name.toLowerCase()) ?? name;
+      if (isMentioned(resolvedName)) {
+        candidates.set(label, resolvedName);
+      } else {
+        unresolved.push({ label, reason: `${name} is not mentioned` });
+      }
     }
   }
 
@@ -79,9 +98,7 @@ export function resolveSpeakerMap({
   const byElimination: string[] = [];
   if (unresolved.length === 1) {
     const remaining = [...new Set(canonical.values())].filter(
-      (name) =>
-        excerpt.toLowerCase().includes(name.toLowerCase()) &&
-        !Object.values(map).includes(name)
+      (name) => isMentioned(name) && !Object.values(map).includes(name)
     );
     if (remaining.length === 1) {
       map[unresolved[0].label] = remaining[0];
