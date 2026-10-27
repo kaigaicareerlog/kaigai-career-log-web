@@ -139,7 +139,7 @@ Amazon Music
 [Episode page URL on kaigaicareerlog.com]
 ```
 
-The episode page goes last because X builds the link card from the last URL: the reply then shows the episode's share image (generated at build time, `/og/episodes/<guid>.png`).
+The episode page goes last because X builds the link card from the last URL: the reply then shows the episode's share image (generated at build time, `/og/episodes/<guid>.png`). The main tweet has no link and so no card: the issue shows the same image to attach to it by hand.
 
 **Benefits:**
 
