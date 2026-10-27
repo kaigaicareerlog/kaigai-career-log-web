@@ -895,11 +895,11 @@
     "countries": [],
     "cities": [],
     "topics": [
-      "visa",
       "english",
-      "no-experience",
-      "job-change",
-      "work-style"
+      "visa",
+      "layoff",
+      "startup",
+      "job-change"
     ],
     "reviewed": false
   },
