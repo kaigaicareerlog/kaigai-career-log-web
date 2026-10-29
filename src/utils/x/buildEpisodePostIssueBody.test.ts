@@ -3,11 +3,13 @@ import { describe, it } from 'node:test';
 import { buildEpisodePostIssueBody } from './buildEpisodePostIssueBody';
 
 const episodePageUrl = 'https://kaigaicareerlog.com/episodes/abc/';
+const shareImageUrl = 'https://kaigaicareerlog.com/og/episodes/abc.png';
 
 describe('buildEpisodePostIssueBody', () => {
   it('puts the main tweet and the reply in separate code blocks', () => {
     const body = buildEpisodePostIssueBody({
       episodePageUrl,
+      shareImageUrl,
       mainTweetText: '🎧新エピソード公開\n\nタイトル',
       urlsTweetText: 'Spotify\nhttps://open.spotify.com/episode/1',
     });
@@ -28,6 +30,7 @@ describe('buildEpisodePostIssueBody', () => {
   it('includes a one-click intent link for the main tweet when it fits', () => {
     const body = buildEpisodePostIssueBody({
       episodePageUrl,
+      shareImageUrl,
       mainTweetText: '短いツイート',
       urlsTweetText: null,
     });
@@ -39,6 +42,7 @@ describe('buildEpisodePostIssueBody', () => {
     const longMainTweet = 'a'.repeat(300);
     const body = buildEpisodePostIssueBody({
       episodePageUrl,
+      shareImageUrl,
       mainTweetText: longMainTweet,
       urlsTweetText: null,
     });
@@ -48,9 +52,22 @@ describe('buildEpisodePostIssueBody', () => {
     assert.equal(body.includes('その投稿への返信として'), false);
   });
 
+  it('shows the share image to attach to the main tweet', () => {
+    const body = buildEpisodePostIssueBody({
+      episodePageUrl,
+      shareImageUrl,
+      mainTweetText: 'メイン',
+      urlsTweetText: null,
+    });
+
+    assert.ok(body.includes(`![シェア画像](${shareImageUrl})`));
+    assert.ok(body.includes('メインツイートに添付'));
+  });
+
   it('tells the reader to post the reply when URLs exist', () => {
     const body = buildEpisodePostIssueBody({
       episodePageUrl,
+      shareImageUrl,
       mainTweetText: 'メイン',
       urlsTweetText: 'URL一覧',
     });
