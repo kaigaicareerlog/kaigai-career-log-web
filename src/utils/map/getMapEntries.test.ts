@@ -80,4 +80,28 @@ describe('getMapEntries', () => {
       false
     );
   });
+
+  it('puts episodes with a country but no city on a country pin', () => {
+    const withCountry = getMapEntries(['e3', 'e2', 'e1'].map(ep), {
+      e1: meta({ countries: ['canada'], cities: ['vancouver'] }),
+      e2: meta({ countries: ['canada'] }),
+      e3: meta({ countries: ['new-zealand'] }),
+    });
+    const ids = Object.fromEntries(withCountry.map((e) => [e.id, e]));
+
+    assert.deepEqual(withCountry.map((e) => e.id).sort(), [
+      'canada',
+      'new-zealand',
+      'vancouver',
+    ]);
+    assert.equal(ids['new-zealand'].kind, 'country');
+    assert.ok(ids['new-zealand'].lat < 0);
+    // Only the cityless episode is on the Canada pin, but the link counts all
+    assert.deepEqual(
+      ids.canada.episodes.map((e) => e.guid),
+      ['e2']
+    );
+    assert.equal(ids.canada.count, 1);
+    assert.equal(ids.canada.pageCount, 2);
+  });
 });

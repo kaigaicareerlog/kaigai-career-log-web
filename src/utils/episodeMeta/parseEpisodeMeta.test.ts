@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { parseEpisodeMeta } from './parseEpisodeMeta';
+import { parseEpisodeMeta, toPlaceSlug } from './parseEpisodeMeta';
 
 describe('parseEpisodeMeta', () => {
   it('maps labels and aliases to slugs and marks the result unreviewed', () => {
@@ -80,5 +80,84 @@ describe('parseEpisodeMeta', () => {
       assert.deepEqual(meta.guests, []);
       assert.deepEqual(meta.topics, []);
     }
+  });
+
+  it('turns a new country or city from otherPlaces into a new tag', () => {
+    const { meta, newPlaces, warnings } = parseEpisodeMeta({
+      countries: [],
+      cities: [],
+      otherPlaces: [
+        {
+          kind: 'country',
+          name: 'Australia',
+          label: 'オーストラリア',
+          lat: -25.27,
+          lon: 133.77,
+        },
+        {
+          kind: 'city',
+          name: 'Melbourne',
+          label: 'メルボルン',
+          lat: -37.8136,
+          lon: 144.9631,
+        },
+      ],
+    });
+
+    assert.deepEqual(meta.countries, ['australia']);
+    assert.deepEqual(meta.cities, ['melbourne']);
+    assert.deepEqual(
+      newPlaces.map((p) => [p.kind, p.tag.slug, p.tag.label]),
+      [
+        ['country', 'australia', 'オーストラリア'],
+        ['city', 'melbourne', 'メルボルン'],
+      ]
+    );
+    assert.deepEqual(warnings, []);
+  });
+
+  it('uses the existing tag when an otherPlaces entry is already known', () => {
+    const { meta, newPlaces } = parseEpisodeMeta({
+      otherPlaces: [
+        {
+          kind: 'country',
+          name: 'New Zealand',
+          label: 'ニュージーランド',
+          lat: -41,
+          lon: 174,
+        },
+      ],
+    });
+
+    assert.deepEqual(meta.countries, ['new-zealand']);
+    assert.deepEqual(newPlaces, []);
+  });
+
+  it('only reports new places without usable coordinates or labels', () => {
+    const { meta, newPlaces, warnings } = parseEpisodeMeta({
+      otherPlaces: [
+        {
+          kind: 'city',
+          name: 'Sydney',
+          label: 'シドニー',
+          lat: 'south',
+          lon: 151,
+        },
+        { kind: 'city', name: 'Perth', label: null, lat: -31.95, lon: 115.86 },
+      ],
+    });
+
+    assert.deepEqual(meta.cities, []);
+    assert.deepEqual(newPlaces, []);
+    assert.deepEqual(warnings, [
+      'place not in vocabulary: シドニー',
+      'place not in vocabulary: Perth',
+    ]);
+  });
+
+  it('makes URL-safe slugs from English names', () => {
+    assert.equal(toPlaceSlug('New Zealand'), 'new-zealand');
+    assert.equal(toPlaceSlug('São Paulo'), 'sao-paulo');
+    assert.equal(toPlaceSlug('オークランド'), null);
   });
 });

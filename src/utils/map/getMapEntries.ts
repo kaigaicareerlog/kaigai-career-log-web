@@ -15,7 +15,7 @@ export const RETURNEE_PIN = {
 export interface MapEntry {
   id: string;
   label: string;
-  kind: 'city' | 'returnee';
+  kind: 'city' | 'country' | 'returnee';
   lat: number;
   lon: number;
   /** Number of episodes */
@@ -24,14 +24,17 @@ export interface MapEntry {
   episodes: PodcastEpisode[];
   /** The tag page, when the tag has enough episodes to have one */
   pagePath: string | null;
+  /** Episodes on the tag page (more than `count` for a country pin) */
+  pageCount: number;
 }
 
 const LATEST_EPISODES = 3;
 
 /**
  * One pin per city that has at least one episode (its position comes from the
- * city's entry in the vocabulary), plus a Tokyo pin for the guests who
- * returned to Japan. Most episodes first.
+ * city's entry in the vocabulary), one pin per country for episodes that have
+ * a country but no city (e.g. the guest never said which city), plus a Tokyo
+ * pin for the guests who returned to Japan. Most episodes first.
  *
  * @param episodes All episodes, newest first
  */
@@ -60,6 +63,39 @@ export function getMapEntries(
           count: page.episodes.length,
           episodes: page.episodes.slice(0, LATEST_EPISODES),
           pagePath: pagePathFor(page.episodes.length, page.slug),
+          pageCount: page.episodes.length,
+        },
+      ];
+    });
+
+  // Episodes with a city are already on the map through their city pin
+  const hasNoCity = (episode: PodcastEpisode) =>
+    (map[episode.guid]?.cities.length ?? 0) === 0;
+  const countries = pages
+    .filter((page) => page.kind === 'country')
+    .flatMap((page): MapEntry[] => {
+      const definition = TAG_DEFINITIONS.country.find(
+        (c) => c.slug === page.slug
+      );
+      const withoutCity = page.episodes.filter(hasNoCity);
+      if (
+        withoutCity.length === 0 ||
+        definition?.lat === undefined ||
+        definition.lon === undefined
+      ) {
+        return [];
+      }
+      return [
+        {
+          id: page.slug,
+          label: page.label,
+          kind: 'country',
+          lat: definition.lat,
+          lon: definition.lon,
+          count: withoutCity.length,
+          episodes: withoutCity.slice(0, LATEST_EPISODES),
+          pagePath: pagePathFor(page.episodes.length, page.slug),
+          pageCount: page.episodes.length,
         },
       ];
     });
@@ -78,9 +114,12 @@ export function getMapEntries(
           count: returnees.episodes.length,
           episodes: returnees.episodes.slice(0, LATEST_EPISODES),
           pagePath: pagePathFor(returnees.episodes.length, returnees.slug),
+          pageCount: returnees.episodes.length,
         },
       ]
     : [];
 
-  return [...cities, ...returneeEntry].sort((a, b) => b.count - a.count);
+  return [...cities, ...countries, ...returneeEntry].sort(
+    (a, b) => b.count - a.count
+  );
 }

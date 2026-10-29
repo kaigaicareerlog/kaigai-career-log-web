@@ -17,8 +17,8 @@ describe('episode vocabulary', () => {
   });
 });
 
-describe('city coordinates', () => {
-  const cities = TAG_DEFINITIONS.city;
+describe('city and country coordinates', () => {
+  const cities = [...TAG_DEFINITIONS.city, ...TAG_DEFINITIONS.country];
 
   it('gives every city a valid map position', () => {
     for (const city of cities) {
