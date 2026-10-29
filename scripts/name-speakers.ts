@@ -9,7 +9,7 @@
  */
 
 import fs from 'fs';
-import { HOSTS } from '../src/constants/actors';
+import { HOST_ALIASES, HOSTS } from '../src/constants/actors';
 import { getEpisodeMeta } from '../src/utils/episodeMeta/episodeMetaFile';
 import { getTranscriptByGuid } from '../src/utils/getTranscriptByGuid';
 import { getTranscriptJsonFilePath } from '../src/utils/getTranscriptJsonFilePath';
@@ -69,7 +69,7 @@ function buildReport(
       : 'すべての話者に名前を付けました。',
     ...(warning ? ['', `⚠️ ${warning}`] : []),
     '',
-    '話者分離は回の後半でずれることがあります。マージ前に、後半の発言者が合っているか確認してください。',
+    '話者分離は回の後半でずれることがあります。後半の発言者が違っていたら Update Transcript Speakers ワークフローで直してください。',
   ].join('\n');
 }
 
@@ -100,6 +100,7 @@ async function nameSpeakers(guid: string): Promise<void> {
   const guesses = await identifySpeakers({
     episodeTitle: transcript.episodeTitle,
     hostNames,
+    hostAliases: HOST_ALIASES,
     guestNames,
     labels,
     excerpt,
@@ -108,6 +109,7 @@ async function nameSpeakers(guid: string): Promise<void> {
     guesses,
     labels,
     knownNames: [...hostNames, ...guestNames],
+    aliases: HOST_ALIASES,
     excerpt,
   });
 

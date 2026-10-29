@@ -79,6 +79,15 @@ export const HIROSHI: Actor = {
 export const HOSTS: Actor[] = [RYO, SENNA, AYAKA, HIROSHI];
 
 /**
+ * Other names hosts go by on the show, for speaker naming. Ryo usually
+ * introduces himself by his family name ("…エンジニアをやっているTogashi").
+ */
+export const HOST_ALIASES: Record<string, string[]> = {
+  Ryo: ['Togashi', '富樫'],
+  Hiroshi: ['Isobe', '磯部'],
+};
+
+/**
  * Get host information by name (for transcripts)
  */
 export function getHostInfo(speaker: string): HostInfo {

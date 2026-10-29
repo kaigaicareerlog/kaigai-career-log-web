@@ -111,4 +111,35 @@ describe('resolveSpeakerMap', () => {
     const { unresolved } = resolveSpeakerMap({ ...base, guesses: [] });
     assert.equal(unresolved.length, 3);
   });
+
+  it('accepts a host who is only mentioned by an alias', () => {
+    const { map, unresolved, byElimination } = resolveSpeakerMap({
+      ...base,
+      aliases: { Ryo: ['Togashi'] },
+      excerpt: 'ホストはTogashiと、FROGのSennaです。Mamoruです。',
+      guesses: [
+        { label: 'speaker_0', name: 'Ryo', confidence: 'high' },
+        { label: 'speaker_1', name: 'Mamoru', confidence: 'high' },
+        { label: 'speaker_2', name: null, confidence: 'low' },
+      ],
+    });
+    assert.deepEqual(map, {
+      speaker_0: 'Ryo',
+      speaker_1: 'Mamoru',
+      speaker_2: 'Senna',
+    });
+    assert.deepEqual(unresolved, []);
+    assert.deepEqual(byElimination, ['speaker_2']);
+  });
+
+  it('saves a guessed alias under the known name', () => {
+    const { map } = resolveSpeakerMap({
+      ...base,
+      aliases: { Ryo: ['Togashi'] },
+      excerpt: 'Togashiです',
+      labels: ['speaker_0'],
+      guesses: [{ label: 'speaker_0', name: 'Togashi', confidence: 'high' }],
+    });
+    assert.deepEqual(map, { speaker_0: 'Ryo' });
+  });
 });
