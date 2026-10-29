@@ -2,7 +2,8 @@
 /**
  * Notifies about a new episode to post to X by opening a GitHub issue with
  * the tweet text ready to copy (main tweet and reply each in their own code
- * block, plus a one-click "open X with the main tweet pre-filled" link),
+ * block, plus a one-click "open X with the main tweet pre-filled" link and
+ * the episode's share image to attach),
  * instead of posting directly - X's API now requires paid pay-per-use
  * credits.
  *
@@ -50,6 +51,7 @@ async function main(): Promise<void> {
   const episodePageUrl = `${SITE_URL}/episodes/${episode.guid}/`;
   const body = buildEpisodePostIssueBody({
     episodePageUrl,
+    shareImageUrl: `${SITE_URL}/og/episodes/${episode.guid}.png`,
     mainTweetText: formatNewEpisodeMainTweet(episode, hosts),
     urlsTweetText: formatNewEpisodeUrlsTweet(episode, episodePageUrl),
   });
