@@ -122,6 +122,12 @@ export const COUNTRY_TAGS: readonly TagDefinition[] = [
     aliases: ['germany'],
     searchAliases: ['ヨーロッパ', '欧州', 'europe'],
   },
+  {
+    slug: 'new-zealand',
+    label: 'ニュージーランド',
+    aliases: ['nz', 'new zealand'],
+    searchAliases: ['オセアニア', 'oceania'],
+  },
 ];
 
 export const CITY_TAGS: readonly TagDefinition[] = [

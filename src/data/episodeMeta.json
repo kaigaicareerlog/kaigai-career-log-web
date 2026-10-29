@@ -892,7 +892,9 @@
     "roles": [
       "designer"
     ],
-    "countries": [],
+    "countries": [
+      "new-zealand"
+    ],
     "cities": [],
     "topics": [
       "english",
