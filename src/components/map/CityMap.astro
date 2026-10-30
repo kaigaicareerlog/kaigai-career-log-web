@@ -146,6 +146,11 @@ const maps = views.map((view) => {
               海外でキャリアを積んだあと、日本へ帰国した人たちです。
             </p>
           )}
+          {entry.kind === 'country' && (
+            <p class="mb-2 text-sm text-muted-foreground">
+              都市名の出てこないエピソードです。
+            </p>
+          )}
           <ul class="mb-3">
             {entry.episodes.map((episode) => (
               <li class="border-t first:border-t-0">
@@ -170,7 +175,7 @@ const maps = views.map((view) => {
               class="inline-flex items-center gap-1 text-sm font-medium text-brand hover:underline"
             >
               {entry.kind === 'returnee' ? 'この' : `「${entry.label}」の`}
-              エピソード{entry.count}話をすべて見る
+              エピソード{entry.pageCount}話をすべて見る
               <ArrowRight class="size-4" aria-hidden="true" />
             </a>
           )}

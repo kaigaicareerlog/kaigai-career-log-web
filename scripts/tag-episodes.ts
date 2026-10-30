@@ -5,6 +5,7 @@ import {
   writeEpisodeMetaMap,
 } from '../src/utils/episodeMeta/episodeMetaFile';
 import { formatEpisodeMetaReport } from '../src/utils/episodeMeta/formatEpisodeMetaReport';
+import { addPlaceTags } from '../src/utils/episodeMeta/placeTagsFile';
 import { sharePartnerTags } from '../src/utils/episodeMeta/sharePartnerTags';
 import {
   DEFAULT_GROQ_MODEL,
@@ -170,7 +171,7 @@ async function main(): Promise<void> {
     logger.processing(episode.title);
 
     try {
-      const { meta, warnings } = await extractEpisodeMeta(
+      const { meta, warnings, newPlaces } = await extractEpisodeMeta(
         {
           title: episode.title,
           description: episode.description,
@@ -178,6 +179,15 @@ async function main(): Promise<void> {
           transcriptOpening: loadTranscriptOpening(episode.guid),
         },
         model
+      );
+
+      // Countries/cities not in the vocabulary yet become new tags (and map
+      // pins) right away; they show up in the report for a human to check
+      addPlaceTags(newPlaces).forEach((place) =>
+        logger.info(
+          `New ${place.kind} tag: ${place.tag.label} (${place.tag.slug})`,
+          2
+        )
       );
 
       map[episode.guid] = meta;

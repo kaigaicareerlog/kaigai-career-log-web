@@ -8,9 +8,16 @@
  *   broad to resolve to it (e.g. 北米 matches both Canada and the USA)
  * - `pageHeading` / `pageDescription`: wording for the tag's own page when the
  *   generic "「<label>」に関するエピソード" would read badly
- * - `lat` / `lon`: cities only. A city with episodes gets a pin on the map, so
- *   adding a city here is all it takes to put it on the map.
+ * - `lat` / `lon`: cities and countries. A city with episodes gets a pin on the
+ *   map, so adding a city here is all it takes to put it on the map. Episodes
+ *   with a country but no city get a pin at the country's position instead.
+ *
+ * Countries and cities that appear in a new episode but are missing here are
+ * added automatically by the tagging script to src/data/placeTags.json, which
+ * is merged in below. Move them here when they need aliases or tidying.
  */
+
+import placeTags from '../data/placeTags.json';
 
 export type TagKind = 'role' | 'country' | 'city' | 'topic';
 
@@ -21,7 +28,7 @@ export interface TagDefinition {
   readonly searchAliases?: readonly string[];
   readonly pageHeading?: string;
   readonly pageDescription?: (count: number) => string;
-  /** Cities only: where the pin goes on the world map (/cities/) */
+  /** Cities and countries: where the pin goes on the world map (/cities/) */
   readonly lat?: number;
   readonly lon?: number;
 }
@@ -97,40 +104,50 @@ export const ROLE_TAGS: readonly TagDefinition[] = [
   },
 ];
 
-export const COUNTRY_TAGS: readonly TagDefinition[] = [
+const BUILT_IN_COUNTRY_TAGS: readonly TagDefinition[] = [
   {
     slug: 'canada',
+    lat: 56.1304,
+    lon: -106.3468,
     label: 'カナダ',
     aliases: ['canada'],
     searchAliases: ['北米', 'north america'],
   },
   {
     slug: 'usa',
+    lat: 39.8283,
+    lon: -98.5795,
     label: 'アメリカ',
     aliases: ['米国', 'usa', 'us', 'united states'],
     searchAliases: ['北米', 'north america', 'america'],
   },
   {
     slug: 'uk',
+    lat: 54.0,
+    lon: -2.0,
     label: 'イギリス',
     aliases: ['英国', 'uk', 'united kingdom'],
     searchAliases: ['ヨーロッパ', '欧州', 'europe'],
   },
   {
     slug: 'germany',
+    lat: 51.1657,
+    lon: 10.4515,
     label: 'ドイツ',
     aliases: ['germany'],
     searchAliases: ['ヨーロッパ', '欧州', 'europe'],
   },
   {
     slug: 'new-zealand',
+    lat: -40.9006,
+    lon: 174.886,
     label: 'ニュージーランド',
     aliases: ['nz', 'new zealand'],
     searchAliases: ['オセアニア', 'oceania'],
   },
 ];
 
-export const CITY_TAGS: readonly TagDefinition[] = [
+const BUILT_IN_CITY_TAGS: readonly TagDefinition[] = [
   {
     slug: 'vancouver',
     lat: 49.2827,
@@ -209,6 +226,24 @@ export const CITY_TAGS: readonly TagDefinition[] = [
     label: 'ロンドン',
     aliases: ['london'],
   },
+];
+
+/** Shape of src/data/placeTags.json (written by scripts/tag-episodes.ts) */
+export interface PlaceTagsFile {
+  countries: TagDefinition[];
+  cities: TagDefinition[];
+}
+
+const autoPlaceTags = placeTags as PlaceTagsFile;
+
+export const COUNTRY_TAGS: TagDefinition[] = [
+  ...BUILT_IN_COUNTRY_TAGS,
+  ...autoPlaceTags.countries,
+];
+
+export const CITY_TAGS: TagDefinition[] = [
+  ...BUILT_IN_CITY_TAGS,
+  ...autoPlaceTags.cities,
 ];
 
 export const TOPIC_TAGS: readonly TagDefinition[] = [

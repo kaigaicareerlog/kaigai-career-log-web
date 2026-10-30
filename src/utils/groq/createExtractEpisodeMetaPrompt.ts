@@ -57,7 +57,7 @@ Rules:
 - "roles", "countries", "cities", "topics": return ONLY slugs from the allowed lists below (the text in parentheses is just the meaning). Pick only those clearly discussed: at most 2 roles, 3 countries, 3 cities, 5 topics.
 - "countries"/"cities": where the guest works or worked abroad. Do not add Japan, a partner's home country, or a company's headquarters unless the guest works there.
 - Use the topic "return-to-japan" only when the GUEST now lives or works in Japan after working abroad (not for a trip to Japan or a job they had in Japan before leaving). Both parts of a two-part interview have the same guest.
-- "otherPlaces": cities/countries where the guest works or worked that are missing from the lists. Usually empty.
+- "otherPlaces": countries/cities where the guest works or worked abroad that are missing from the allowed lists (e.g. a country not listed above). Usually empty. For each give "kind" ("country" or "city"), "name" (English name, e.g. "New Zealand", "Auckland"), "label" (the usual Japanese name, e.g. "ニュージーランド", "オークランド") and "lat"/"lon" (decimal degrees of the city centre, or of the country's geographic centre). Only include a city when it is explicitly named; when only the country is stated, include just the country.
 
 Allowed roles: ${options(ROLE_TAGS)}
 Allowed countries: ${options(COUNTRY_TAGS)}
@@ -65,7 +65,7 @@ Allowed cities: ${options(CITY_TAGS)}
 Allowed topics: ${options(TOPIC_TAGS)}
 
 Return ONLY a JSON object with exactly this shape:
-{"guests":[{"name":string|null,"position":string|null,"company":string|null}],"roles":[string],"countries":[string],"cities":[string],"topics":[string],"otherPlaces":[string]}
+{"guests":[{"name":string|null,"position":string|null,"company":string|null}],"roles":[string],"countries":[string],"cities":[string],"topics":[string],"otherPlaces":[{"kind":"country"|"city","name":string,"label":string,"lat":number,"lon":number}]}
 
 Title: ${input.title}
 Description: ${description}${highlights}${transcriptOpening}`;

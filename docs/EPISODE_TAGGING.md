@@ -32,6 +32,18 @@ minutes, where guests introduce their job, company and city) and return:
 - Tags must come from the fixed lists in
   `src/constants/episodeVocabulary.ts`. Anything else is dropped and printed as
   a warning (add it to the vocabulary if it is worth keeping).
+- Exception: a **country or city** missing from the lists (e.g. the first
+  guest in a new country) is added automatically. The model returns it in
+  `otherPlaces` with its English name, Japanese label and coordinates, and the
+  script saves it to `src/data/placeTags.json`, which is merged into the
+  vocabulary. The new tag gets its tag page and map pin with no code change.
+  Move it into `episodeVocabulary.ts` later if it needs aliases.
+
+## World map (`/cities/`)
+
+Each city tag with episodes is a pin. An episode with a country but no city
+(the guest did not say where) is shown on a pin at the country's position, so
+every tagged episode is on the map. Returnees get the Tokyo pin.
 - Every result is saved with `"reviewed": false`.
 
 The daily RSS workflow runs the same script, so new episodes are tagged
