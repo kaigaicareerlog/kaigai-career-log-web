@@ -1,7 +1,5 @@
 ---
 import { Calendar, ChevronRight, Clock } from '@lucide/astro';
-import fs from 'fs';
-import path from 'path';
 import EpisodeUrlModal from '../../components/EpisodeUrlModal.astro';
 import EpisodeDescription from '../../components/episode/EpisodeDescription.astro';
 import EpisodeHighlights from '../../components/episode/EpisodeHighlights.astro';
@@ -12,14 +10,13 @@ import EpisodeMetaPills from '../../components/podcast/EpisodeMetaPills.astro';
 import { HOSTS } from '../../constants/actors';
 import { META_DESCRIPTION_MAX_LENGTH, SITE_NAME } from '../../constants/site';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import type { TranscriptJSON } from '../../types';
 import {
   getEpisodeMeta,
   readEpisodeMetaMap,
 } from '../../utils/episodeMeta/episodeMetaFile';
 import { getEpisodePartner } from '../../utils/episodeMeta/getEpisodePartner';
 import { getRelatedEpisodes } from '../../utils/episodeMeta/getRelatedEpisodes';
-import { findTagBySlug } from '../../utils/episodeMeta/resolveTag';
+import { getEpisodeTagLabels } from '../../utils/episodeMeta/getEpisodeTagLabels';
 import { formatDate, formatDuration } from '../../utils/formatters';
 import { getEpisodeNumber } from '../../utils/getEpisodeNumber';
 import { getLatestEpisodes } from '../../utils/getLatestEpisodes';
@@ -30,6 +27,10 @@ import {
   truncateText,
 } from '../../utils/seo';
 import { getSpotifyEmbedUrl } from '../../utils/spotify';
+import {
+  getTranscriptHighlights,
+  readTranscriptIfExists,
+} from '../../utils/transcript/readTranscriptIfExists';
 
 export async function getStaticPaths() {
   const { episodes } = await getLatestEpisodes();
@@ -43,27 +44,8 @@ export async function getStaticPaths() {
 const { episode } = Astro.props;
 const { episodes } = await getLatestEpisodes();
 
-// Load transcript if available
-let transcript: TranscriptJSON | null = null;
-try {
-  const transcriptPath = path.join(
-    process.cwd(),
-    'public',
-    'transcripts',
-    `${episode.guid}.json`
-  );
-  if (fs.existsSync(transcriptPath)) {
-    transcript = JSON.parse(fs.readFileSync(transcriptPath, 'utf-8'));
-  }
-} catch (error) {
-  console.error(`Failed to load transcript for ${episode.guid}:`, error);
-}
-
-const highlights = [
-  transcript?.highlight1,
-  transcript?.highlight2,
-  transcript?.highlight3,
-].filter((highlight): highlight is string => Boolean(highlight));
+const transcript = readTranscriptIfExists(episode.guid);
+const highlights = getTranscriptHighlights(transcript);
 
 // Guest info / tags shown as badges
 const meta = getEpisodeMeta(episode.guid);
@@ -83,14 +65,11 @@ const episodeNumber = getEpisodeNumber(episode.title);
 // SEO metadata
 const episodePath = `/episodes/${episode.guid}/`;
 const speakers = new Set(transcript?.utterances.map((u) => u.speaker));
-const keywords = meta
-  ? [
-      ...meta.countries.map((slug) => findTagBySlug('country', slug)),
-      ...meta.cities.map((slug) => findTagBySlug('city', slug)),
-      ...meta.roles.map((slug) => findTagBySlug('role', slug)),
-      ...meta.topics.map((slug) => findTagBySlug('topic', slug)),
-    ].flatMap((tag) => (tag ? [tag.label] : []))
-  : [];
+const keywords = getEpisodeTagLabels(meta);
+// Plain Markdown copy of this page (facts, highlights, transcript) for AI
+// assistants
+const markdownPath = `/episodes/${episode.guid}.md`;
+const ogImagePath = `/og/episodes/${episode.guid}.png`;
 const jsonLd = [
   buildPodcastEpisodeJsonLd(episode, toAbsoluteUrl(episodePath), {
     // Hosts heard in the transcript; a host interviewed as the guest is
@@ -100,6 +79,8 @@ const jsonLd = [
     ),
     guests: meta?.guests,
     keywords,
+    image: ogImagePath,
+    transcriptUrl: transcript ? markdownPath : undefined,
   }),
   buildBreadcrumbJsonLd([
     { name: SITE_NAME, url: '/' },
@@ -112,7 +93,8 @@ const jsonLd = [
   title={`${episode.title} - ${SITE_NAME}`}
   description={truncateText(episode.description, META_DESCRIPTION_MAX_LENGTH)}
   ogType="article"
-  ogImage={`/og/episodes/${episode.guid}.png`}
+  ogImage={ogImagePath}
+  markdownAlternate={markdownPath}
   largeImage
   jsonLd={jsonLd}
 >
