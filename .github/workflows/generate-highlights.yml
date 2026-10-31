@@ -30,7 +30,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -39,17 +39,21 @@ jobs:
       - name: Generate highlights
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          EPISODE_GUID: ${{ inputs.episode_guid }}
+          FORCE: ${{ inputs.force }}
         run: |
-          if [ "${{ inputs.force }}" = "true" ]; then
-            npm run generate-highlights ${{ inputs.episode_guid }} -- --force
+          if [ "$FORCE" = "true" ]; then
+            npm run generate-highlights "$EPISODE_GUID" -- --force
           else
-            npm run generate-highlights ${{ inputs.episode_guid }}
+            npm run generate-highlights "$EPISODE_GUID"
           fi
 
       - name: Commit and push changes
+        env:
+          EPISODE_GUID: ${{ inputs.episode_guid }}
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add public/transcripts/${{ inputs.episode_guid }}.json
-          git diff --staged --quiet || git commit -m "Add highlights for episode ${{ inputs.episode_guid }}"
+          git add "public/transcripts/$EPISODE_GUID.json"
+          git diff --staged --quiet || git commit -m "Add highlights for episode $EPISODE_GUID"
           git push

@@ -10,6 +10,8 @@ on:
 jobs:
   post-google-form-reminder:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Check if this is a biweekly run
@@ -41,7 +43,7 @@ jobs:
         if: steps.check-week.outputs.should_post == 'true'
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         if: steps.check-week.outputs.should_post == 'true'
