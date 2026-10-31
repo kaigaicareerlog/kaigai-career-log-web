@@ -4,14 +4,16 @@ import {
   SPOTIFY_CHANNEL_URL,
   YOUTUBE_CHANNEL_URL,
 } from '../../constants/podcastUrls';
+import { X_ACCOUNT_URL } from '../../constants/contact';
 import {
   SITE_DEFAULT_DESCRIPTION,
   SITE_DEFAULT_OG_IMAGE,
   SITE_LANGUAGE,
   SITE_NAME,
+  SITE_NAME_EN,
   SITE_URL,
 } from '../../constants/site';
-import type { EpisodeGuest, PodcastEpisode } from '../../types';
+import type { Actor, EpisodeGuest, PodcastEpisode } from '../../types';
 import { toAbsoluteUrl } from './toAbsoluteUrl';
 import { toIsoDuration } from './toIsoDuration';
 
@@ -23,14 +25,36 @@ export interface BreadcrumbItem {
   url: string;
 }
 
+/** Stable @id of the podcast, so every page points at the same entity */
+export const PODCAST_SERIES_ID = `${SITE_URL}/#podcast`;
+
+/**
+ * schema.org Person for a host, linked to their profiles so answer engines
+ * can tell who is speaking and connect them to the same person elsewhere.
+ */
+export function buildHostPerson(host: Actor): JsonLd {
+  return {
+    '@type': 'Person',
+    name: host.name,
+    description: host.bio,
+    image: toAbsoluteUrl(host.avatar),
+    ...(host.socialLinks.length > 0
+      ? { sameAs: host.socialLinks.map((link) => link.href) }
+      : {}),
+  };
+}
+
 /**
  * schema.org PodcastSeries describing the podcast as a whole (home page)
+ * @param hosts Current hosts, published as the series' authors
  */
-export function buildPodcastSeriesJsonLd(): JsonLd {
+export function buildPodcastSeriesJsonLd(hosts: Actor[] = []): JsonLd {
   return {
     '@context': 'https://schema.org',
     '@type': 'PodcastSeries',
+    '@id': PODCAST_SERIES_ID,
     name: SITE_NAME,
+    alternateName: SITE_NAME_EN,
     url: `${SITE_URL}/`,
     description: SITE_DEFAULT_DESCRIPTION,
     inLanguage: SITE_LANGUAGE,
@@ -40,7 +64,31 @@ export function buildPodcastSeriesJsonLd(): JsonLd {
       APPLE_PODCAST_CHANNEL_URL,
       YOUTUBE_CHANNEL_URL,
       AMAZON_MUSIC_CHANNEL_URL,
+      X_ACCOUNT_URL,
     ],
+    ...(hosts.length > 0 ? { author: hosts.map(buildHostPerson) } : {}),
+  };
+}
+
+export interface FaqEntry {
+  question: string;
+  answer: string;
+}
+
+/**
+ * schema.org FAQPage. Only use it for questions and answers that are shown
+ * on the page itself.
+ */
+export function buildFaqPageJsonLd(items: readonly FaqEntry[]): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    inLanguage: SITE_LANGUAGE,
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
   };
 }
 
@@ -51,6 +99,10 @@ export interface PodcastEpisodeDetails {
   guests?: EpisodeGuest[];
   /** Tag labels (countries, cities, roles, topics) */
   keywords?: string[];
+  /** Path or absolute URL of the episode's share image */
+  image?: string;
+  /** Path or absolute URL of the Markdown copy with the full transcript */
+  transcriptUrl?: string;
 }
 
 function guestPerson(guest: EpisodeGuest): JsonLd | null {
@@ -74,7 +126,13 @@ function guestPerson(guest: EpisodeGuest): JsonLd | null {
 export function buildPodcastEpisodeJsonLd(
   episode: PodcastEpisode,
   pageUrl: string,
-  { hostNames = [], guests = [], keywords = [] }: PodcastEpisodeDetails = {}
+  {
+    hostNames = [],
+    guests = [],
+    keywords = [],
+    image,
+    transcriptUrl,
+  }: PodcastEpisodeDetails = {}
 ): JsonLd {
   const published = new Date(episode.date);
   const actors = [
@@ -100,6 +158,7 @@ export function buildPodcastEpisodeJsonLd(
       ? {}
       : { datePublished: published.toISOString() }),
     timeRequired: toIsoDuration(episode.duration),
+    ...(image ? { image: toAbsoluteUrl(image) } : {}),
     ...(episode.audioUrl
       ? {
           associatedMedia: {
@@ -108,8 +167,19 @@ export function buildPodcastEpisodeJsonLd(
           },
         }
       : {}),
+    ...(transcriptUrl
+      ? {
+          subjectOf: {
+            '@type': 'DigitalDocument',
+            name: `${episode.title}（文字起こし）`,
+            encodingFormat: 'text/markdown',
+            url: toAbsoluteUrl(transcriptUrl),
+          },
+        }
+      : {}),
     partOfSeries: {
       '@type': 'PodcastSeries',
+      '@id': PODCAST_SERIES_ID,
       name: SITE_NAME,
       url: `${SITE_URL}/`,
     },

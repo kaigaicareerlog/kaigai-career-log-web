@@ -4,11 +4,14 @@
 export {
   buildBreadcrumbJsonLd,
   buildCollectionPageJsonLd,
+  buildFaqPageJsonLd,
+  buildHostPerson,
   buildPodcastEpisodeJsonLd,
   buildPodcastSeriesJsonLd,
 } from './buildJsonLd';
 export type {
   BreadcrumbItem,
+  FaqEntry,
   JsonLd,
   PodcastEpisodeDetails,
 } from './buildJsonLd';

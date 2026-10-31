@@ -14,9 +14,10 @@ import {
   SPOTIFY_CHANNEL_URL,
   YOUTUBE_CHANNEL_URL,
 } from '../constants/podcastUrls';
+import { FAQ_ITEMS } from '../constants/faq';
 import { SITE_NAME } from '../constants/site';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { buildBreadcrumbJsonLd } from '../utils/seo';
+import { buildBreadcrumbJsonLd, buildFaqPageJsonLd } from '../utils/seo';
 
 const platforms = [
   { label: 'Spotify', href: SPOTIFY_CHANNEL_URL },
@@ -28,11 +29,14 @@ const platforms = [
 
 <BaseLayout
   title={`海外キャリアログについて（ホスト紹介・番組情報） - ${SITE_NAME}`}
-  description="海外キャリアログについて - ホスト紹介とポッドキャストの詳細"
-  jsonLd={buildBreadcrumbJsonLd([
-    { name: SITE_NAME, url: '/' },
-    { name: 'About', url: '/about/' },
-  ])}
+  description="海外キャリアログについて - ホスト紹介、配信先、よくある質問"
+  jsonLd={[
+    buildBreadcrumbJsonLd([
+      { name: SITE_NAME, url: '/' },
+      { name: 'About', url: '/about/' },
+    ]),
+    buildFaqPageJsonLd(FAQ_ITEMS),
+  ]}
 >
   <main class="flex-1">
     <div class="mx-auto max-w-3xl space-y-12 px-4 py-10">
@@ -58,7 +62,33 @@ const platforms = [
       <HostsSection compact={false} />
       <SponsorCard />
 
-      <section>
+      <section aria-labelledby="faq-heading">
+        <h2 id="faq-heading" class="mb-4 text-2xl font-semibold tracking-tight">
+          よくある質問
+        </h2>
+        <div class="space-y-3">
+          {
+            FAQ_ITEMS.map((item) => (
+              <div class="rounded-xl border p-4">
+                <h3 class="mb-1.5 font-semibold">{item.question}</h3>
+                <p class="text-sm leading-relaxed text-muted-foreground">
+                  {item.answer}
+                </p>
+                {item.link && (
+                  <a
+                    href={item.link.href}
+                    class="mt-2 inline-block text-sm font-medium text-brand hover:underline"
+                  >
+                    {item.link.label}
+                  </a>
+                )}
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <section id="contact" class="scroll-mt-20">
         <h2 class="mb-2 text-2xl font-semibold tracking-tight">
           お問い合わせ・質問
         </h2>

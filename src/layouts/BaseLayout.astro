@@ -27,6 +27,8 @@ interface Props {
   jsonLd?: JsonLd | JsonLd[];
   /** Ask search engines not to index this page (e.g. 404) */
   noindex?: boolean;
+  /** Path of a Markdown copy of this page, for AI assistants */
+  markdownAlternate?: string;
 }
 
 const {
@@ -37,6 +39,7 @@ const {
   ogType = 'website',
   jsonLd,
   noindex = false,
+  markdownAlternate,
 } = Astro.props;
 
 const canonicalUrl = toAbsoluteUrl(Astro.url.pathname);
@@ -69,6 +72,21 @@ const jsonLdItems = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
     </script>
     <title>{title}</title>
     <link rel="canonical" href={canonicalUrl} />
+    {
+      markdownAlternate && (
+        <link
+          rel="alternate"
+          type="text/markdown"
+          href={toAbsoluteUrl(markdownAlternate)}
+        />
+      )
+    }
+    <link
+      rel="alternate"
+      type="text/plain"
+      title="llms.txt"
+      href={toAbsoluteUrl('/llms.txt')}
+    />
 
     <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:type" content={ogType} />
