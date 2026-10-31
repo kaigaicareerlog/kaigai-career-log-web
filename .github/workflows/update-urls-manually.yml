@@ -41,7 +41,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         run: npm install
@@ -54,53 +54,65 @@ jobs:
           echo "📁 Found episodes file: $EPISODES_FILE"
 
       - name: Display update information
+        env:
+          GUID: ${{ inputs.guid }}
+          SPOTIFY_URL: ${{ inputs.spotify_url }}
+          YOUTUBE_URL: ${{ inputs.youtube_url }}
+          APPLE_URL: ${{ inputs.apple_podcast_url }}
+          AMAZON_URL: ${{ inputs.amazon_music_url }}
         run: |
           echo "🔄 Updating episode URLs"
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "📝 GUID: ${{ github.event.inputs.guid }}"
+          echo "📝 GUID: $GUID"
           echo ""
-          if [ -n "${{ github.event.inputs.spotify_url }}" ]; then
-            echo "🎵 Spotify: ${{ github.event.inputs.spotify_url }}"
+          if [ -n "$SPOTIFY_URL" ]; then
+            echo "🎵 Spotify: $SPOTIFY_URL"
           fi
-          if [ -n "${{ github.event.inputs.youtube_url }}" ]; then
-            echo "🎥 YouTube: ${{ github.event.inputs.youtube_url }}"
+          if [ -n "$YOUTUBE_URL" ]; then
+            echo "🎥 YouTube: $YOUTUBE_URL"
           fi
-          if [ -n "${{ github.event.inputs.apple_podcast_url }}" ]; then
-            echo "🍎 Apple Podcast: ${{ github.event.inputs.apple_podcast_url }}"
+          if [ -n "$APPLE_URL" ]; then
+            echo "🍎 Apple Podcast: $APPLE_URL"
           fi
-          if [ -n "${{ github.event.inputs.amazon_music_url }}" ]; then
-            echo "📦 Amazon Music: ${{ github.event.inputs.amazon_music_url }}"
+          if [ -n "$AMAZON_URL" ]; then
+            echo "📦 Amazon Music: $AMAZON_URL"
           fi
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
       - name: Update episode URLs
+        env:
+          EPISODES_FILE: ${{ steps.find-file.outputs.episodes_file }}
+          GUID: ${{ inputs.guid }}
+          SPOTIFY_URL: ${{ inputs.spotify_url }}
+          YOUTUBE_URL: ${{ inputs.youtube_url }}
+          APPLE_URL: ${{ inputs.apple_podcast_url }}
+          AMAZON_URL: ${{ inputs.amazon_music_url }}
         run: |
-          EPISODES_FILE="${{ steps.find-file.outputs.episodes_file }}"
-          GUID="${{ github.event.inputs.guid }}"
+          # Build the arguments as an array so input values are never
+          # evaluated as shell code
+          ARGS=("$EPISODES_FILE" "$GUID")
 
-          # Build the command with provided URLs
-          CMD="npx tsx scripts/update-episode-by-guid.ts \"$EPISODES_FILE\" \"$GUID\""
-
-          if [ -n "${{ github.event.inputs.spotify_url }}" ]; then
-            CMD="$CMD --spotify \"${{ github.event.inputs.spotify_url }}\""
+          if [ -n "$SPOTIFY_URL" ]; then
+            ARGS+=(--spotify "$SPOTIFY_URL")
           fi
 
-          if [ -n "${{ github.event.inputs.youtube_url }}" ]; then
-            CMD="$CMD --youtube \"${{ github.event.inputs.youtube_url }}\""
+          if [ -n "$YOUTUBE_URL" ]; then
+            ARGS+=(--youtube "$YOUTUBE_URL")
           fi
 
-          if [ -n "${{ github.event.inputs.apple_podcast_url }}" ]; then
-            CMD="$CMD --apple \"${{ github.event.inputs.apple_podcast_url }}\""
+          if [ -n "$APPLE_URL" ]; then
+            ARGS+=(--apple "$APPLE_URL")
           fi
 
-          if [ -n "${{ github.event.inputs.amazon_music_url }}" ]; then
-            CMD="$CMD --amazon \"${{ github.event.inputs.amazon_music_url }}\""
+          if [ -n "$AMAZON_URL" ]; then
+            ARGS+=(--amazon "$AMAZON_URL")
           fi
 
-          # Execute the command
-          eval $CMD
+          npx tsx scripts/update-episode-by-guid.ts "${ARGS[@]}"
 
       - name: Commit and push changes
+        env:
+          GUID: ${{ inputs.guid }}
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
@@ -110,7 +122,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "⚠️  No changes to commit"
           else
-            git commit -m "chore: Manual URL update for episode ${{ github.event.inputs.guid }}"
+            git commit -m "chore: Manual URL update for episode $GUID"
             git push
             echo "✅ Changes committed and pushed successfully"
           fi

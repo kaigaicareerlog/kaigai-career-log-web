@@ -41,25 +41,33 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
       - name: Update speaker labels
+        env:
+          EPISODE_GUID: ${{ inputs.episode_guid }}
+          SPEAKER_A: ${{ inputs.speaker_a_name }}
+          SPEAKER_B: ${{ inputs.speaker_b_name }}
+          SPEAKER_C: ${{ inputs.speaker_c_name }}
+          SPEAKER_D: ${{ inputs.speaker_d_name }}
         run: |
           npx tsx scripts/update-transcript-speakers.ts \
-            "${{ inputs.episode_guid }}" \
-            "${{ inputs.speaker_a_name }}" \
-            "${{ inputs.speaker_b_name }}" \
-            "${{ inputs.speaker_c_name }}" \
-            "${{ inputs.speaker_d_name }}"
+            "$EPISODE_GUID" \
+            "$SPEAKER_A" \
+            "$SPEAKER_B" \
+            "$SPEAKER_C" \
+            "$SPEAKER_D"
 
       - name: Commit and push changes
+        env:
+          EPISODE_GUID: ${{ inputs.episode_guid }}
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add public/transcripts/${{ inputs.episode_guid }}.json
-          git diff --staged --quiet || git commit -m "Update transcript speakers for ${{ inputs.episode_guid }}"
+          git add "public/transcripts/$EPISODE_GUID.json"
+          git diff --staged --quiet || git commit -m "Update transcript speakers for $EPISODE_GUID"
           git push

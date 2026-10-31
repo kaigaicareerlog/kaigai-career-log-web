@@ -19,6 +19,8 @@ on:
 jobs:
   post-highlight-to-x:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -27,7 +29,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         run: npm install
@@ -38,5 +40,7 @@ jobs:
           X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
           X_API_KEY: ${{ secrets.X_API_KEY }}
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          EPISODE_GUID: ${{ inputs.guid }}
+          HIGHLIGHT_NUMBER: ${{ inputs.highlight_number }}
         run: |
-          npx tsx scripts/post-x-episode-highlight.ts "${{ inputs.guid }}" "${{ inputs.highlight_number }}"
+          npx tsx scripts/post-x-episode-highlight.ts "$EPISODE_GUID" "$HIGHLIGHT_NUMBER"

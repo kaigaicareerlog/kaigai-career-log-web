@@ -31,6 +31,9 @@ on:
 jobs:
   update-episode-urls:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout repository
@@ -41,7 +44,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -52,15 +55,20 @@ jobs:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          EPISODE_GUID: ${{ inputs.guid }}
+          UPDATE_SPOTIFY: ${{ inputs.update_spotify }}
+          UPDATE_YOUTUBE: ${{ inputs.update_youtube }}
+          UPDATE_APPLE: ${{ inputs.update_apple }}
+          UPDATE_AMAZON: ${{ inputs.update_amazon }}
         run: |
           PLATFORMS_UPDATED=()
 
           # Update Spotify URLs
-          if [ "${{ inputs.update_spotify }}" = "true" ]; then
+          if [ "$UPDATE_SPOTIFY" = "true" ]; then
             echo "📝 Updating Spotify URLs..."
-            if [ -n "${{ inputs.guid }}" ]; then
-              echo "   Updating specific episode: ${{ inputs.guid }}"
-              npm run update-spotify-urls "${{ inputs.guid }}"
+            if [ -n "$EPISODE_GUID" ]; then
+              echo "   Updating specific episode: $EPISODE_GUID"
+              npm run update-spotify-urls "$EPISODE_GUID"
             else
               echo "   Updating all episodes without Spotify URLs"
               npm run update-spotify-urls
@@ -69,12 +77,12 @@ jobs:
           fi
 
           # Update YouTube URLs
-          if [ "${{ inputs.update_youtube }}" = "true" ]; then
+          if [ "$UPDATE_YOUTUBE" = "true" ]; then
             echo ""
             echo "📝 Updating YouTube URLs..."
-            if [ -n "${{ inputs.guid }}" ]; then
-              echo "   Updating specific episode: ${{ inputs.guid }}"
-              npm run update-youtube-urls "${{ inputs.guid }}"
+            if [ -n "$EPISODE_GUID" ]; then
+              echo "   Updating specific episode: $EPISODE_GUID"
+              npm run update-youtube-urls "$EPISODE_GUID"
             else
               echo "   Updating all episodes without YouTube URLs"
               npm run update-youtube-urls
@@ -83,14 +91,14 @@ jobs:
           fi
 
           # Update Apple Podcast URLs
-          if [ "${{ inputs.update_apple }}" = "true" ]; then
+          if [ "$UPDATE_APPLE" = "true" ]; then
             echo ""
             echo "⚠️  Apple Podcast URL updates are not yet supported"
             echo "   Coming soon!"
           fi
 
           # Update Amazon Music URLs
-          if [ "${{ inputs.update_amazon }}" = "true" ]; then
+          if [ "$UPDATE_AMAZON" = "true" ]; then
             echo ""
             echo "⚠️  Amazon Music URL updates are not yet supported"
             echo "   Coming soon!"

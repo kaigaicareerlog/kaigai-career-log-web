@@ -60,7 +60,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -88,10 +88,12 @@ jobs:
       # monthly budget check stays accurate. The transcript itself stays
       # uncommitted (autostash) until the publish step.
       - name: Record transcription usage
+        env:
+          EPISODE_GUID: ${{ inputs.episode_guid }}
         run: |
           git add src/data/transcriptionUsage.json
           if ! git diff --staged --quiet; then
-            git commit -m "chore: record transcription usage for ${{ inputs.episode_guid }}"
+            git commit -m "chore: record transcription usage for $EPISODE_GUID"
             git pull --rebase --autostash
             git push
           fi
@@ -103,14 +105,16 @@ jobs:
         continue-on-error: true
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-        run: npm run generate-highlights ${{ inputs.episode_guid }}
+          EPISODE_GUID: ${{ inputs.episode_guid }}
+        run: npm run generate-highlights "$EPISODE_GUID"
 
       - name: Name speakers
         continue-on-error: true
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          EPISODE_GUID: ${{ inputs.episode_guid }}
         run: |
-          npx tsx scripts/name-speakers.ts ${{ inputs.episode_guid }} --report="$RUNNER_TEMP/speakers.md" \
+          npx tsx scripts/name-speakers.ts "$EPISODE_GUID" --report="$RUNNER_TEMP/speakers.md" \
             || echo "⚠️ 話者名の自動付与に失敗しました。Update Transcript Speakers ワークフローで付けてください。" > "$RUNNER_TEMP/speakers.md"
 
       # Redo the episode's tags now that the guests' self-introductions are
@@ -120,11 +124,12 @@ jobs:
         continue-on-error: true
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          EPISODE_GUID: ${{ inputs.episode_guid }}
         run: |
-          npx tsx scripts/tag-episodes.ts --guid=${{ inputs.episode_guid }} --force --keep-reviewed
+          npx tsx scripts/tag-episodes.ts --guid="$EPISODE_GUID" --force --keep-reviewed
           git add src/data/episodeMeta.json src/data/placeTags.json
           if ! git diff --staged --quiet; then
-            git commit -m "chore: retag episode ${{ inputs.episode_guid }} from its transcript"
+            git commit -m "chore: retag episode $EPISODE_GUID from its transcript"
             git pull --rebase --autostash
             git push
           fi
@@ -132,9 +137,11 @@ jobs:
       # Publish straight to main (no review PR). Speaker names the model was
       # unsure about stay as speaker_N; fix them with Update Transcript Speakers.
       - name: Publish transcript
+        env:
+          EPISODE_GUID: ${{ inputs.episode_guid }}
         run: |
           cat "$RUNNER_TEMP/speakers.md" >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
-          git add public/transcripts/${{ inputs.episode_guid }}.json
-          git commit -m "Add transcription for episode ${{ inputs.episode_guid }}"
+          git add "public/transcripts/$EPISODE_GUID.json"
+          git commit -m "Add transcription for episode $EPISODE_GUID"
           git pull --rebase
           git push

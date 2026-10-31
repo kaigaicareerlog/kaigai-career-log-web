@@ -36,26 +36,30 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         run: npm install
 
       - name: Build host list
         id: hosts
+        env:
+          HOST_RYO: ${{ inputs.host_ryo }}
+          HOST_SENNA: ${{ inputs.host_senna }}
+          HOST_HIROSHI: ${{ inputs.host_hiroshi }}
         run: |
           HOSTS=""
-          if [ "${{ inputs.host_ryo }}" = "true" ]; then
+          if [ "$HOST_RYO" = "true" ]; then
             HOSTS="@togashi_ryo"
           fi
-          if [ "${{ inputs.host_senna }}" = "true" ]; then
+          if [ "$HOST_SENNA" = "true" ]; then
             if [ -n "$HOSTS" ]; then
               HOSTS="$HOSTS, @onepercentdsgn"
             else
               HOSTS="@onepercentdsgn"
             fi
           fi
-          if [ "${{ inputs.host_hiroshi }}" = "true" ]; then
+          if [ "$HOST_HIROSHI" = "true" ]; then
             if [ -n "$HOSTS" ]; then
               HOSTS="$HOSTS, @Isobe_Hiroshi"
             else
@@ -77,8 +81,10 @@ jobs:
           X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
           X_API_KEY: ${{ secrets.X_API_KEY }}
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          EPISODE_GUID: ${{ inputs.guid }}
+          HOSTS: ${{ steps.hosts.outputs.hosts }}
         run: |
-          npx tsx scripts/post-x-new-episode-intro.ts "${{ inputs.guid }}" "${{ steps.hosts.outputs.hosts }}"
+          npx tsx scripts/post-x-new-episode-intro.ts "$EPISODE_GUID" "$HOSTS"
 
       - name: Commit and push changes
         run: |
