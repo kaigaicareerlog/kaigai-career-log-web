@@ -1,4 +1,14 @@
 {
   "countries": [],
-  "cities": []
+  "cities": [
+    {
+      "slug": "auckland",
+      "label": "オークランド",
+      "aliases": [
+        "auckland"
+      ],
+      "lat": -36.8485,
+      "lon": 174.7633
+    }
+  ]
 }

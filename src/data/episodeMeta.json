@@ -717,12 +717,15 @@
     "countries": [
       "new-zealand"
     ],
-    "cities": [],
+    "cities": [
+      "auckland"
+    ],
     "topics": [
+      "english",
       "visa",
       "job-hunting",
       "startup",
-      "english"
+      "work-style"
     ],
     "reviewed": false
   },
