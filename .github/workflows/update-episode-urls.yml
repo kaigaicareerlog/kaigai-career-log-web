@@ -50,6 +50,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Find latest episodes file
+        id: episodes
+        run: |
+          EPISODES_FILE=$(npx tsx -e "import {findLatestEpisodesFile} from './src/utils/findLatestEpisodesFile'; console.log(findLatestEpisodesFile())")
+          echo "file=$EPISODES_FILE" >> "$GITHUB_OUTPUT"
+          echo "Using $EPISODES_FILE"
+
       - name: Update Episode URLs
         env:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
@@ -62,55 +69,22 @@ jobs:
           UPDATE_AMAZON: ${{ inputs.update_amazon }}
         run: |
           PLATFORMS_UPDATED=()
+          if [ "$UPDATE_SPOTIFY" = "true" ]; then PLATFORMS_UPDATED+=("Spotify"); fi
+          if [ "$UPDATE_YOUTUBE" = "true" ]; then PLATFORMS_UPDATED+=("YouTube"); fi
+          if [ "$UPDATE_APPLE" = "true" ]; then PLATFORMS_UPDATED+=("Apple Podcasts"); fi
+          if [ "$UPDATE_AMAZON" = "true" ]; then PLATFORMS_UPDATED+=("Amazon Music"); fi
 
-          # Update Spotify URLs
-          if [ "$UPDATE_SPOTIFY" = "true" ]; then
-            echo "📝 Updating Spotify URLs..."
-            if [ -n "$EPISODE_GUID" ]; then
-              echo "   Updating specific episode: $EPISODE_GUID"
-              npm run update-spotify-urls "$EPISODE_GUID"
-            else
-              echo "   Updating all episodes without Spotify URLs"
-              npm run update-spotify-urls
-            fi
-            PLATFORMS_UPDATED+=("Spotify")
-          fi
-
-          # Update YouTube URLs
-          if [ "$UPDATE_YOUTUBE" = "true" ]; then
-            echo ""
-            echo "📝 Updating YouTube URLs..."
-            if [ -n "$EPISODE_GUID" ]; then
-              echo "   Updating specific episode: $EPISODE_GUID"
-              npm run update-youtube-urls "$EPISODE_GUID"
-            else
-              echo "   Updating all episodes without YouTube URLs"
-              npm run update-youtube-urls
-            fi
-            PLATFORMS_UPDATED+=("YouTube")
-          fi
-
-          # Update Apple Podcast URLs
-          if [ "$UPDATE_APPLE" = "true" ]; then
-            echo ""
-            echo "⚠️  Apple Podcast URL updates are not yet supported"
-            echo "   Coming soon!"
-          fi
-
-          # Update Amazon Music URLs
-          if [ "$UPDATE_AMAZON" = "true" ]; then
-            echo ""
-            echo "⚠️  Amazon Music URL updates are not yet supported"
-            echo "   Coming soon!"
-          fi
-
-          # Save updated platforms for PR title
           if [ ${#PLATFORMS_UPDATED[@]} -eq 0 ]; then
-            echo "No platforms were updated"
-          else
-            PLATFORMS_LIST=$(IFS=", "; echo "${PLATFORMS_UPDATED[*]}")
-            echo "PLATFORMS_UPDATED=$PLATFORMS_LIST" >> $GITHUB_ENV
+            echo "No platforms selected"
+            exit 0
           fi
+
+          PLATFORMS_LIST=$(IFS=", "; echo "${PLATFORMS_UPDATED[*]}")
+          echo "PLATFORMS_UPDATED=$PLATFORMS_LIST" >> "$GITHUB_ENV"
+          # Same command as the daily RSS job. It fills empty URLs only.
+          # UPDATE_* and EPISODE_GUID narrow that; unset, the script updates
+          # every platform, which is the daily behavior.
+          npx tsx scripts/update-new-episode-urls.ts "${{ steps.episodes.outputs.file }}"
 
       - name: Check for changes
         id: check_changes
@@ -137,7 +111,7 @@ jobs:
 
             ### Changes
             - Platforms: **${{ env.PLATFORMS_UPDATED }}**
-            - Updated `episodes.json` with URLs for episodes that were missing them
+            - Filled empty platform URLs via `update-new-episode-urls` (existing URLs are kept)
             ${{ inputs.guid && format('- Episode GUID: **{0}**', inputs.guid) || '- Updated all episodes missing URLs' }}
 
             ### Platform Selection

@@ -1,0 +1,64 @@
+name: CI
+
+# pull_request runs the workflow from the merge commit with read-only
+# GITHUB_TOKEN and without repository secrets, including for fork PRs.
+# Do not switch this to pull_request_target.
+#
+# A push made with the default GITHUB_TOKEN does not start another workflow,
+# so the daily RSS and transcription jobs (which push with that token) will
+# not run this CI and cannot loop. A push authenticated with a PAT does
+# start it. These jobs never push.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Production build
+        run: npm run build
+
+  # Separate job so pre-existing diagnostics stay visible without hiding
+  # test and build results. `npm run typecheck` currently reports errors
+  # that this change does not introduce.
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck

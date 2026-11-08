@@ -24,6 +24,7 @@
     "tag-episodes": "tsx scripts/tag-episodes.ts",
     "compare-transcription": "tsx scripts/compare-transcription.ts",
     "test": "tsx --test \"src/**/*.test.ts\"",
+    "typecheck": "astro check",
     "backfill-city-tags": "tsx scripts/backfill-city-tags.ts"
   },
   "dependencies": {
@@ -42,12 +43,14 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.12",
     "d3-geo": "^3.1.1",
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1",
     "puppeteer": "^25.16.0",
     "topojson-client": "^3.1.0",
     "tsx": "^4.20.6",
+    "typescript": "^6.0.3",
     "world-atlas": "^2.0.2"
   },
   "overrides": {

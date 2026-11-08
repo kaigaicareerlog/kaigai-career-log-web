@@ -5,9 +5,10 @@
  */
 
 import fs from 'fs';
-import { parseRSSToEpisodes } from '../src/utils/rss/parseRSSToEpisodes';
-import { loadExistingEpisodes } from '../src/utils/rss/loadExistingEpisodes';
+import { catalogRejectionReason } from '../src/utils/rss/episodeCatalogGuard';
 import { generateEpisodes } from '../src/utils/rss/generateEpisodes';
+import { loadExistingEpisodes } from '../src/utils/rss/loadExistingEpisodes';
+import { parseRSSToEpisodes } from '../src/utils/rss/parseRSSToEpisodes';
 
 // Main execution
 const args = process.argv.slice(2);
@@ -30,6 +31,15 @@ try {
   console.log(`Found ${rssEpisodes.length} episodes in RSS feed`);
 
   const existingEpisodes = loadExistingEpisodes();
+  const rejection = catalogRejectionReason(rssEpisodes, [
+    ...existingEpisodes.keys(),
+  ]);
+  if (rejection) {
+    console.error(`Refusing to replace the episode catalog: ${rejection}`);
+    console.error('The existing episodes file was left unchanged.');
+    process.exit(1);
+  }
+
   const episodes = generateEpisodes(rssEpisodes, existingEpisodes);
 
   fs.writeFileSync(outputFile, JSON.stringify(episodes, null, 2), 'utf-8');

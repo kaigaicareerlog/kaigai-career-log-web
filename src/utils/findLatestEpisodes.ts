@@ -1,12 +1,20 @@
-import fs from 'fs';
 import type { PodcastEpisode } from '../types';
-import { findLatestEpisodesFile } from './findLatestEpisodesFile';
+import {
+  findLatestEpisodesFile,
+  readEpisodeCatalog,
+} from './findLatestEpisodesFile';
 
+/**
+ * Episodes from the newest catalog that is safe to publish.
+ * See `chooseEpisodeCatalog` for when a newer file is skipped.
+ */
 export function findLatestEpisodes(rssDir?: string): PodcastEpisode[] {
   const latestFile = findLatestEpisodesFile(rssDir);
-  const data: PodcastEpisode[] = JSON.parse(
-    fs.readFileSync(latestFile, 'utf-8')
-  );
+  const episodes = readEpisodeCatalog(latestFile);
 
-  return data;
+  if (!episodes) {
+    throw new Error(`Episodes file is not a catalog: ${latestFile}`);
+  }
+
+  return episodes;
 }
