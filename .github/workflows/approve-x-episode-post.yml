@@ -1,0 +1,55 @@
+name: Approve X episode post
+
+# `issues` runs the workflow file from the default branch.
+# Checkout that branch explicitly. Do not use pull_request_target, and do not
+# check out a PR or fork ref: this job can read X API secrets.
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: approve-x-episode-post-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event.label.name == 'x-post-approved'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish the approved episode post
+        env:
+          # Issue text is data in the environment. The run script does not
+          # interpolate it, and the program does not pass it to a shell.
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          SENDER_LOGIN: ${{ github.event.sender.login }}
+          ASSIGNEE_LOGIN: ${{ github.event.issue.assignee.login }}
+          LABEL_NAME: ${{ github.event.label.name }}
+          X_POST_APPROVER_LOGINS: ${{ vars.X_POST_APPROVER_LOGINS }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          APPROVAL_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: npx tsx scripts/publish-approved-x-post.ts

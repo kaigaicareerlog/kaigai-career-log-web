@@ -85,14 +85,9 @@ jobs:
           # Never let a tagging problem block the RSS update
           npx tsx scripts/tag-episodes.ts || echo "Episode tagging failed; continuing"
 
-      # X's API now requires paid pay-per-use credits (posting used to be free),
-      # so instead of posting automatically this opens a GitHub issue with the
-      # tweet text ready to copy/paste (or open X pre-filled) and assigns it,
-      # which notifies the assignee. See docs/EPISODE_TAGGING.md's neighbor,
-      # scripts/notify-episode-to-post-x.ts, for details.
-      # To resume automatic posting once X credits are funded again, swap
-      # this step back to `npx tsx scripts/auto-post-episode-to-x.ts` with the
-      # X_* secrets (see git history for the previous version of this step).
+      # Opens a review issue and records it in src/data/xPostLedger.json.
+      # Publishing happens only when an allowlisted user adds x-post-approved
+      # (approve-x-episode-post.yml). Do not call auto-post-episode-to-x.ts here.
       - name: Notify about episode to post to X
         env:
           GH_TOKEN: ${{ github.token }}
@@ -104,6 +99,6 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add public/rss/ src/data/episodeMeta.json src/data/placeTags.json
+          git add public/rss/ src/data/episodeMeta.json src/data/placeTags.json src/data/xPostLedger.json
           git diff --staged --quiet || git commit -m "chore: Update RSS feed and post episode intro - ${{ steps.timestamp.outputs.datetime }}"
           git push
