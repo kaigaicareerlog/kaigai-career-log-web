@@ -1,6 +1,6 @@
 ---
 import { ChevronDown } from '@lucide/astro';
-import { getHostInfo } from '../../constants/actors';
+import { getSpeakerDisplayName } from '../../utils/transcript/speakerLabel';
 
 interface Props {
   utterances: Array<{ speaker: string; text: string; timestamp: string }>;
@@ -24,7 +24,7 @@ const { utterances } = Astro.props;
           <div>
             <p class="mb-1 text-xs text-muted-foreground">
               <span class="font-medium text-foreground">
-                {getHostInfo(utterance.speaker).name}
+                {getSpeakerDisplayName(utterance.speaker)}
               </span>
               · {utterance.timestamp}
             </p>

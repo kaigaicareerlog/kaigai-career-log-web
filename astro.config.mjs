@@ -4,6 +4,7 @@ import path from 'path';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
+import { findLatestEpisodes } from './src/utils/findLatestEpisodes.ts';
 
 const SITE = 'https://kaigaicareerlog.com';
 
@@ -13,18 +14,13 @@ const SITE = 'https://kaigaicareerlog.com';
  * not listed here get no lastmod.
  */
 function readLastModified() {
-  const rssDir = path.join(process.cwd(), 'public', 'rss');
-  const latest = fs
-    .readdirSync(rssDir)
-    .filter((file) => /^\d{8}-\d{4}-episodes\.json$/.test(file))
-    .sort()
-    .pop();
-  if (!latest) return new Map();
-
   /** @type {Array<{ guid: string; date: string }>} */
-  const episodes = JSON.parse(
-    fs.readFileSync(path.join(rssDir, latest), 'utf-8')
-  );
+  let episodes;
+  try {
+    episodes = findLatestEpisodes();
+  } catch {
+    return new Map();
+  }
   /** @type {Map<string, Date>} */
   const dates = new Map();
 

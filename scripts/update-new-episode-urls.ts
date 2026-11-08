@@ -16,6 +16,10 @@
  *   SPOTIFY_SHOW_ID - Your Spotify Show ID (optional, defaults to hardcoded value)
  *   YOUTUBE_CHANNEL_ID - Your YouTube Channel ID (optional, defaults to hardcoded value)
  *   APPLE_PODCAST_ID - Your Apple Podcasts Show ID (optional, defaults to hardcoded value)
+ *   EPISODE_GUID - Update only this episode (optional; daily job omits it)
+ *   UPDATE_SPOTIFY / UPDATE_YOUTUBE / UPDATE_APPLE / UPDATE_AMAZON
+ *     Set to "false" to skip that platform. Unset means update, which is
+ *     what the daily RSS job relies on. Existing non-empty URLs are kept.
  *
  * Note: Apple Podcasts uses iTunes API which is free and doesn't require authentication!
  */
@@ -44,6 +48,10 @@ import {
   findAmazonMusicEpisodeByTitle,
 } from '../src/utils/amazon_music';
 import type { PodcastEpisode } from '../src/types';
+import {
+  readUrlUpdateRequest,
+  selectEpisodesNeedingUrls,
+} from '../src/utils/episodeUrls/selectEpisodesNeedingUrls';
 import { createLogger } from '../src/utils/logger';
 
 /**
@@ -70,20 +78,33 @@ async function updateNewEpisodeUrls(episodesPath: string): Promise<void> {
   // 2. Load episodes.json
   const episodesContent = await readFile(episodesPath, 'utf-8');
   const episodes: PodcastEpisode[] = JSON.parse(episodesContent);
+  const request = readUrlUpdateRequest(process.env);
 
-  // 3. Find episodes that need URLs
-  const episodesNeedingSpotify = episodes.filter(
-    (ep) => !ep.spotifyUrl || ep.spotifyUrl === ''
-  );
-  const episodesNeedingYoutube = episodes.filter(
-    (ep) => !ep.youtubeUrl || ep.youtubeUrl === ''
-  );
-  const episodesNeedingApple = episodes.filter(
-    (ep) => !ep.applePodcastUrl || ep.applePodcastUrl === ''
-  );
-  const episodesNeedingAmazon = episodes.filter(
-    (ep) => !ep.amazonMusicUrl || ep.amazonMusicUrl === ''
-  );
+  if (
+    request.guid &&
+    !episodes.some((episode) => episode.guid === request.guid)
+  ) {
+    throw new Error(`Episode with GUID ${request.guid} was not found`);
+  }
+
+  if (
+    !request.spotify &&
+    !request.youtube &&
+    !request.apple &&
+    !request.amazon
+  ) {
+    logger.warning('No platforms selected; leaving episode URLs unchanged.');
+    return;
+  }
+
+  // 3. Find episodes that need URLs. Unset switches still mean "update",
+  // matching the daily RSS job. Existing non-empty URLs are not replaced.
+  const {
+    spotify: episodesNeedingSpotify,
+    youtube: episodesNeedingYoutube,
+    apple: episodesNeedingApple,
+    amazon: episodesNeedingAmazon,
+  } = selectEpisodesNeedingUrls(episodes, request);
 
   logger.summary({
     'Total episodes': episodes.length,

@@ -26,7 +26,7 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Set timestamp
         id: timestamp
@@ -36,7 +36,20 @@ jobs:
       - name: Download latest RSS feed
         run: |
           FILENAME="public/rss/${{ steps.timestamp.outputs.datetime }}-rss-file.xml"
-          curl -o "$FILENAME" https://anchor.fm/s/105976b60/podcast/rss
+          # --fail stops the job on HTTP errors. A later generate step also
+          # refuses an empty, invalid, or sharply smaller catalog, and does
+          # not write a file, so cleanup and commit never see it.
+          curl --fail --location --silent --show-error \
+            -o "$FILENAME" \
+            https://anchor.fm/s/105976b60/podcast/rss
+          if [ ! -s "$FILENAME" ]; then
+            echo "RSS download was empty; leaving the existing catalog in place."
+            exit 1
+          fi
+          if ! grep -q '<rss' "$FILENAME"; then
+            echo "Download is not an RSS document; leaving the existing catalog in place."
+            exit 1
+          fi
           echo "New RSS file created: $FILENAME"
 
       - name: Update channel info

@@ -117,6 +117,15 @@ jobs:
           npx tsx scripts/name-speakers.ts "$EPISODE_GUID" --report="$RUNNER_TEMP/speakers.md" \
             || echo "⚠️ 話者名の自動付与に失敗しました。Update Transcript Speakers ワークフローで付けてください。" > "$RUNNER_TEMP/speakers.md"
 
+      # No API call. Placeholder labels (A, speaker_3) stay in the file and
+      # the site shows them as 話者A / 話者3. The paid transcript is still
+      # published when this check fails.
+      - name: Check for unresolved speaker labels
+        continue-on-error: true
+        env:
+          EPISODE_GUID: ${{ inputs.episode_guid }}
+        run: npx tsx scripts/report-unresolved-speakers.ts "$EPISODE_GUID"
+
       # Redo the episode's tags now that the guests' self-introductions are
       # available. Reviewed tags are left alone. Tags go straight to main like
       # the daily RSS tagging, so separate transcript PRs never conflict.
@@ -134,8 +143,9 @@ jobs:
             git push
           fi
 
-      # Publish straight to main (no review PR). Speaker names the model was
-      # unsure about stay as speaker_N; fix them with Update Transcript Speakers.
+      # Publish straight to main (no review PR). Labels the namer left as
+      # speaker_N or A/B/C are shown as 話者N / 話者A until Update Transcript
+      # Speakers sets a real name. This step does not invent one.
       - name: Publish transcript
         env:
           EPISODE_GUID: ${{ inputs.episode_guid }}
