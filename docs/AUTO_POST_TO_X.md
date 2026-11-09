@@ -58,3 +58,11 @@ The media id is used only for the main tweet in the same run. It is not saved. T
 Secrets, OAuth signatures, and response bodies are not written to logs or issue comments.
 
 `scripts/auto-post-episode-to-x.ts` and the manual `Post Episode to X` workflow are not part of this approval gate. Do not attach the auto-post script to the RSS job.
+
+## Recreate an approval issue
+
+The daily job only opens an issue when `newEpisodeIntroPostedToX` is false. An episode that already has that flag, and no ledger row, needs a manual issue.
+
+Run **Create X approval issue** from the Actions tab on `main`. The only input is the episode GUID. The workflow checks that the value is a UUID, opens one new-format issue assigned to `ryonryon`, and commits one `awaiting_approval` ledger row. It does not post to X, upload media, or add `x-post-approved`.
+
+If the ledger already has any row for that GUID, the workflow stops and does not open another issue. Older issues that are not in the ledger are left as they are.

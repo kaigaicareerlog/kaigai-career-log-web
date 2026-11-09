@@ -1,0 +1,55 @@
+name: Create X approval issue
+
+# Opens one review issue for a chosen episode and records it in the ledger.
+# Does not post to X, upload media, or label the issue.
+on:
+  workflow_dispatch:
+    inputs:
+      guid:
+        description: 'Episode GUID (UUID). Creates a review issue only. Does not post to X.'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: create-x-approval-issue
+  cancel-in-progress: false
+
+jobs:
+  create:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create the approval issue and ledger row
+        env:
+          # The guid stays in the environment. The script checks it is a UUID
+          # before use and does not pass it to a shell.
+          EPISODE_GUID: ${{ inputs.guid }}
+          GH_TOKEN: ${{ github.token }}
+        run: npx tsx scripts/create-manual-approval-issue.ts
+
+      - name: Commit the ledger row
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -- src/data/xPostLedger.json
+          git diff --staged --quiet && exit 1
+          git commit -m "chore: record a manual X approval issue"
+          git push
