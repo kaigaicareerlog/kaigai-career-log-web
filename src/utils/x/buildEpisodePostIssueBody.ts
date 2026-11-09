@@ -1,14 +1,15 @@
+import { SITE_URL } from '../../constants/site';
 import {
   EPISODE_GUID_PATTERN,
   X_POST_APPROVAL_LABEL,
   X_POST_INTENDED_ACCOUNT_URL,
 } from '../../constants/xPost';
-import { SITE_URL } from '../../constants/site';
+import { canonicalShareImageUrl } from './shareImage';
 
 export interface EpisodePostContent {
   guid: string;
   episodePageUrl: string;
-  /** Shown for reference. This approval flow does not upload it. */
+  /** Canonical episode PNG. The main post attaches the bytes served at approval time. */
   shareImageUrl: string;
   mainTweetText: string;
   /** Platform links tweet, posted as a reply. Null means the issue cannot be approved. */
@@ -29,6 +30,9 @@ const REPLY_END = '<!-- x-post-reply:end -->';
 export function buildEpisodePostIssueBody(content: EpisodePostContent): string {
   const { guid, episodePageUrl, shareImageUrl, urlsTweetText } = content;
   if (!EPISODE_GUID_PATTERN.test(guid)) throw new Error('Invalid episode guid');
+  if (shareImageUrl !== canonicalShareImageUrl(guid)) {
+    throw new Error('Share image URL is not the canonical episode PNG');
+  }
   if (episodePageUrl !== `${SITE_URL}/episodes/${guid}/`) {
     throw new Error('Episode page URL does not match the guid');
   }
@@ -42,18 +46,23 @@ export function buildEpisodePostIssueBody(content: EpisodePostContent): string {
     `**エピソードページ:** ${episodePageUrl}`,
     '',
     '### 承認すると公開される内容',
-    `ラベル \`${X_POST_APPROVAL_LABEL}\` を付けると、下のメインツイートと返信ツイートだけが、この順でXに公開されます。`,
+    `ラベル \`${X_POST_APPROVAL_LABEL}\` を付けると、下のメインツイート（シェア画像付き）と返信ツイート（画像なし）だけが、この順でXに公開されます。`,
     'それ以外の操作では公開されません。本文を変えてからラベルを付けると、エピソードデータから作り直した文面と一致しない限り公開せず、再承認に戻します。',
     `承認できるのはリポジトリ変数 \`X_POST_APPROVER_LOGINS\` に登録されたGitHubアカウントだけです。未設定のときは、誰がラベルを付けても公開されません。`,
     '',
     '### 投稿アカウントの確認',
     '投稿に使われるのは GitHub Actions の secret `X_ACCESS_TOKEN`（OAuth 1.0a。対になる secret は `X_API_KEY`、`X_API_SECRET`、`X_ACCESS_TOKEN_SECRET`）のXアカウントです。',
+    '画像のアップロードも同じ4つのsecretで署名します。トークンにメディアアップロードが許可されているかは、コードでは確認しません。',
     'コードはこのトークンのユーザー名を照合しません。',
     `サイトが案内している番組アカウントは ${X_POST_INTENDED_ACCOUNT_URL} です。`,
     'ラベルを付ける前に、Xの開発者ポータルで、トークンのユーザーがこのアカウントであることを確認してください。',
     '',
     '### 画像',
-    'この承認フローは画像をアップロードしません。公開される投稿に画像は付きません。下の画像は確認用です。',
+    'メインツイートにだけ、下のシェア画像を添付します。返信ツイートには画像を付けません。',
+    '取得先は常に `https://kaigaicareerlog.com/og/episodes/<エピソードID>.png` です。Issue本文に書かれたURLは取得に使いません。表示用のリンクを書き換えても、添付される画像の取得先は変わりません。',
+    'このPNGはサイトのビルド時に作られます（1200×630）。URLはエピソードIDで固定ですが、サイトを再ビルドすると同じURLの中身（バイト列）が変わることがあります。',
+    'ワークフローは、ラベルを処理した時点でそのURLが返したPNGをアップロードします。Issueを開いた瞬間のバイト列は保存しません。',
+    '画像の取得、PNGであることの確認、またはアップロードに失敗した場合は、テキストだけの投稿にはしません。何も投稿しません。',
     '',
     `<!-- x-post-guid:${guid} -->`,
     '',
@@ -81,7 +90,7 @@ export function buildEpisodePostIssueBody(content: EpisodePostContent): string {
 
   lines.push(
     '',
-    `🖼️ 参考画像（自動では添付されません）: [画像を開く](${shareImageUrl})`,
+    `🖼️ メインツイートに添付するシェア画像: [画像を開く](${shareImageUrl})`,
     '',
     `![シェア画像](${shareImageUrl})`,
     '',

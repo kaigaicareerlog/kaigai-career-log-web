@@ -1,4 +1,7 @@
-import { X_POST_APPROVAL_LABEL } from '../../constants/xPost';
+import {
+  SHARE_IMAGE_SHA256_PATTERN,
+  X_POST_APPROVAL_LABEL,
+} from '../../constants/xPost';
 import type { PodcastEpisode } from '../../types';
 import { buildEpisodePostIssueBody } from './buildEpisodePostIssueBody';
 import { buildNewEpisodePostTexts } from './buildNewEpisodePostTexts';
@@ -6,11 +9,18 @@ import { decideXPostAction, type ApprovalDecision } from './decideXPostAction';
 import type { IssueGateway } from './githubIssueGateway';
 import { parseApproverAllowlist } from './parseApproverAllowlist';
 import { parseEpisodePostIssue } from './parseEpisodePostIssue';
+import {
+  canonicalShareImageUrl,
+  SHARE_IMAGE_MAX_BYTES,
+  type ShareImageLoadResult,
+} from './shareImage';
 import type { TweetPublishResult } from './tweetPublishResult';
+import type { MediaUploadResult } from './uploadShareImage';
 import {
   ambiguousComment,
   allowlistEmptyComment,
   concurrentComment,
+  imageNotPostedComment,
   notApproverComment,
   persistenceComment,
   publishedComment,
@@ -32,7 +42,8 @@ export interface LedgerStore {
 }
 
 export interface XPostPublisher {
-  postMain(text: string): Promise<TweetPublishResult>;
+  uploadImage(bytes: Uint8Array): Promise<MediaUploadResult>;
+  postMain(text: string, mediaId: string): Promise<TweetPublishResult>;
   postReply(
     text: string,
     inReplyToTweetId: string
@@ -49,6 +60,7 @@ export interface ExecuteApprovedXPostInput {
   runId: string;
   now: () => string;
   loadEpisode: (guid: string) => PodcastEpisode | null;
+  loadShareImage: (guid: string) => Promise<ShareImageLoadResult>;
   ledger: LedgerStore;
   publisher: XPostPublisher | null;
   issues: IssueGateway;
@@ -71,7 +83,8 @@ interface EpisodeRender {
 /**
  * Handles one approval-label event.
  * Tweet text is published only when the approver, ledger, issue, and current
- * episode render all agree. Issue text is never passed to a shell.
+ * episode render all agree. The main post also needs the canonical PNG.
+ * A reply never uploads or attaches an image. Issue text is never passed to a shell.
  */
 export async function executeApprovedXPost(
   input: ExecuteApprovedXPostInput
@@ -119,9 +132,14 @@ export async function executeApprovedXPost(
   }
 
   if (decision.kind === 'already_published') {
+    const parsed = parseEpisodePostIssue(input.issueBody);
     comment(
       input,
-      publishedComment(decision.mainTweetId, decision.replyTweetId)
+      publishedComment(
+        decision.mainTweetId,
+        decision.replyTweetId,
+        parsed.guid ? recordedImageHash(input, parsed.guid) : undefined
+      )
     );
     closeIssue(input);
     return {
@@ -142,6 +160,25 @@ export async function executeApprovedXPost(
   }
 
   const publishDecision = decision;
+  let prepared: { mediaId: string; sha256: string } | null = null;
+  if (publishDecision.phase === 'main') {
+    const image = await prepareMainImage(
+      input,
+      input.publisher,
+      publishDecision.guid
+    );
+    if (!image.ok) {
+      comment(input, imageNotPostedComment(image));
+      removeLabel(input);
+      return {
+        outcome: 'not_posted',
+        postedMain: false,
+        postedReply: false,
+      };
+    }
+    prepared = { mediaId: image.mediaId, sha256: image.sha256 };
+  }
+
   const claimed = persistClaim(input, publishDecision);
   if (!claimed) {
     comment(input, concurrentComment());
@@ -149,7 +186,12 @@ export async function executeApprovedXPost(
     return { outcome: 'concurrent', postedMain: false, postedReply: false };
   }
 
-  const mainResult = await postPhase(input, input.publisher, publishDecision);
+  const mainResult = await postPhase(
+    input,
+    input.publisher,
+    publishDecision,
+    prepared
+  );
   if (publishDecision.phase === 'main' && mainResult.ok) posted.main = true;
   if (publishDecision.phase === 'reply' && mainResult.ok) posted.reply = true;
 
@@ -171,16 +213,7 @@ export async function executeApprovedXPost(
   }
 
   if (!mainResult.ok) {
-    comment(
-      input,
-      mainResult.outcome === 'rejected'
-        ? rejectedComment(
-            publishDecision.phase,
-            mainResult.status,
-            publishDecision.mainTweetId
-          )
-        : ambiguousComment(publishDecision.phase)
-    );
+    comment(input, failureComment(publishDecision, mainResult));
     removeLabel(input);
     return {
       outcome: mainResult.outcome,
@@ -201,7 +234,11 @@ export async function executeApprovedXPost(
     }
     comment(
       input,
-      publishedComment(publishDecision.mainTweetId, mainResult.tweetId)
+      publishedComment(
+        publishDecision.mainTweetId,
+        mainResult.tweetId,
+        recordedImageHash(input, publishDecision.guid)
+      )
     );
     closeIssue(input);
     return { outcome: 'published', postedMain: false, postedReply: true };
@@ -231,7 +268,7 @@ export async function executeApprovedXPost(
     removeLabel(input);
     return { outcome: 'concurrent', postedMain: true, postedReply: false };
   }
-  const replyResult = await postPhase(input, input.publisher, decision);
+  const replyResult = await postPhase(input, input.publisher, decision, null);
   if (replyResult.ok) posted.reply = true;
   const replyApplied = applyOutcome(
     input,
@@ -264,7 +301,14 @@ export async function executeApprovedXPost(
     };
   }
 
-  comment(input, publishedComment(decision.mainTweetId, replyResult.tweetId));
+  comment(
+    input,
+    publishedComment(
+      decision.mainTweetId,
+      replyResult.tweetId,
+      recordedImageHash(input, decision.guid)
+    )
+  );
   closeIssue(input);
   return { outcome: 'published', postedMain: true, postedReply: true };
 }
@@ -383,19 +427,128 @@ function applyOutcome(
 async function postPhase(
   input: ExecuteApprovedXPostInput,
   publisher: XPostPublisher,
-  decision: Extract<ApprovalDecision, { kind: 'publish' }>
+  decision: Extract<ApprovalDecision, { kind: 'publish' }>,
+  prepared: { mediaId: string; sha256: string } | null
 ): Promise<TweetPublishResult> {
+  if (decision.phase === 'reply') {
+    try {
+      if (!decision.mainTweetId) return { ok: false, outcome: 'ambiguous' };
+      return await publisher.postReply(
+        decision.replyText,
+        decision.mainTweetId
+      );
+    } catch (error) {
+      input.log(
+        `X request failed before a confirmed response: ${(error as Error).name}`
+      );
+      return { ok: false, outcome: 'ambiguous' };
+    }
+  }
+
+  if (!prepared) {
+    return { ok: false, outcome: 'not_posted', reason: 'image_invalid' };
+  }
   try {
-    if (decision.phase === 'main')
-      return await publisher.postMain(decision.mainText);
-    if (!decision.mainTweetId) return { ok: false, outcome: 'ambiguous' };
-    return await publisher.postReply(decision.replyText, decision.mainTweetId);
+    const posted = await publisher.postMain(
+      decision.mainText,
+      prepared.mediaId
+    );
+    if (!posted.ok) return posted;
+    return { ...posted, shareImageSha256: prepared.sha256 };
   } catch (error) {
     input.log(
       `X request failed before a confirmed response: ${(error as Error).name}`
     );
     return { ok: false, outcome: 'ambiguous' };
   }
+}
+
+/**
+ * Fetches and uploads the canonical PNG before the ledger claim and the tweet.
+ * A failure here does not call POST /2/tweets and does not mark the attempt
+ * in flight. The media id is used once in this attempt and is not stored.
+ */
+async function prepareMainImage(
+  input: ExecuteApprovedXPostInput,
+  publisher: XPostPublisher,
+  guid: string
+): Promise<
+  | { ok: true; mediaId: string; sha256: string }
+  | Extract<TweetPublishResult, { outcome: 'not_posted' }>
+> {
+  const expectedUrl = canonicalShareImageUrl(guid);
+  if (!expectedUrl) {
+    return { ok: false, outcome: 'not_posted', reason: 'image_invalid' };
+  }
+
+  let loaded: ShareImageLoadResult;
+  try {
+    loaded = await input.loadShareImage(guid);
+  } catch (error) {
+    input.log(`Share image fetch failed: ${(error as Error).name}`);
+    return { ok: false, outcome: 'not_posted', reason: 'image_fetch' };
+  }
+  if (!loaded.ok) {
+    input.log(imageFailureLog(loaded.reason, loaded.status));
+    return {
+      ok: false,
+      outcome: 'not_posted',
+      reason: loaded.reason,
+      status: loaded.status,
+    };
+  }
+  if (
+    loaded.sourceUrl !== expectedUrl ||
+    !SHARE_IMAGE_SHA256_PATTERN.test(loaded.sha256) ||
+    loaded.bytes.byteLength === 0 ||
+    loaded.bytes.byteLength > SHARE_IMAGE_MAX_BYTES
+  ) {
+    input.log(imageFailureLog('image_invalid'));
+    return { ok: false, outcome: 'not_posted', reason: 'image_invalid' };
+  }
+
+  let uploaded: MediaUploadResult;
+  try {
+    uploaded = await publisher.uploadImage(loaded.bytes);
+  } catch (error) {
+    input.log(`Share image upload failed: ${(error as Error).name}`);
+    return { ok: false, outcome: 'not_posted', reason: 'image_upload' };
+  }
+  if (!uploaded.ok) {
+    input.log(imageFailureLog(uploaded.reason, uploaded.status));
+    return {
+      ok: false,
+      outcome: 'not_posted',
+      reason: uploaded.reason,
+      status: uploaded.status,
+    };
+  }
+  return { ok: true, mediaId: uploaded.mediaId, sha256: loaded.sha256 };
+}
+
+function imageFailureLog(reason: string, status?: number): string {
+  return `Share image was not posted: ${reason}${
+    typeof status === 'number' ? ` HTTP ${status}` : ''
+  }`;
+}
+
+function failureComment(
+  decision: Extract<ApprovalDecision, { kind: 'publish' }>,
+  result: Extract<TweetPublishResult, { ok: false }>
+): string {
+  if (result.outcome === 'rejected') {
+    return rejectedComment(decision.phase, result.status, decision.mainTweetId);
+  }
+  if (result.outcome === 'not_posted') return imageNotPostedComment(result);
+  return ambiguousComment(decision.phase);
+}
+
+function recordedImageHash(
+  input: ExecuteApprovedXPostInput,
+  guid: string
+): string | undefined {
+  return input.ledger.read().entries.find((item) => item.guid === guid)
+    ?.shareImageSha256;
 }
 
 function persistNeedsReview(

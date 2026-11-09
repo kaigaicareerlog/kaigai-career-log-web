@@ -27,7 +27,13 @@ describe('buildEpisodePostIssueBody', () => {
     assert.equal(parsed.replyText, urlsTweetText);
     assert.equal(body.includes('twitter.com/intent/tweet'), false);
     assert.ok(body.includes(X_POST_APPROVAL_LABEL));
-    assert.ok(body.includes('画像をアップロードしません'));
+    assert.ok(
+      body.includes('メインツイートにだけ、下のシェア画像を添付します')
+    );
+    assert.ok(body.includes('返信ツイートには画像を付けません'));
+    assert.ok(body.includes(`![シェア画像](${shareImageUrl})`));
+    assert.equal(body.includes('画像をアップロードしません'), false);
+    assert.equal(body.includes('自動では添付されません'), false);
     assert.ok(body.includes('X_ACCESS_TOKEN'));
     assert.ok(body.includes('https://x.com/kaigaicareerlog'));
   });
@@ -55,6 +61,27 @@ describe('buildEpisodePostIssueBody', () => {
         shareImageUrl,
         mainTweetText: '```\n$(rm -rf /)',
         urlsTweetText: 'reply',
+      })
+    );
+  });
+
+  it('rejects a share image URL that is not the canonical PNG', () => {
+    assert.throws(() =>
+      buildEpisodePostIssueBody({
+        guid,
+        episodePageUrl,
+        shareImageUrl: 'https://example.test/og/episodes/evil.png',
+        mainTweetText: 'メイン',
+        urlsTweetText: '返信',
+      })
+    );
+    assert.throws(() =>
+      buildEpisodePostIssueBody({
+        guid,
+        episodePageUrl,
+        shareImageUrl: `https://kaigaicareerlog.com/og/episodes/${guid}.png?next=http://127.0.0.1`,
+        mainTweetText: 'メイン',
+        urlsTweetText: '返信',
       })
     );
   });

@@ -1,4 +1,8 @@
-import { X_POST_APPROVAL_LABEL } from '../../constants/xPost';
+import {
+  SHARE_IMAGE_SHA256_PATTERN,
+  X_POST_APPROVAL_LABEL,
+} from '../../constants/xPost';
+import type { NotPostedReason } from './tweetPublishResult';
 import { isTweetId } from './xPostLedger';
 
 /**
@@ -64,15 +68,47 @@ export function ambiguousComment(
   return lines.join('\n');
 }
 
+export function imageNotPostedComment(failure: {
+  reason: NotPostedReason;
+  status?: number;
+}): string {
+  const status =
+    typeof failure.status === 'number' ? `（HTTP ${failure.status}）` : '';
+  const detail: Record<NotPostedReason, string> = {
+    image_fetch: `シェア画像を取得できなかったため、投稿しません${status}。`,
+    image_invalid: `シェア画像のURL、形式、またはサイズが条件を満たさないため、投稿しません${status}。`,
+    image_upload: `シェア画像のアップロードが完了しなかったため、投稿しません${status}。`,
+    image_auth: `シェア画像のアップロードが認可されませんでした${status}。トークンにメディアのアップロードが許可されているか確認してください。`,
+    image_processing: `シェア画像の処理が完了していないため、投稿しません${status}。`,
+    media_id: 'メディアIDを確認できなかったため、投稿しません。',
+  };
+  return [
+    detail[failure.reason],
+    '承認した画像付きの投稿を、画像なしでは公開しません。メイン投稿は作成していません。',
+    `ラベル \`${X_POST_APPROVAL_LABEL}\` を付け直すと、画像の取得からやり直せます。`,
+  ].join('\n');
+}
+
 export function publishedComment(
   mainTweetId: string,
-  replyTweetId: string
+  replyTweetId: string,
+  shareImageSha256?: string
 ): string {
-  return [
-    'Xへの公開が完了しました。画像は添付していません。',
+  const lines = [
+    'Xへの公開が完了しました。シェア画像はメイン投稿にだけ添付しています。返信には画像を付けていません。',
     `メイン: ${tweetStatusUrl(mainTweetId)}`,
     `返信: ${tweetStatusUrl(replyTweetId)}`,
-  ].join('\n');
+  ];
+  if (
+    shareImageSha256 !== undefined &&
+    SHARE_IMAGE_SHA256_PATTERN.test(shareImageSha256)
+  ) {
+    lines.push(`添付した画像のSHA-256: ${shareImageSha256}`);
+    lines.push(
+      'このハッシュは公開時に取得したPNGのものです。同じURLでも、サイトの再ビルド後は別のバイト列になることがあります。'
+    );
+  }
+  return lines.join('\n');
 }
 
 export function persistenceComment(tweetId: string): string {

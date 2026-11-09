@@ -1,4 +1,8 @@
-import { EPISODE_GUID_PATTERN, TWEET_ID_PATTERN } from '../../constants/xPost';
+import {
+  EPISODE_GUID_PATTERN,
+  SHARE_IMAGE_SHA256_PATTERN,
+  TWEET_ID_PATTERN,
+} from '../../constants/xPost';
 import type { TweetPublishResult } from './tweetPublishResult';
 
 export type XPostStatus =
@@ -24,6 +28,8 @@ export interface XPostLedgerEntry {
   postedReplyText?: string;
   mainTweetId?: string;
   replyTweetId?: string;
+  /** SHA-256 of the PNG uploaded with the main post. Not a media id. */
+  shareImageSha256?: string;
   inFlightRunId?: string;
   needsReviewReason?: string;
   updatedAt: string;
@@ -161,6 +167,7 @@ export function claimPublish(
 /**
  * Applies an API result.
  * A rejected call returns to a retryable status.
+ * not_posted means the tweet endpoint was not called, so it is retryable too.
  * An ambiguous call sticks at needs_review so the main post is not sent again.
  */
 export function applyPublishResult(
@@ -181,6 +188,9 @@ export function applyPublishResult(
         status: 'reply_pending',
         mainTweetId: result.tweetId,
         postedMainText: entry.mainText,
+        shareImageSha256: isShareImageSha256(result.shareImageSha256)
+          ? result.shareImageSha256
+          : undefined,
         needsReviewReason: undefined,
       };
     }
@@ -192,7 +202,7 @@ export function applyPublishResult(
       needsReviewReason: undefined,
     };
   }
-  if (result.outcome === 'rejected') {
+  if (result.outcome === 'rejected' || result.outcome === 'not_posted') {
     if (phase === 'main') {
       return {
         ...cleared,
@@ -281,6 +291,7 @@ function parseEntry(raw: unknown): XPostLedgerEntry {
   assignOptionalText(entry, 'postedReplyText', value.postedReplyText);
   assignOptionalTweetId(entry, 'mainTweetId', value.mainTweetId);
   assignOptionalTweetId(entry, 'replyTweetId', value.replyTweetId);
+  assignOptionalSha256(entry, value.shareImageSha256);
   assignOptionalText(entry, 'inFlightRunId', value.inFlightRunId);
   assignOptionalText(entry, 'needsReviewReason', value.needsReviewReason);
   return entry;
@@ -312,6 +323,18 @@ function assignOptionalTweetId(
     throw new Error(`Invalid ledger field ${key}`);
   }
   entry[key] = value;
+}
+
+function assignOptionalSha256(entry: XPostLedgerEntry, value: unknown): void {
+  if (value === undefined) return;
+  if (!isShareImageSha256(value)) {
+    throw new Error('Invalid ledger field shareImageSha256');
+  }
+  entry.shareImageSha256 = value;
+}
+
+function isShareImageSha256(value: unknown): value is string {
+  return typeof value === 'string' && SHARE_IMAGE_SHA256_PATTERN.test(value);
 }
 
 function isRevision(value: unknown): value is number {

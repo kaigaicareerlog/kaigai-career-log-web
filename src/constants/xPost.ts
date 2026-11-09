@@ -25,3 +25,12 @@ export const EPISODE_GUID_PATTERN =
 
 /** Numeric id returned by POST /2/tweets. */
 export const TWEET_ID_PATTERN = /^[0-9]{1,30}$/;
+
+/**
+ * Media id from POST /2/media/upload.
+ * Create Post accepts media_ids of 1 to 19 digits.
+ */
+export const MEDIA_ID_PATTERN = /^[0-9]{1,19}$/;
+
+/** Lowercase hex SHA-256 of the PNG attached to the main post. */
+export const SHARE_IMAGE_SHA256_PATTERN = /^[a-f0-9]{64}$/;

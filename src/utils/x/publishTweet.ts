@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import OAuth from 'oauth-1.0a';
-import { TWEET_ID_PATTERN } from '../../constants/xPost';
+import { MEDIA_ID_PATTERN, TWEET_ID_PATTERN } from '../../constants/xPost';
 import type { TweetPublishResult } from './tweetPublishResult';
 
 export interface XApiCredentials {
@@ -47,13 +47,40 @@ export function classifyTweetResponse(
 }
 
 /**
+ * OAuth 1.0a Authorization header for one URL and method.
+ * The signature does not cover the JSON body. Do not log the header.
+ */
+export function oauthAuthorizationHeader(
+  url: string,
+  method: string,
+  credentials: XApiCredentials
+): { Authorization: string } {
+  const oauth = new OAuth({
+    consumer: { key: credentials.apiKey, secret: credentials.apiSecret },
+    signature_method: 'HMAC-SHA1',
+    hash_function(baseString, key) {
+      return crypto.createHmac('sha1', key).update(baseString).digest('base64');
+    },
+  });
+  return oauth.toHeader(
+    oauth.authorize(
+      { url, method },
+      { key: credentials.accessToken, secret: credentials.accessTokenSecret }
+    )
+  );
+}
+
+/**
  * Posts one tweet with OAuth 1.0a user context.
- * Network and 5xx failures are ambiguous because the tweet may already exist.
+ * mediaIds attaches an already uploaded image to a main post.
+ * A reply never accepts media. Network and 5xx failures are ambiguous
+ * because the tweet may already exist.
  */
 export async function publishTweet(options: {
   text: string;
   credentials: XApiCredentials;
   replyToTweetId?: string;
+  mediaIds?: readonly string[];
   fetchImpl?: typeof fetch;
 }): Promise<TweetPublishResult> {
   if (
@@ -62,29 +89,33 @@ export async function publishTweet(options: {
   ) {
     return { ok: false, outcome: 'ambiguous' };
   }
+  if (options.mediaIds !== undefined && options.replyToTweetId !== undefined) {
+    return { ok: false, outcome: 'not_posted', reason: 'media_id' };
+  }
 
-  const oauth = new OAuth({
-    consumer: {
-      key: options.credentials.apiKey,
-      secret: options.credentials.apiSecret,
-    },
-    signature_method: 'HMAC-SHA1',
-    hash_function(baseString, key) {
-      return crypto.createHmac('sha1', key).update(baseString).digest('base64');
-    },
-  });
-  const payload: { text: string; reply?: { in_reply_to_tweet_id: string } } = {
-    text: options.text,
-  };
+  const payload: {
+    text: string;
+    reply?: { in_reply_to_tweet_id: string };
+    media?: { media_ids: string[] };
+  } = { text: options.text };
   if (options.replyToTweetId) {
     payload.reply = { in_reply_to_tweet_id: options.replyToTweetId };
   }
-  const request = { url: TWEETS_URL, method: 'POST' };
-  const authorization = oauth.toHeader(
-    oauth.authorize(request, {
-      key: options.credentials.accessToken,
-      secret: options.credentials.accessTokenSecret,
-    })
+  if (options.mediaIds !== undefined) {
+    const mediaId = options.mediaIds[0];
+    if (
+      options.mediaIds.length !== 1 ||
+      mediaId === undefined ||
+      !MEDIA_ID_PATTERN.test(mediaId)
+    ) {
+      return { ok: false, outcome: 'not_posted', reason: 'media_id' };
+    }
+    payload.media = { media_ids: [mediaId] };
+  }
+  const authorization = oauthAuthorizationHeader(
+    TWEETS_URL,
+    'POST',
+    options.credentials
   );
 
   const fetchImpl = options.fetchImpl ?? fetch;

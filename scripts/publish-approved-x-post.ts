@@ -14,8 +14,10 @@ import { getEpisodeByGuid } from '../src/utils/getEpisodeByGuid';
 import { executeApprovedXPost } from '../src/utils/x/executeApprovedXPost';
 import { createGitLedgerStore } from '../src/utils/x/gitLedgerStore';
 import { createGhIssueGateway } from '../src/utils/x/githubIssueGateway';
-import { readXCredentials, publishTweet } from '../src/utils/x/publishTweet';
+import { publishTweet, readXCredentials } from '../src/utils/x/publishTweet';
 import { redactSecrets } from '../src/utils/x/redactSecrets';
+import { fetchShareImage } from '../src/utils/x/shareImage';
+import { uploadShareImage } from '../src/utils/x/uploadShareImage';
 
 const BRANCH_PATTERN = /^[A-Za-z0-9._/-]{1,100}$/;
 const RUN_PATTERN = /^[A-Za-z0-9._-]{1,120}$/;
@@ -43,9 +45,16 @@ async function main(): Promise<void> {
   };
   const publisher = credentials
     ? {
-        postMain: (text: string) => publishTweet({ text, credentials }),
+        uploadImage: (bytes: Uint8Array) =>
+          uploadShareImage({ bytes, credentials }),
+        postMain: (text: string, mediaId: string) =>
+          publishTweet({ text, credentials, mediaIds: [mediaId] }),
         postReply: (text: string, inReplyToTweetId: string) =>
-          publishTweet({ text, credentials, replyToTweetId: inReplyToTweetId }),
+          publishTweet({
+            text,
+            credentials,
+            replyToTweetId: inReplyToTweetId,
+          }),
       }
     : null;
 
@@ -59,6 +68,7 @@ async function main(): Promise<void> {
     runId,
     now: () => new Date().toISOString(),
     loadEpisode: (guid) => getEpisodeByGuid({ guid }),
+    loadShareImage: (guid) => fetchShareImage({ guid }),
     ledger: createGitLedgerStore({
       cwd: process.cwd(),
       branch,

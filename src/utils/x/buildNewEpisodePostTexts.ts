@@ -1,8 +1,9 @@
-import { EPISODE_GUID_PATTERN, X_POST_HOSTS } from '../../constants/xPost';
 import { SITE_URL } from '../../constants/site';
+import { EPISODE_GUID_PATTERN, X_POST_HOSTS } from '../../constants/xPost';
 import type { PodcastEpisode } from '../../types';
 import { formatNewEpisodeMainTweet } from './formatNewEpisodeMainTweet';
 import { formatNewEpisodeUrlsTweet } from './formatNewEpisodeUrlsTweet';
+import { canonicalShareImageUrl } from './shareImage';
 
 export interface NewEpisodePostTexts {
   mainText: string;
@@ -21,11 +22,13 @@ export function buildNewEpisodePostTexts(
   if (!EPISODE_GUID_PATTERN.test(episode.guid)) {
     throw new Error('Episode guid is not a UUID');
   }
+  const shareImageUrl = canonicalShareImageUrl(episode.guid);
+  if (!shareImageUrl) throw new Error('Episode guid is not a UUID');
   const episodePageUrl = `${SITE_URL}/episodes/${episode.guid}/`;
   return {
     mainText: formatNewEpisodeMainTweet(episode, X_POST_HOSTS),
     replyText: formatNewEpisodeUrlsTweet(episode, episodePageUrl),
     episodePageUrl,
-    shareImageUrl: `${SITE_URL}/og/episodes/${episode.guid}.png`,
+    shareImageUrl,
   };
 }

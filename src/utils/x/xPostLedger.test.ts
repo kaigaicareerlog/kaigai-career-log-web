@@ -84,5 +84,54 @@ describe('xPostLedger', () => {
     );
     assert.equal(replied.status, 'reply_pending');
     assert.equal(replied.mainTweetId, '555');
+
+    const imageFailed = applyPublishResult(
+      first as XPostLedgerEntry,
+      'main',
+      { ok: false, outcome: 'not_posted', reason: 'image_upload', status: 500 },
+      't8'
+    );
+    assert.equal(imageFailed.status, 'awaiting_approval');
+    assert.equal(imageFailed.mainTweetId, undefined);
+
+    const hashed = applyPublishResult(
+      first as XPostLedgerEntry,
+      'main',
+      { ok: true, tweetId: '555', shareImageSha256: 'ab'.repeat(32) },
+      't9'
+    );
+    assert.equal(hashed.shareImageSha256, 'ab'.repeat(32));
+    const retryHashed = claimPublish(hashed, 'reply', 'run-4', 't10');
+    const kept = applyPublishResult(
+      retryHashed as XPostLedgerEntry,
+      'reply',
+      { ok: true, tweetId: '777' },
+      't11'
+    );
+    assert.equal(kept.status, 'published');
+    assert.equal(kept.shareImageSha256, 'ab'.repeat(32));
+    assert.equal(kept.mainTweetId, '555');
+  });
+
+  it('keeps a share-image hash and rejects a bad one', () => {
+    const ledger = withAwaitingApprovalEntry(emptyXPostLedger(), {
+      guid,
+      issueNumber: 10,
+      mainText: 'main',
+      replyText: 'reply',
+      updatedAt: '2026-11-08T00:00:00.000Z',
+    });
+    const hash = 'cd'.repeat(32);
+    const parsed = parseXPostLedger({
+      ...ledger,
+      entries: [{ ...ledger.entries[0], shareImageSha256: hash }],
+    });
+    assert.equal(parsed.entries[0]?.shareImageSha256, hash);
+    assert.throws(() =>
+      parseXPostLedger({
+        ...ledger,
+        entries: [{ ...ledger.entries[0], shareImageSha256: 'not-a-hash' }],
+      })
+    );
   });
 });

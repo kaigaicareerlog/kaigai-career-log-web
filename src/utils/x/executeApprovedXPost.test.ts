@@ -9,7 +9,9 @@ import {
   type XPostPublisher,
 } from './executeApprovedXPost';
 import type { IssueGateway } from './githubIssueGateway';
+import type { ShareImageLoadResult } from './shareImage';
 import type { TweetPublishResult } from './tweetPublishResult';
+import type { MediaUploadResult } from './uploadShareImage';
 import {
   emptyXPostLedger,
   withAwaitingApprovalEntry,
@@ -79,21 +81,60 @@ function gateway(): IssueGateway & {
   };
 }
 
+const imageHash = 'ab'.repeat(32);
+const pngBytes = Uint8Array.from([
+  0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x01,
+]);
+
+function imageSource(
+  failure?: Extract<ShareImageLoadResult, { ok: false }>,
+  sourceUrl?: string
+): {
+  loads: string[];
+  load: (guid: string) => Promise<ShareImageLoadResult>;
+} {
+  const loads: string[] = [];
+  return {
+    loads,
+    async load(guid) {
+      loads.push(guid);
+      if (failure) return failure;
+      return {
+        ok: true,
+        bytes: pngBytes,
+        sha256: imageHash,
+        sourceUrl:
+          sourceUrl ?? `https://kaigaicareerlog.com/og/episodes/${guid}.png`,
+      };
+    },
+  };
+}
+
 function publisher(options?: {
   main?: TweetPublishResult;
   reply?: TweetPublishResult;
+  upload?: MediaUploadResult;
 }): XPostPublisher & {
   mains: string[];
+  mediaIds: string[];
   replies: { text: string; id: string }[];
+  uploads: Uint8Array[];
 } {
   const state = {
     mains: [] as string[],
+    mediaIds: [] as string[],
     replies: [] as { text: string; id: string }[],
+    uploads: [] as Uint8Array[],
   };
   return {
     ...state,
-    async postMain(text) {
+    async uploadImage(bytes) {
+      state.uploads.push(bytes);
+      return options?.upload ?? { ok: true, mediaId: '123456789012345' };
+    },
+    async postMain(text, mediaId) {
       state.mains.push(text);
+      state.mediaIds.push(mediaId);
       return options?.main ?? { ok: true, tweetId: '111' };
     },
     async postReply(text, id) {
@@ -136,9 +177,11 @@ async function run(options: {
   allowlistRaw?: string;
   publisher?: ReturnType<typeof publisher>;
   issues?: IssueGateway;
+  images?: ReturnType<typeof imageSource>;
 }) {
   const issues = options.issues ?? gateway();
   const posts = options.publisher ?? publisher();
+  const images = options.images ?? imageSource();
   const result = await executeApprovedXPost({
     issueNumber: 70,
     issueBody: options.body,
@@ -152,12 +195,13 @@ async function run(options: {
     now: () => '2026-11-08T01:00:00.000Z',
     loadEpisode: () =>
       options.episode === undefined ? episode() : options.episode,
+    loadShareImage: images.load,
     ledger: options.ledger,
     publisher: posts,
     issues,
     log: () => undefined,
   });
-  return { result, issues, posts };
+  return { result, issues, posts, images };
 }
 
 describe('executeApprovedXPost', () => {
@@ -274,14 +318,25 @@ describe('executeApprovedXPost', () => {
       publisher: posts,
     });
     assert.equal(first.result.outcome, 'published');
+    assert.equal(first.images.loads.length, 1);
+    assert.equal(posts.uploads.length, 1);
     assert.deepEqual(posts.mains, [setup.texts.mainText]);
+    assert.deepEqual(posts.mediaIds, ['123456789012345']);
     assert.deepEqual(posts.replies, [
       { text: setup.texts.replyText, id: '111' },
     ]);
     assert.equal(store.snapshot().entries[0]?.status, 'published');
     assert.equal(store.snapshot().entries[0]?.mainTweetId, '111');
     assert.equal(store.snapshot().entries[0]?.replyTweetId, '222');
+    assert.equal(store.snapshot().entries[0]?.shareImageSha256, imageHash);
     assert.equal(issues.closed, 1);
+    assert.match(issues.comments.at(-1) ?? '', /メイン投稿にだけ/);
+    assert.match(issues.comments.at(-1) ?? '', /返信には画像を付けていません/);
+    assert.match(issues.comments.at(-1) ?? '', new RegExp(imageHash));
+    assert.equal(
+      (issues.comments.at(-1) ?? '').includes('画像は添付していません'),
+      false
+    );
     assert.match(issues.comments.at(-1) ?? '', /status\/111/);
     assert.match(issues.comments.at(-1) ?? '', /status\/222/);
 
@@ -306,6 +361,7 @@ describe('executeApprovedXPost', () => {
       publisher: posts,
     });
     assert.equal(result.outcome, 'concurrent');
+    assert.equal(posts.uploads.length, 1);
     assert.equal(posts.mains.length, 0);
     assert.equal(posts.replies.length, 0);
   });
@@ -320,6 +376,7 @@ describe('executeApprovedXPost', () => {
     await run({ body: setup.body, ledger: store, publisher: posts, issues });
     assert.equal(store.snapshot().entries[0]?.status, 'reply_pending');
     assert.equal(store.snapshot().entries[0]?.mainTweetId, '111');
+    assert.equal(posts.uploads.length, 1);
     assert.equal(issues.closed, 0);
     assert.match(issues.comments.at(-1) ?? '', /返信だけ/);
 
@@ -330,6 +387,8 @@ describe('executeApprovedXPost', () => {
       publisher: retryPosts,
     });
     assert.equal(retry.result.outcome, 'published');
+    assert.equal(retry.images.loads.length, 0);
+    assert.equal(retryPosts.uploads.length, 0);
     assert.equal(retryPosts.mains.length, 0);
     assert.deepEqual(retryPosts.replies, [
       { text: setup.texts.replyText, id: '111' },
@@ -343,6 +402,8 @@ describe('executeApprovedXPost', () => {
       main: { ok: false, outcome: 'ambiguous', status: 500 },
     });
     await run({ body: setup.body, ledger: store, publisher: posts });
+    assert.equal(posts.uploads.length, 1);
+    assert.equal(posts.mains.length, 1);
     assert.equal(posts.replies.length, 0);
     assert.equal(store.snapshot().entries[0]?.status, 'needs_review');
 
@@ -353,6 +414,8 @@ describe('executeApprovedXPost', () => {
       publisher: again,
     });
     assert.equal(second.result.outcome, 'needs_review');
+    assert.equal(second.images.loads.length, 0);
+    assert.equal(again.uploads.length, 0);
     assert.equal(again.mains.length, 0);
     assert.equal(again.replies.length, 0);
   });
@@ -375,6 +438,7 @@ describe('executeApprovedXPost', () => {
 
     const again = publisher();
     await run({ body: setup.body, ledger: store, publisher: again });
+    assert.equal(again.uploads.length, 0);
     assert.equal(again.mains.length, 0);
     assert.equal(again.replies.length, 0);
   });
@@ -411,5 +475,109 @@ describe('executeApprovedXPost', () => {
     await run({ body: setup.body, ledger: store, publisher: posts });
     assert.equal(posts.mains.length, 0);
     assert.equal(store.snapshot().entries[0]?.status, 'needs_review');
+  });
+
+  it('does not post when the share image cannot be fetched', async () => {
+    const setup = awaiting(episode());
+    const store = memoryStore(setup.ledger);
+    const posts = publisher();
+    const issues = gateway();
+    const images = imageSource({
+      ok: false,
+      reason: 'image_fetch',
+      status: 404,
+    });
+    const { result } = await run({
+      body: setup.body,
+      ledger: store,
+      publisher: posts,
+      issues,
+      images,
+    });
+    assert.equal(result.outcome, 'not_posted');
+    assert.equal(result.postedMain, false);
+    assert.equal(posts.uploads.length, 0);
+    assert.equal(posts.mains.length, 0);
+    assert.equal(posts.replies.length, 0);
+    assert.equal(store.snapshot().entries[0]?.status, 'awaiting_approval');
+    assert.equal(store.snapshot().entries[0]?.mainTweetId, undefined);
+    assert.equal(issues.closed, 0);
+    assert.match(issues.comments.at(-1) ?? '', /画像なしでは公開しません/);
+    assert.match(issues.comments.at(-1) ?? '', /HTTP 404/);
+  });
+
+  it('does not post when the image URL is not the canonical PNG', async () => {
+    const setup = awaiting(episode());
+    const store = memoryStore(setup.ledger);
+    const posts = publisher();
+    const images = imageSource(undefined, 'http://127.0.0.1/secret.png');
+    const { result } = await run({
+      body: setup.body,
+      ledger: store,
+      publisher: posts,
+      images,
+    });
+    assert.equal(result.outcome, 'not_posted');
+    assert.equal(posts.uploads.length, 0);
+    assert.equal(posts.mains.length, 0);
+    assert.equal(store.snapshot().entries[0]?.status, 'awaiting_approval');
+  });
+
+  it('does not post when media upload is unauthorized', async () => {
+    const setup = awaiting(episode());
+    const store = memoryStore(setup.ledger);
+    const posts = publisher({
+      upload: { ok: false, reason: 'image_auth', status: 403 },
+    });
+    const issues = gateway();
+    const { result } = await run({
+      body: setup.body,
+      ledger: store,
+      publisher: posts,
+      issues,
+    });
+    assert.equal(result.outcome, 'not_posted');
+    assert.equal(posts.uploads.length, 1);
+    assert.equal(posts.mains.length, 0);
+    assert.equal(posts.replies.length, 0);
+    assert.equal(store.snapshot().entries[0]?.status, 'awaiting_approval');
+    assert.equal(issues.closed, 0);
+    assert.match(issues.comments.at(-1) ?? '', /認可/);
+    assert.match(issues.comments.at(-1) ?? '', /HTTP 403/);
+  });
+
+  it('does not post or mark review when the upload response is lost', async () => {
+    const setup = awaiting(episode());
+    const store = memoryStore(setup.ledger);
+    const posts = publisher({
+      upload: { ok: false, reason: 'image_upload', status: 500 },
+    });
+    const { result } = await run({
+      body: setup.body,
+      ledger: store,
+      publisher: posts,
+    });
+    assert.equal(result.outcome, 'not_posted');
+    assert.equal(posts.mains.length, 0);
+    assert.equal(store.snapshot().entries[0]?.status, 'awaiting_approval');
+    assert.notEqual(store.snapshot().entries[0]?.status, 'needs_review');
+  });
+
+  it('does not post when the upload throws before the tweet request', async () => {
+    const setup = awaiting(episode());
+    const store = memoryStore(setup.ledger);
+    const posts = publisher();
+    posts.uploadImage = async (bytes) => {
+      posts.uploads.push(bytes);
+      throw new Error('ECONNRESET');
+    };
+    const { result } = await run({
+      body: setup.body,
+      ledger: store,
+      publisher: posts,
+    });
+    assert.equal(result.outcome, 'not_posted');
+    assert.equal(posts.mains.length, 0);
+    assert.equal(store.snapshot().entries[0]?.status, 'awaiting_approval');
   });
 });

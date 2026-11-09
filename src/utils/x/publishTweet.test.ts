@@ -63,6 +63,59 @@ describe('publishTweet', () => {
     assert.equal(JSON.stringify(result).includes('secret-body'), false);
   });
 
+  it('attaches one media id to a main post and never to a reply', async () => {
+    const seen: string[] = [];
+    const result = await publishTweet({
+      text: 'hello',
+      credentials,
+      mediaIds: ['123456789012345'],
+      fetchImpl: async (_url, init) => {
+        seen.push(String(init?.body));
+        return new Response(JSON.stringify({ data: { id: '42' } }), {
+          status: 201,
+        });
+      },
+    });
+    assert.deepEqual(result, { ok: true, tweetId: '42' });
+    assert.equal(
+      seen[0],
+      JSON.stringify({
+        text: 'hello',
+        media: { media_ids: ['123456789012345'] },
+      })
+    );
+
+    let called = false;
+    const blocked = await publishTweet({
+      text: 'reply',
+      credentials,
+      replyToTweetId: '42',
+      mediaIds: ['123456789012345'],
+      fetchImpl: async () => {
+        called = true;
+        return new Response('{}', { status: 201 });
+      },
+    });
+    assert.equal(called, false);
+    assert.deepEqual(blocked, {
+      ok: false,
+      outcome: 'not_posted',
+      reason: 'media_id',
+    });
+
+    const invalid = await publishTweet({
+      text: 'hello',
+      credentials,
+      mediaIds: ['not-numeric'],
+      fetchImpl: async () => {
+        called = true;
+        return new Response('{}', { status: 201 });
+      },
+    });
+    assert.equal(called, false);
+    assert.equal(invalid.ok, false);
+  });
+
   it('treats a network failure as ambiguous', async () => {
     const result = await publishTweet({
       text: 'hello',
