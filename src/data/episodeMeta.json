@@ -1742,18 +1742,24 @@
       {
         "name": "Mamoru",
         "position": "プロダクトデザイナー",
-        "company": null
+        "company": "Lightspeed"
       }
     ],
     "roles": [
       "designer"
     ],
     "countries": [
-      "new-zealand"
+      "new-zealand",
+      "canada"
     ],
-    "cities": [],
+    "cities": [
+      "auckland"
+    ],
     "topics": [
+      "visa",
       "layoff",
+      "job-hunting",
+      "english",
       "startup"
     ],
     "reviewed": false
