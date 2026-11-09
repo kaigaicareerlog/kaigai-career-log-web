@@ -1,77 +1,88 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
+import { X_POST_APPROVAL_LABEL } from '../../constants/xPost';
 import { buildEpisodePostIssueBody } from './buildEpisodePostIssueBody';
+import { parseEpisodePostIssue } from './parseEpisodePostIssue';
 
-const episodePageUrl = 'https://kaigaicareerlog.com/episodes/abc/';
-const shareImageUrl = 'https://kaigaicareerlog.com/og/episodes/abc.png';
+const guid = '11111111-1111-4111-8111-111111111111';
+const episodePageUrl = `https://kaigaicareerlog.com/episodes/${guid}/`;
+const shareImageUrl = `https://kaigaicareerlog.com/og/episodes/${guid}.png`;
 
 describe('buildEpisodePostIssueBody', () => {
-  it('puts the main tweet and the reply in separate code blocks', () => {
+  it('round-trips the main tweet and the reply', () => {
+    const mainTweetText = '🎧新エピソード公開\n\nタイトル';
+    const urlsTweetText = 'Spotify\nhttps://open.spotify.com/episode/1';
     const body = buildEpisodePostIssueBody({
+      guid,
       episodePageUrl,
       shareImageUrl,
-      mainTweetText: '🎧新エピソード公開\n\nタイトル',
-      urlsTweetText: 'Spotify\nhttps://open.spotify.com/episode/1',
+      mainTweetText,
+      urlsTweetText,
     });
+    const parsed = parseEpisodePostIssue(body);
 
-    const codeBlocks = [...body.matchAll(/```\n([\s\S]*?)```/g)].map((match) =>
-      match[1].replace(/\n$/, '')
-    );
-
-    assert.equal(codeBlocks?.length, 2);
-    assert.equal(codeBlocks?.[0], '🎧新エピソード公開\n\nタイトル');
-    assert.equal(
-      codeBlocks?.[1],
-      'Spotify\nhttps://open.spotify.com/episode/1'
-    );
-    assert.ok(body.includes(episodePageUrl));
-  });
-
-  it('includes a one-click intent link for the main tweet when it fits', () => {
-    const body = buildEpisodePostIssueBody({
-      episodePageUrl,
-      shareImageUrl,
-      mainTweetText: '短いツイート',
-      urlsTweetText: null,
-    });
-
-    assert.ok(body.includes('](https://twitter.com/intent/tweet?text='));
-  });
-
-  it('omits the intent link and the reply section when there are no URLs', () => {
-    const longMainTweet = 'a'.repeat(300);
-    const body = buildEpisodePostIssueBody({
-      episodePageUrl,
-      shareImageUrl,
-      mainTweetText: longMainTweet,
-      urlsTweetText: null,
-    });
-
+    assert.equal(parsed.ok, true);
+    if (!parsed.ok) return;
+    assert.equal(parsed.mainText, mainTweetText);
+    assert.equal(parsed.replyText, urlsTweetText);
     assert.equal(body.includes('twitter.com/intent/tweet'), false);
-    assert.equal(body.includes('#### 2.'), false);
-    assert.equal(body.includes('その投稿への返信として'), false);
+    assert.ok(body.includes(X_POST_APPROVAL_LABEL));
+    assert.ok(
+      body.includes('メインツイートにだけ、下のシェア画像を添付します')
+    );
+    assert.ok(body.includes('返信ツイートには画像を付けません'));
+    assert.ok(body.includes(`![シェア画像](${shareImageUrl})`));
+    assert.equal(body.includes('画像をアップロードしません'), false);
+    assert.equal(body.includes('自動では添付されません'), false);
+    assert.ok(body.includes('X_ACCESS_TOKEN'));
+    assert.ok(body.includes('https://x.com/kaigaicareerlog'));
   });
 
-  it('shows the share image to attach to the main tweet', () => {
+  it('is not approvable when the reply is missing', () => {
     const body = buildEpisodePostIssueBody({
+      guid,
       episodePageUrl,
       shareImageUrl,
       mainTweetText: 'メイン',
       urlsTweetText: null,
     });
 
-    assert.ok(body.includes(`![シェア画像](${shareImageUrl})`));
-    assert.ok(body.includes('メインツイートに添付'));
+    assert.equal(parseEpisodePostIssue(body).ok, false);
+    assert.equal(body.includes('twitter.com/intent/tweet'), false);
+    assert.ok(body.includes('対象外'));
+    assert.equal(body.includes('添付してください'), false);
   });
 
-  it('tells the reader to post the reply when URLs exist', () => {
-    const body = buildEpisodePostIssueBody({
-      episodePageUrl,
-      shareImageUrl,
-      mainTweetText: 'メイン',
-      urlsTweetText: 'URL一覧',
-    });
+  it('rejects text that could break the markers', () => {
+    assert.throws(() =>
+      buildEpisodePostIssueBody({
+        guid,
+        episodePageUrl,
+        shareImageUrl,
+        mainTweetText: '```\n$(rm -rf /)',
+        urlsTweetText: 'reply',
+      })
+    );
+  });
 
-    assert.ok(body.includes('その投稿への返信として2を投稿してください'));
+  it('rejects a share image URL that is not the canonical PNG', () => {
+    assert.throws(() =>
+      buildEpisodePostIssueBody({
+        guid,
+        episodePageUrl,
+        shareImageUrl: 'https://example.test/og/episodes/evil.png',
+        mainTweetText: 'メイン',
+        urlsTweetText: '返信',
+      })
+    );
+    assert.throws(() =>
+      buildEpisodePostIssueBody({
+        guid,
+        episodePageUrl,
+        shareImageUrl: `https://kaigaicareerlog.com/og/episodes/${guid}.png?next=http://127.0.0.1`,
+        mainTweetText: 'メイン',
+        urlsTweetText: '返信',
+      })
+    );
   });
 });
