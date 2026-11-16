@@ -46,11 +46,12 @@
     ]
   },
   "2026-11": {
-    "audioSeconds": 5730,
-    "estimatedUsd": 0.5157,
+    "audioSeconds": 8184,
+    "estimatedUsd": 0.7366,
     "episodes": [
       "681a1672-40ab-477e-9015-071316436121",
-      "e43ae872-c683-4586-ba40-06c1fd852fd9"
+      "e43ae872-c683-4586-ba40-06c1fd852fd9",
+      "44433910-52f4-4960-8f4d-46272bafed69"
     ]
   }
 }
