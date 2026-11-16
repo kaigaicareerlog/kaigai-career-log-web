@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": 5,
+  "revision": 6,
   "entries": [
     {
       "guid": "e43ae872-c683-4586-ba40-06c1fd852fd9",
@@ -14,6 +14,14 @@
       "mainTweetId": "2119656238522777841",
       "replyTweetId": "2119656250946244796",
       "shareImageSha256": "f851adf49cd43b10741e611bfda48d4f08d38155c658b3ce51707940f885b21a"
+    },
+    {
+      "guid": "44433910-52f4-4960-8f4d-46272bafed69",
+      "issueNumber": 62,
+      "status": "awaiting_approval",
+      "mainText": "🎧Podcast新エピソード公開\n\nレイオフを機に「再就職しない」決断！家族との時間を最優先に旅するように生きるMamoruさんのNZキャリア論（Part4）#71\n\nHost\n@togashi_ryo, @onepercentdsgn, @Isobe_Hiroshi\n\n#海外 #海外就職 #キャリア #kaigaicareerlog #ポッドキャスト",
+      "replyText": "Apple\nhttps://podcasts.apple.com/us/podcast/%E3%83%AC%E3%82%A4%E3%82%AA%E3%83%95%E3%82%92%E6%A9%9F%E3%81%AB-%E5%86%8D%E5%B0%B1%E8%81%B7%E3%81%97%E3%81%AA%E3%81%84-%E6%B1%BA%E6%96%AD-%E5%AE%B6%E6%97%8F%E3%81%A8%E3%81%AE%E6%99%82%E9%96%93%E3%82%92%E6%9C%80%E5%84%AA%E5%85%88%E3%81%AB%E6%97%85%E3%81%99%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E7%94%9F%E3%81%8D%E3%82%8Bmamoru%E3%81%95%E3%82%93%E3%81%AEnz%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E8%AB%96/id1818019572?i=1000802138768&uo=4\n\nSpotify\nhttps://open.spotify.com/episode/1y1ZQZBa5ue7Z2S0FRjdnE\n\nYoutube\nhttps://www.youtube.com/watch?v=aLMaQvKiAoQ\n\nAmazon Music\nhttps://music.amazon.co.jp/podcasts/118b5e6b-1f97-4c62-97a5-754714381b40/episodes/4585920f-36f4-4767-8486-61d340f1fe91/%E6%B5%B7%E5%A4%96%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E3%83%AD%E3%82%B0-%E3%83%AC%E3%82%A4%E3%82%AA%E3%83%95%E3%82%92%E6%A9%9F%E3%81%AB%E3%80%8C%E5%86%8D%E5%B0%B1%E8%81%B7%E3%81%97%E3%81%AA%E3%81%84%E3%80%8D%E6%B1%BA%E6%96%AD%EF%BC%81%E5%AE%B6%E6%97%8F%E3%81%A8%E3%81%AE%E6%99%82%E9%96%93%E3%82%92%E6%9C%80%E5%84%AA%E5%85%88%E3%81%AB%E6%97%85%E3%81%99%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E7%94%9F%E3%81%8D%E3%82%8Bmamoru%E3%81%95%E3%82%93%E3%81%AEnz%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E8%AB%96%EF%BC%88part4%EF%BC%89-71\n\n文字起こし・聴きどころ\nhttps://kaigaicareerlog.com/episodes/44433910-52f4-4960-8f4d-46272bafed69/",
+      "updatedAt": "2026-11-16T02:32:37.628Z"
     }
   ]
 }
