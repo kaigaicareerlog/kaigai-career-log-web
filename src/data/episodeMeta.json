@@ -1919,6 +1919,32 @@
     ],
     "reviewed": false
   },
+  "f66bfa0a-0d9d-434d-b970-01d94a7769e1": {
+    "guests": [
+      {
+        "name": "Taka",
+        "position": "デザイナー",
+        "company": "DataVisor"
+      }
+    ],
+    "roles": [
+      "designer"
+    ],
+    "countries": [
+      "canada",
+      "usa"
+    ],
+    "cities": [
+      "vancouver"
+    ],
+    "topics": [
+      "english",
+      "no-experience",
+      "job-hunting",
+      "startup"
+    ],
+    "reviewed": false
+  },
   "f774bd47-7fd6-4585-aac0-cc265458a6fd": {
     "guests": [
       {
