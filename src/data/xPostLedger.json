@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "revision": 13,
+  "revision": 14,
   "entries": [
     {
       "guid": "e43ae872-c683-4586-ba40-06c1fd852fd9",
@@ -31,13 +31,14 @@
     {
       "guid": "f66bfa0a-0d9d-434d-b970-01d94a7769e1",
       "issueNumber": 63,
-      "status": "reply_pending",
+      "status": "reply_in_flight",
       "mainText": "🎧Podcast新エピソード公開\n\n英語力ゼロ・未経験から米IT企業のデザイナーへ！“デザイン×コード”で切り拓く北米キャリア戦略（前半）#72\n\nHost\n@togashi_ryo, @onepercentdsgn, @Isobe_Hiroshi\n\n#海外 #海外就職 #キャリア #kaigaicareerlog #ポッドキャスト",
       "replyText": "Apple\nhttps://podcasts.apple.com/us/podcast/%E8%8B%B1%E8%AA%9E%E5%8A%9B%E3%82%BC%E3%83%AD-%E6%9C%AA%E7%B5%8C%E9%A8%93%E3%81%8B%E3%82%89%E7%B1%B3it%E4%BC%81%E6%A5%AD%E3%81%AE%E3%83%87%E3%82%B6%E3%82%A4%E3%83%8A%E3%83%BC%E3%81%B8-%E3%83%87%E3%82%B6%E3%82%A4%E3%83%B3-%E3%82%B3%E3%83%BC%E3%83%89-%E3%81%A7%E5%88%87%E3%82%8A%E6%8B%93%E3%81%8F%E5%8C%97%E7%B1%B3%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%E6%88%A6%E7%95%A5-%E5%89%8D%E5%8D%8A-72/id1818019572?i=1000803480343&uo=4\n\nSpotify\nhttps://open.spotify.com/episode/34FTasQukrZ5fDLxbM7QYE\n\nYoutube\nhttps://www.youtube.com/watch?v=h3aPYqmN7qU\n\n文字起こし・聴きどころ\nhttps://kaigaicareerlog.com/episodes/f66bfa0a-0d9d-434d-b970-01d94a7769e1/",
-      "updatedAt": "2026-11-23T05:06:07.768Z",
+      "updatedAt": "2026-11-23T05:06:08.961Z",
       "postedMainText": "🎧Podcast新エピソード公開\n\n英語力ゼロ・未経験から米IT企業のデザイナーへ！“デザイン×コード”で切り拓く北米キャリア戦略（前半）#72\n\nHost\n@togashi_ryo, @onepercentdsgn, @Isobe_Hiroshi\n\n#海外 #海外就職 #キャリア #kaigaicareerlog #ポッドキャスト",
       "mainTweetId": "2124731196668014775",
-      "shareImageSha256": "3fec73ad8ab433fd9cfdc58fb38d07b65dc0965c837c0567ce1d1ea91e223cb3"
+      "shareImageSha256": "3fec73ad8ab433fd9cfdc58fb38d07b65dc0965c837c0567ce1d1ea91e223cb3",
+      "inFlightRunId": "45115633236-1"
     }
   ]
 }
